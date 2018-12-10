@@ -7,8 +7,9 @@
 
 		public Empty() { }
 		public IItem GetSub(int i) => new Book("This item doesn't contain other items.", "(I don't think it should be possible to see this...)", 2018);
+		public bool HasItem(IItem test) => false;
 		public string Type => typeS;
-		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? "" : "";
+		public string ListInfo(bool beforeNotAfter) => string.Empty;
 		public override string ToString() => message;
 	}
 }

@@ -4,6 +4,7 @@
 	{
 		string Type { get; }
 
+		bool HasItem(IItem test);
 		string ListInfo(bool beforeNotAfter);
 		string ToString();
 	}

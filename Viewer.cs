@@ -29,30 +29,48 @@ namespace HouseCS
 		public string List(int s, int e) => curHouse.List(CurFloor, s, e, "*");
 		public string List(string type) => curHouse.List(CurFloor, type);
 		public void AddItem(IItem i) => curHouse.AddItem(CurFloor, i);
-		public void RemoveItem(int r)
-		{
-			IItem temp = curHouse.GetFloor(CurFloor).GetItem(r);
-			//any Item that can have this item will have it removed
-			foreach (Floor f in curHouse.GetFloors)
-			{
-				foreach (IItem i in f.GetItems())
-				{
-					switch (i.Type)
-					{
-						case "Bookshelf":
-							for (int b = 0; b < ((Bookshelf)i).BookCount; b++)
-								if (((Bookshelf)i).GetBook(b) == temp)
-									((Bookshelf)i).RemoveBook(b);
-							break;
-						case "Display":
-							for (int d = 0; d < ((Display)i).DeviceCount; d++)
-								if (((Display)i).GetDevice(d) == temp)
-									((Display)i).Disconnect(d);
-							break;
+		public void RemoveItem(int iN, int sIN) {
+			IItem temp = curHouse.GetFloor(CurFloor).GetItem(iN, sIN);
+			if (temp == curItem) curItem = new Empty();
+			if (temp.HasItem(curItem)) if (!(temp is Display)) curItem = new Empty();
+			//any Item that can have this item will have it removed - currently no sub items have their own sub items
+			if (curHouse.GetFloor(CurFloor).RemoveItem(iN, sIN)) {
+				foreach (Floor f in curHouse.GetFloors) {
+					foreach (IItem i in f.GetItems()) {
+						if (i.HasItem(temp)) {
+							switch (i.Type) {
+							case "Bookshelf":
+								((Bookshelf)i).RemoveBook(temp);
+								break;
+							case "Display":
+								((Display)i).Disconnect(temp);
+								break;
+							}
+						}
 					}
 				}
 			}
-			curHouse.GetFloor(CurFloor).RemoveItem(r);
+		}
+		public void RemoveItem(int iN) {
+			IItem temp = curHouse.GetFloor(CurFloor).GetItem(iN);
+			if (temp == curItem) curItem = new Empty();
+			if (temp.HasItem(curItem)) if (!(temp is Display)) curItem = new Empty();
+			//any Item that can have this item will have it removed
+			foreach (Floor f in curHouse.GetFloors) {
+				foreach (IItem i in f.GetItems()) {
+					if (i.HasItem(temp)) {
+						switch (i.Type) {
+						case "Bookshelf":
+							((Bookshelf)i).RemoveBook(temp);
+							break;
+						case "Display":
+							((Display)i).Disconnect(temp);
+							break;
+						}
+					}
+				}
+			}
+			curHouse.GetFloor(CurFloor).RemoveItem(iN);
 		}
 		public int CurFloor { get; private set; }
 		public string GoUp()

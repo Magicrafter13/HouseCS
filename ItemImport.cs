@@ -57,5 +57,10 @@ namespace HouseCS
 			}, 40)
 		};
 		public static readonly int[] displays_f = { 1, 1 };
+		public static readonly Bed[] beds = {
+			new Bed(false, 2),
+			new Bed(false, 0)
+		};
+		public static readonly int[] beds_f = { 1, 1 };
 	}
 }

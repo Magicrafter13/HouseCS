@@ -50,21 +50,18 @@ namespace HouseCS
 					itemIds.Add(i);
 				}
 			}
-			if (items.Count == 0)
-				return $"Floor has no {type} items.";
+			if (items.Count == 0) return $"Floor has no {type} items.";
 			for (int i = 0; i < items.Count; i++)
 			{
 				retVal += $"{itemIds[i]}: {items[i].ListInfo(true)}{items[i].Type}{items[i].ListInfo(false)}";
-				if (i < items.Count - 1)
-					retVal += "\n";
+				if (i < items.Count - 1) retVal += "\n";
 			}
 			return $"\n{retVal}\n";
 		}
 		public string List(int f) => List(f, 0, GetFloors[f].Size(), "*");
 		public string List(int f, string type) => List(f, 0, GetFloors[f].Size(), type);
 		public int Size { get; }
-		public bool AddItem(int f, IItem i)
-		{
+		public bool AddItem(int f, IItem i) {
 			if (f < 0 || f >= Size)
 				return false;
 			GetFloors[f].AddItem(i);

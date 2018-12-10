@@ -26,6 +26,7 @@
 			id = totalComps;
 			totalComps++;
 		}
+		public bool HasItem(IItem test) => false;
 		public void TurnOn() => isOn = true;
 		public void TurnOff() => isOn = false;
 		public string Type => typeS;

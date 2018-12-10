@@ -18,12 +18,13 @@
 			totalBooks++;
 			ID = totalBooks;
 		}
+		public bool HasItem(IItem test) => false;
 		public string Title { get; private set; }
 		public string Author { get; private set; }
 		public int Year { get; private set; }
 		public int ID { get; }
 		public string Type => typeS;
-		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? "" : $": {Title}";
+		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? string.Empty : $": {Title}";
 		public override string ToString() => $"Title: {Title}\nAuthor: {Author}\nYear: {Year}";
 	}
 }

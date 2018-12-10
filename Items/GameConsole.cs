@@ -15,8 +15,9 @@
 			company = c;
 			system = s;
 		}
+		public bool HasItem(IItem test) => false;
 		public string Type => typeS;
-		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? company + " " : $" - {types[sysType]}";
+		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? $"{company} " : $" - {types[sysType]}";
 		public override string ToString() => $"This Video Game {types[sysType]}, is a {company}\n{system}";
 	}
 }
