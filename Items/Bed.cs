@@ -1,10 +1,13 @@
+using System;
+using HouseCS.ConsoleUtils;
+
 namespace HouseCS.Items
 {
     public class Bed : IItem
     {
         public static readonly string[] types = {"King", "Queen", "Twin", "Single"};
-        private bool adjustable;
-        private int bedType;
+        private readonly bool adjustable;
+        private readonly int bedType;
         private static readonly string typeS = "Bed";
 
         public Bed() : this(false, 2) { }
@@ -14,11 +17,7 @@ namespace HouseCS.Items
         }
         public bool HasItem(IItem test) => false;
         public string Type => typeS;
-        public string ListInfo(bool beforeNotAfter) => beforeNotAfter
-            ? $"{types[bedType]} "
-            : adjustable
-                ? " - Adjustable"
-                : "";
-        public override string ToString() => $"{(adjustable ? "Adjustable" : "Non adjustable")} {types[bedType]} size bed";
+        public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{types[bedType]} " : adjustable ? " - Adjustable" : "" }, new ConsoleColor[] { ConsoleColor.White });
+        public ColorText ToText() => new ColorText(new string[] { $"{(adjustable ? "Adjustable" : "Non adjustable")} {types[bedType]} size bed" }, new ConsoleColor[] { ConsoleColor.White });
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using HouseCS.ConsoleUtils;
 using HouseCS.Items;
 
 namespace HouseCS
@@ -7,7 +8,7 @@ namespace HouseCS
 	public class House
 	{
 		private static readonly string[] colors = { "White", "Red", "Brown", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black" };
-		public static readonly string[] types = { "*", "Book", "Bookshelf", "Computer", "Console", "Display" };
+		public static readonly string[] types = { "*", "Bed", "Book", "Bookshelf", "Computer", "Console", "Display" };
 		private readonly int color;
 
 		private void InitializeFloors()
@@ -23,21 +24,22 @@ namespace HouseCS
 			GetFloors = new Floor[Size];
 			InitializeFloors();
 		}
-		public string List(int f, int s, int e, string type)
+		public ColorText List(int f, int s, int e, string type)
 		{
 			bool validType = false;
 			foreach (string t in types)
 				if (type.Equals(t, StringComparison.OrdinalIgnoreCase))
 					validType = true;
 			if (!validType)
-				return $"{type} is not a valid item type.";
+				return new ColorText(new string[] { type, " is not a valid item type." }, new ConsoleColor[] { ConsoleColor.DarkYellow, ConsoleColor.White });
 			if (GetFloors[f].Size() == 0)
-				return "Floor is empty!";
+				return new ColorText(new string[] { "Floor is empty!" }, new ConsoleColor[] { ConsoleColor.White });
 			if (s >= e)
-				return "Start must be less than End";
+				return new ColorText(new string[] { "Start must be less than End" }, new ConsoleColor[] { ConsoleColor.White });
 			if (s < 0)
-				return "Start must be greater than or equal to 0";
-			string retVal = string.Empty;
+				return new ColorText(new string[] { "Start must be greater than or equal to 0" }, new ConsoleColor[] { ConsoleColor.White });
+			List<string> retStr = new List<string>() { "\n" };
+			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White };
 			List<IItem> items = new List<IItem>();
 			List<int> itemIds = new List<int>();
 			for (int i = s; i < e; i++)
@@ -50,16 +52,28 @@ namespace HouseCS
 					itemIds.Add(i);
 				}
 			}
-			if (items.Count == 0) return $"Floor has no {type} items.";
+			if (items.Count == 0) return new ColorText(new string[] { "Floor has no ", type, " items." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
 			for (int i = 0; i < items.Count; i++)
 			{
-				retVal += $"{itemIds[i]}: {items[i].ListInfo(true)}{items[i].Type}{items[i].ListInfo(false)}";
-				if (i < items.Count - 1) retVal += "\n";
+				retStr.Add($"{itemIds[i]}");
+				retClr.Add(ConsoleColor.Cyan);
+				retStr.Add(": ");
+				retClr.Add(ConsoleColor.White);
+				ColorText left = items[i].ListInfo(true);
+				foreach (string str in left.Lines) retStr.Add(str);
+				foreach (ConsoleColor clr in left.Colors) retClr.Add(clr);
+				retStr.Add(items[i].Type);
+				retClr.Add(ConsoleColor.White);
+				ColorText right = items[i].ListInfo(false);
+				foreach (string str in right.Lines) retStr.Add(str);
+				foreach (ConsoleColor clr in right.Colors) retClr.Add(clr);
+				retStr.Add("\n");
+				retClr.Add(ConsoleColor.White);
 			}
-			return $"\n{retVal}\n";
+			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-		public string List(int f) => List(f, 0, GetFloors[f].Size(), "*");
-		public string List(int f, string type) => List(f, 0, GetFloors[f].Size(), type);
+		public ColorText List(int f) => List(f, 0, GetFloors[f].Size(), "*");
+		public ColorText List(int f, string type) => List(f, 0, GetFloors[f].Size(), type);
 		public int Size { get; }
 		public bool AddItem(int f, IItem i) {
 			if (f < 0 || f >= Size)

@@ -1,4 +1,7 @@
-﻿namespace HouseCS.Items
+﻿using System;
+using HouseCS.ConsoleUtils;
+
+namespace HouseCS.Items
 {
 	public class GameConsole : IItem
 	{
@@ -17,7 +20,7 @@
 		}
 		public bool HasItem(IItem test) => false;
 		public string Type => typeS;
-		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? $"{company} " : $" - {types[sysType]}";
-		public override string ToString() => $"This Video Game {types[sysType]}, is a {company}\n{system}";
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{company} " : $" - {types[sysType]}" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ToText() => new ColorText(new string[] { $"This Video Game {types[sysType]}, is a {company}\n{system}" }, new ConsoleColor[] { ConsoleColor.White });
 	}
 }

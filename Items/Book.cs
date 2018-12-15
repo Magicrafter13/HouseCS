@@ -1,4 +1,7 @@
-﻿namespace HouseCS.Items
+﻿using System;
+using HouseCS.ConsoleUtils;
+
+namespace HouseCS.Items
 {
 	public class Book : IItem
 	{
@@ -24,7 +27,7 @@
 		public int Year { get; private set; }
 		public int ID { get; }
 		public string Type => typeS;
-		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? string.Empty : $": {Title}";
-		public override string ToString() => $"Title: {Title}\nAuthor: {Author}\nYear: {Year}";
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? string.Empty : $": {Title}" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ToText() => new ColorText(new string[] { $"Title: {Title}\nAuthor: {Author}\nYear: {Year}" }, new ConsoleColor[] { ConsoleColor.White });
 	}
 }

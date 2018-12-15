@@ -1,4 +1,7 @@
-﻿using HouseCS.Items;
+﻿using System.Collections.Generic;
+using System;
+using HouseCS.ConsoleUtils;
+using HouseCS.Items;
 
 namespace HouseCS
 {
@@ -23,11 +26,21 @@ namespace HouseCS
 			CurFloor = f;
 			return true;
 		}
-		public string ViewCurItem => $"Object type is: {curItem.Type}\n\n{curItem}";
+
+		public ColorText GetViewCurItem() {
+			List<string> retStr = new List<string>() { $"Object type is: {curItem.Type}\n\n" };
+			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White };
+			ColorText itm = curItem.ToText();
+			foreach (string str in itm.Lines)
+				retStr.Add(str);
+			foreach (ConsoleColor clr in itm.Colors)
+				retClr.Add(clr);
+			return new ColorText(retStr.ToArray(), retClr.ToArray());
+		}
 		public int FloorSize => curHouse.GetFloor(CurFloor).Size();
-		public string List() => curHouse.List(CurFloor);
-		public string List(int s, int e) => curHouse.List(CurFloor, s, e, "*");
-		public string List(string type) => curHouse.List(CurFloor, type);
+		public ColorText List() => curHouse.List(CurFloor);
+		public ColorText List(int s, int e) => curHouse.List(CurFloor, s, e, "*");
+		public ColorText List(string type) => curHouse.List(CurFloor, type);
 		public void AddItem(IItem i) => curHouse.AddItem(CurFloor, i);
 		public void RemoveItem(int iN, int sIN) {
 			IItem temp = curHouse.GetFloor(CurFloor).GetItem(iN, sIN);

@@ -1,4 +1,7 @@
-﻿namespace HouseCS.Items
+﻿using System;
+using HouseCS.ConsoleUtils;
+
+namespace HouseCS.Items
 {
 	public class Computer : IItem
 	{
@@ -30,7 +33,7 @@
 		public void TurnOn() => isOn = true;
 		public void TurnOff() => isOn = false;
 		public string Type => typeS;
-		public string ListInfo(bool beforeNotAfter) => beforeNotAfter ? $"{brand} " : $", turned {(isOn ? "on" : "off")}";
-		public override string ToString() => $"{computerType} Computer, ID:{id}\nCurrently powered {(isOn ? "on" : "off")}\nIt is a(n) {brand} {family} {model}";
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{brand} " : $", turned {(isOn ? "on" : "off")}" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ToText() => new ColorText(new string[] { $"{computerType} Computer, ID:{id}\nCurrently powered {(isOn ? "on" : "off")}\nIt is a(n) {brand} {family} {model}" }, new ConsoleColor[] { ConsoleColor.White });
 	}
 }
