@@ -20,6 +20,7 @@ namespace HouseCS.Items
 		}
 		public bool HasItem(IItem test) => false;
 		public string Type => typeS;
+		public string SubType => typeS;
 		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{company} " : $" - {types[sysType]}" }, new ConsoleColor[] { ConsoleColor.White });
 		public ColorText ToText() => new ColorText(new string[] { $"This Video Game {types[sysType]}, is a {company}\n{system}" }, new ConsoleColor[] { ConsoleColor.White });
 	}

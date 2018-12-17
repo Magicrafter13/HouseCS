@@ -59,6 +59,7 @@ namespace HouseCS.Items
 		public int DeviceCount => connectedTo.Count;
 		public IItem GetDevice(int i) => connectedTo[i];
 		public string Type => typeS;
+		public string SubType => typeS;
 		public ColorText ListInfo(bool before_not_after) => new ColorText(new string[] { before_not_after ? $"{sizeInch}\" {(isMonitor ? "Monitor" : "TV")} (" : $") - {connectedTo.Count} devices are connected to it" }, new ConsoleColor[] { ConsoleColor.White });
 		public ColorText ToText()
 		{

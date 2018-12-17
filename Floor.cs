@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using HouseCS.Items;
+using HouseCS.Items.Containers;
 
 namespace HouseCS
 {
@@ -14,8 +15,8 @@ namespace HouseCS
 			int removeFromFloor = -1;
 			for (int i = 0; i < Items.Count; i++) {
 				switch(Items[iN].Type) {
-				case "Bookshelf":
-					if (((Bookshelf)Items[iN]).GetBook(sIN) == Items[i]) removeFromFloor = i;
+				case "Container": case "Bookshelf": case "Fridge":
+					if (((Container)Items[iN]).GetItem(sIN) == Items[i]) removeFromFloor = i;
 					break;
 				case "Display":
 					if (((Display)Items[iN]).GetDevice(sIN) == Items[i]) removeFromFloor = i;
@@ -23,8 +24,8 @@ namespace HouseCS
 				}
 			}
 			switch (Items[iN].Type) {
-			case "Bookshelf":
-				((Bookshelf)Items[iN]).RemoveBook(sIN);
+			case "Container":
+				((Container)Items[iN]).RemoveItem(sIN);
 				break;
 			case "Display":
 				((Display)Items[iN]).Disconnect(sIN);
@@ -35,15 +36,13 @@ namespace HouseCS
 			return true;
 		}
 		public List<IItem> Items { get; set; }
-		public List<IItem> GetItems() => Items;
 		public IItem GetItem(int i) => i >= 0 && i < Items.Count ? Items[i] : new Empty();
-		public IItem GetItem(int i, int sI)
-		{
+		public IItem GetItem(int i, int sI) {
 			if (i >= 0 && i < Items.Count)
 			{
 				IItem ret_val = Items[i];
-				if (Items[i] is Bookshelf)
-					ret_val = ((Bookshelf)Items[i]).GetBook(sI);
+				if (Items[i] is Container)
+					ret_val = ((Container)Items[i]).GetItem(sI);
 				if (Items[i] is Display)
 					ret_val = ((Display)Items[i]).GetDevice(sI);
 				return ret_val;

@@ -2,6 +2,7 @@
 using System;
 using HouseCS.ConsoleUtils;
 using HouseCS.Items;
+using HouseCS.Items.Containers;
 
 namespace HouseCS
 {
@@ -19,12 +20,10 @@ namespace HouseCS
 		}
 		public bool IsItem(int i) => i >= 0 && i < curHouse.GetFloor(CurFloor).Size();
 		public IItem GetItem(int i) => curHouse.GetItem(CurFloor, i);
-		public bool GoFloor(int f)
-		{
-			if (f < 0 || f >= curHouse.Size)
-				return false;
-			CurFloor = f;
-			return true;
+		public bool GoFloor(int f) {
+			bool check = f >= 0 && f < curHouse.Size;
+			if (check) CurFloor = f;
+			return check;
 		}
 
 		public ColorText GetViewCurItem() {
@@ -38,8 +37,10 @@ namespace HouseCS
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
 		public int FloorSize => curHouse.GetFloor(CurFloor).Size();
+		public int PageCount(int s, int e, string t, int l) => curHouse.PageCount(CurFloor, s, e, t, l);
+		public ColorText List(int s, int e, string t, int l, int p) => curHouse.List(CurFloor, s, e, t, l, p);
 		public ColorText List() => curHouse.List(CurFloor);
-		public ColorText List(int s, int e) => curHouse.List(CurFloor, s, e, "*");
+		public ColorText List(int s, int e) => curHouse.List(CurFloor, s, e, "*", FloorSize, 0);
 		public ColorText List(string type) => curHouse.List(CurFloor, type);
 		public void AddItem(IItem i) => curHouse.AddItem(CurFloor, i);
 		public void RemoveItem(int iN, int sIN) {
@@ -49,42 +50,35 @@ namespace HouseCS
 			//any Item that can have this item will have it removed - currently no sub items have their own sub items
 			if (curHouse.GetFloor(CurFloor).RemoveItem(iN, sIN)) {
 				foreach (Floor f in curHouse.GetFloors) {
-					foreach (IItem i in f.GetItems()) {
+					foreach (IItem i in f.Items) {
 						if (i.HasItem(temp)) {
 							switch (i.Type) {
-							case "Bookshelf":
-								((Bookshelf)i).RemoveBook(temp);
-								break;
-							case "Display":
-								((Display)i).Disconnect(temp);
-								break;
+								case "Container": ((Container)i).RemoveItem(temp); break;
+								case "Display": ((Display)i).Disconnect(temp); break;
 							}
 						}
 					}
 				}
 			}
 		}
-		public void RemoveItem(int iN) {
-			IItem temp = curHouse.GetFloor(CurFloor).GetItem(iN);
+		public void RemoveItem(IItem iN) {
+			IItem temp = iN;
 			if (temp == curItem) curItem = new Empty();
 			if (temp.HasItem(curItem)) if (!(temp is Display)) curItem = new Empty();
 			//any Item that can have this item will have it removed
 			foreach (Floor f in curHouse.GetFloors) {
-				foreach (IItem i in f.GetItems()) {
+				foreach (IItem i in f.Items) {
 					if (i.HasItem(temp)) {
 						switch (i.Type) {
-						case "Bookshelf":
-							((Bookshelf)i).RemoveBook(temp);
-							break;
-						case "Display":
-							((Display)i).Disconnect(temp);
-							break;
+							case "Container": ((Container)i).RemoveItem(temp); break;
+							case "Display": ((Display)i).Disconnect(temp); break;
 						}
 					}
 				}
 			}
 			curHouse.GetFloor(CurFloor).RemoveItem(iN);
 		}
+		public void RemoveItem(int iN) => RemoveItem(curHouse.GetFloor(CurFloor).GetItem(iN));
 		public int CurFloor { get; private set; }
 		public string GoUp()
 		{
@@ -101,19 +95,17 @@ namespace HouseCS
 			CurFloor--;
 			return $"\nWelcome to floor {CurFloor}.\n";
 		}
-		public bool ChangeItemFocus(int i)
-		{
-			if (i < 0 || i >= curHouse.GetFloor(CurFloor).Size())
-				return false;
-			curItem = curHouse.GetItem(CurFloor, i);
-			return true;
+		public bool ChangeItemFocus(int i) {
+			bool check = i >= 0 && i < curHouse.GetFloor(CurFloor).Size();
+			if (check) curItem = curHouse.GetItem(CurFloor, i);
+			return check;
 		}
-		public int ChangeItemFocus(int i, int si)
-		{
-			if (i < 0 || i >= curHouse.GetFloor(CurFloor).Size())
-				return 2;
-			curItem = curHouse.GetItem(CurFloor, i, si);
-			return curItem is Empty ? 1 : 0;
+		public int ChangeItemFocus(int i, int sI) {
+			if (i >= 0 && i < curHouse.GetFloor(CurFloor).Size()) {
+				curItem = curHouse.GetItem(CurFloor, i, sI);
+				return curItem is Empty ? 1 : 0;
+			}
+			return 2;
 		}
 		public void ChangeHouseFocus(House h)
 		{

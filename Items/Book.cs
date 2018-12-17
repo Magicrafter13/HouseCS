@@ -27,6 +27,7 @@ namespace HouseCS.Items
 		public int Year { get; private set; }
 		public int ID { get; }
 		public string Type => typeS;
+		public string SubType => Type;
 		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? string.Empty : $": {Title}" }, new ConsoleColor[] { ConsoleColor.White });
 		public ColorText ToText() => new ColorText(new string[] { $"Title: {Title}\nAuthor: {Author}\nYear: {Year}" }, new ConsoleColor[] { ConsoleColor.White });
 	}

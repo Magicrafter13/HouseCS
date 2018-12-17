@@ -33,6 +33,7 @@ namespace HouseCS.Items
 		public void TurnOn() => isOn = true;
 		public void TurnOff() => isOn = false;
 		public string Type => typeS;
+		public string SubType => typeS;
 		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{brand} " : $", turned {(isOn ? "on" : "off")}" }, new ConsoleColor[] { ConsoleColor.White });
 		public ColorText ToText() => new ColorText(new string[] { $"{computerType} Computer, ID:{id}\nCurrently powered {(isOn ? "on" : "off")}\nIt is a(n) {brand} {family} {model}" }, new ConsoleColor[] { ConsoleColor.White });
 	}
