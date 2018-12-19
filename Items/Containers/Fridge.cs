@@ -54,7 +54,7 @@ namespace HouseCS.Items.Containers
         public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
             ? new ColorText($"{temperature}° ", ConsoleColor.White)
             : Size > 0
-                ? new ColorText(new string[] { " - [", Size.ToString(), " Items", $"]{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
+                ? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
                 : new ColorText(new string[] { " - ", "Empty", $"]{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
         public new ColorText ToText() {
             List<string> retStr = new List<string>() { "Items", " in this ", "Fridge", ":" };

@@ -9,19 +9,19 @@ namespace HouseCS
 	public class Viewer
 	{
 		public IItem curItem;
-		private House curHouse;
+		public House CurHouse { get; private set; }
 
 		public Viewer() : this(new House()) { }
 		public Viewer(House h)
 		{
 			CurFloor = 0;
 			curItem = new Empty();
-			curHouse = h;
+			CurHouse = h;
 		}
-		public bool IsItem(int i) => i >= 0 && i < curHouse.GetFloor(CurFloor).Size();
-		public IItem GetItem(int i) => curHouse.GetItem(CurFloor, i);
+		public bool IsItem(int i) => i >= 0 && i < CurHouse.GetFloor(CurFloor).Size();
+		public IItem GetItem(int i) => CurHouse.GetItem(CurFloor, i);
 		public bool GoFloor(int f) {
-			bool check = f >= 0 && f < curHouse.Size;
+			bool check = f >= 0 && f < CurHouse.Size;
 			if (check) CurFloor = f;
 			return check;
 		}
@@ -36,20 +36,20 @@ namespace HouseCS
 				retClr.Add(clr);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-		public int FloorSize => curHouse.GetFloor(CurFloor).Size();
-		public int PageCount(int s, int e, string t, int l) => curHouse.PageCount(CurFloor, s, e, t, l);
-		public ColorText List(int s, int e, string t, int l, int p) => curHouse.List(CurFloor, s, e, t, l, p);
-		public ColorText List() => curHouse.List(CurFloor);
-		public ColorText List(int s, int e) => curHouse.List(CurFloor, s, e, "*", FloorSize, 0);
-		public ColorText List(string type) => curHouse.List(CurFloor, type);
-		public void AddItem(IItem i) => curHouse.AddItem(CurFloor, i);
+		public int FloorSize => CurHouse.GetFloor(CurFloor).Size();
+		public int PageCount(int s, int e, string t, int l) => CurHouse.PageCount(CurFloor, s, e, t, l);
+		public ColorText List(int s, int e, string t, int l, int p) => CurHouse.List(CurFloor, s, e, t, l, p);
+		public ColorText List() => CurHouse.List(CurFloor);
+		public ColorText List(int s, int e) => CurHouse.List(CurFloor, s, e, "*", FloorSize, 0);
+		public ColorText List(string type) => CurHouse.List(CurFloor, type);
+		public void AddItem(IItem i) => CurHouse.AddItem(CurFloor, i);
 		public void RemoveItem(int iN, int sIN) {
-			IItem temp = curHouse.GetFloor(CurFloor).GetItem(iN, sIN);
+			IItem temp = CurHouse.GetFloor(CurFloor).GetItem(iN, sIN);
 			if (temp == curItem) curItem = new Empty();
 			if (temp.HasItem(curItem)) if (!(temp is Display)) curItem = new Empty();
 			//any Item that can have this item will have it removed - currently no sub items have their own sub items
-			if (curHouse.GetFloor(CurFloor).RemoveItem(iN, sIN)) {
-				foreach (Floor f in curHouse.GetFloors) {
+			if (CurHouse.GetFloor(CurFloor).RemoveItem(iN, sIN)) {
+				foreach (Floor f in CurHouse.GetFloors) {
 					foreach (IItem i in f.Items) {
 						if (i.HasItem(temp)) {
 							switch (i.Type) {
@@ -66,7 +66,7 @@ namespace HouseCS
 			if (temp == curItem) curItem = new Empty();
 			if (temp.HasItem(curItem)) if (!(temp is Display)) curItem = new Empty();
 			//any Item that can have this item will have it removed
-			foreach (Floor f in curHouse.GetFloors) {
+			foreach (Floor f in CurHouse.GetFloors) {
 				foreach (IItem i in f.Items) {
 					if (i.HasItem(temp)) {
 						switch (i.Type) {
@@ -76,14 +76,14 @@ namespace HouseCS
 					}
 				}
 			}
-			curHouse.GetFloor(CurFloor).RemoveItem(iN);
+			CurHouse.GetFloor(CurFloor).RemoveItem(iN);
 		}
-		public void RemoveItem(int iN) => RemoveItem(curHouse.GetFloor(CurFloor).GetItem(iN));
+		public void RemoveItem(int iN) => RemoveItem(CurHouse.GetFloor(CurFloor).GetItem(iN));
 		public int CurFloor { get; private set; }
 		public string GoUp()
 		{
 			CurFloor++;
-			if (CurFloor < curHouse.Size)
+			if (CurFloor < CurHouse.Size)
 				return $"\nWelcome to floor {CurFloor}.\n";
 			CurFloor--;
 			return "\nYou are currently on the top floor, floor unchanged.\n";
@@ -96,13 +96,13 @@ namespace HouseCS
 			return $"\nWelcome to floor {CurFloor}.\n";
 		}
 		public bool ChangeItemFocus(int i) {
-			bool check = i >= 0 && i < curHouse.GetFloor(CurFloor).Size();
-			if (check) curItem = curHouse.GetItem(CurFloor, i);
+			bool check = i >= 0 && i < CurHouse.GetFloor(CurFloor).Size();
+			if (check) curItem = CurHouse.GetItem(CurFloor, i);
 			return check;
 		}
 		public int ChangeItemFocus(int i, int sI) {
-			if (i >= 0 && i < curHouse.GetFloor(CurFloor).Size()) {
-				curItem = curHouse.GetItem(CurFloor, i, sI);
+			if (i >= 0 && i < CurHouse.GetFloor(CurFloor).Size()) {
+				curItem = CurHouse.GetItem(CurFloor, i, sI);
 				return curItem is Empty ? 1 : 0;
 			}
 			return 2;
@@ -111,7 +111,7 @@ namespace HouseCS
 		{
 			CurFloor = 0;
 			curItem = new Empty();
-			curHouse = h;
+			CurHouse = h;
 		}
 		public override string ToString() => $"\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
 	}

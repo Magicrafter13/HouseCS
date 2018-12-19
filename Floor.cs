@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using HouseCS.ConsoleUtils;
 using HouseCS.Items;
 using HouseCS.Items.Containers;
 
@@ -6,8 +8,17 @@ namespace HouseCS
 {
 	public class Floor
 	{
-		public Floor() : this(new List<IItem>()) { }
-		public Floor(List<IItem> i) => Items = i;
+		public Floor() : this(new List<IItem>(), false) { }
+		public Floor(List<IItem> i, bool l) {
+			Items = i;
+			Lights = l;
+		}
+		public Floor(List<IItem> i) : this(i, false) { }
+		public Floor(bool l) : this(new List<IItem>(), l) { }
+		public ColorText ToggleLights() {
+			Lights = Lights ? false : true;
+			return new ColorText($"Lights turned {(Lights ? "on" : "off")}.", ConsoleColor.White);
+		}
 		public void AddItem(IItem i) => Items.Add(i);
 		public void RemoveItem(int i) => Items.RemoveAt(i);
 		public void RemoveItem(IItem i) => Items.Remove(i);
@@ -36,6 +47,7 @@ namespace HouseCS
 			return true;
 		}
 		public List<IItem> Items { get; set; }
+		public bool Lights {get; private set; }
 		public IItem GetItem(int i) => i >= 0 && i < Items.Count ? Items[i] : new Empty();
 		public IItem GetItem(int i, int sI) {
 			if (i >= 0 && i < Items.Count)

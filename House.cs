@@ -26,6 +26,11 @@ namespace HouseCS
 			GetFloors = new Floor[Size];
 			InitializeFloors();
 		}
+		public House(int c, Floor[] fs) {
+			color = c >= 0 && c <= 9 ? c : 0;
+			Size = fs.Length;
+			GetFloors = fs;
+		}
 		public int PageCount(int f, int rangeStart, int rangeEnd, String searchType, int pageLength) {
 			bool validType = false;
 			foreach (String t in types) if (searchType.Equals(t, StringComparison.OrdinalIgnoreCase)) validType = true;
