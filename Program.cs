@@ -30,7 +30,8 @@ namespace HouseCS {
 		}
 		public static void WriteColor(ColorText text) => WriteColor(text.Lines, text.Colors);
 		public static void WriteColor(ColorText[] lines) {
-			foreach (ColorText line in lines) WriteColor(line.Lines, line.Colors);
+			foreach (ColorText line in lines)
+				WriteColor(line.Lines, line.Colors);
 		}
 		public static void WriteColorLine(string[] lines, ConsoleColor[] colors) {
 			WriteColor(lines, colors);
@@ -145,62 +146,78 @@ namespace HouseCS {
 		private static bool CanGoInside(string src, string dst) {
 			switch (dst.ToLower()) {
 				case "bookshelf":
-				return src.Equals("book", StringComparison.OrdinalIgnoreCase);
+					return src.Equals("book", StringComparison.OrdinalIgnoreCase);
 				case "container":
-				switch (src.ToLower()) {
-					case "empty":
-					case "fridge":
-					return false;
-					default: return true;
-				}
+					switch (src.ToLower()) {
+						case "empty":
+						case "fridge":
+							return false;
+						default:
+							return true;
+					}
 				case "display":
-				switch (src.ToLower()) {
-					case "computer":
-					case "console":
-					return true;
-					default: return false;
-				}
-				case "empty": return false;
+					switch (src.ToLower()) {
+						case "computer":
+						case "console":
+							return true;
+						default:
+							return false;
+					}
+				case "empty":
+					return false;
 				case "fridge":
-				switch (src.ToLower()) {
-					case "empty":
-					case "fridge":
-					return false;
-					default: return true;
-				}
+					switch (src.ToLower()) {
+						case "empty":
+						case "fridge":
+							return false;
+						default:
+							return true;
+					}
 				case "dresser":
-				switch (src.ToLower()) {
-					case "clothing": return true;
-					default: return false;
-				}
+					switch (src.ToLower()) {
+						case "clothing":
+							return true;
+						default:
+							return false;
+					}
 				case "table":
-				switch (src.ToLower()) {
-					case "fridge":
-					case "empty":
-					case "table":
+					switch (src.ToLower()) {
+						case "fridge":
+						case "empty":
+						case "table":
+							return false;
+						default:
+							return true;
+					}
+				default:
 					return false;
-					default: return true;
-				}
-				default: return false;
 			}
 		}
 		public static IItem CreateContainer(string type) {
 			switch (type.ToLower()) {
-				case "fridge": return new Fridge();
-				case "bookshelf": return new Bookshelf();
-				case "dresser" : return new Dresser();
-				case "table" : return new Table();
-				default: return new Container();
+				case "fridge":
+					return new Fridge();
+				case "bookshelf":
+					return new Bookshelf();
+				case "dresser":
+					return new Dresser();
+				case "table":
+					return new Table();
+				default:
+					return new Container();
 			}
 		}
-		public static IItem CreateClothing(String type) {
+		public static IItem CreateClothing(string type) {
 			switch (type.ToLower()) {
-				case "shirt": return new Shirt();
-				case "pants": return new Pants();
-				default: return new Clothing();
+				case "shirt":
+					return new Shirt();
+				case "pants":
+					return new Pants();
+				default:
+					return new Clothing();
 			}
 		}
-		public static String[,] enviVar = {
+		public static string[,] enviVar = {
 			{"interactive", "false", "bool", "user"},
 			{"temperature", "70.0", "double", "system"},
 			{"house", "0", "int", "system"}
@@ -215,11 +232,12 @@ namespace HouseCS {
 			ItemImport.InitializeItems();
 			List<House> houseData = ItemImport.houses;
 			List<Viewer> viewers = new List<Viewer>();
-			foreach (House h in houseData) viewers.Add(new Viewer(h));
+			foreach (House h in houseData)
+				viewers.Add(new Viewer(h));
 
 			House my_house = houseData[0];
 			Viewer user = viewers[0];
-			Boolean here = true;
+			bool here = true;
 
 			while (here) {
 				Console.Write("> ");
@@ -253,7 +271,9 @@ namespace HouseCS {
 										else
 											WriteColor(new string[] { "use", $" {cmds[1]}, does have extra arguments." }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 										break;
-									default: WriteColor(new string[] { $"{cmds[1]} cannot be '", "used", "'." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White }); break;
+									default:
+										WriteColor(new string[] { $"{cmds[1]} cannot be '", "used", "'." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White });
+										break;
 								}
 							} else
 								WriteColor(new string[] { "Use", " what?\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
@@ -264,60 +284,64 @@ namespace HouseCS {
 								case 1:
 									Console.Write("\n\tEnvironment Variables:\n\n");
 									for (int v = 0; v < enviVar.GetLength(0); v++)
-										Console.WriteLine($"{enviVar[v,0]} = {enviVar[v,1]}");
+										Console.WriteLine($"{enviVar[v, 0]} = {enviVar[v, 1]}");
 									Console.WriteLine();
 									break;
 								case 2:
 									validVar = false;
 									for (int v = 0; v < enviVar.GetLength(0); v++) {
-										if (enviVar[v,0].Equals(cmds[1], StringComparison.OrdinalIgnoreCase)) {
-											Console.Write($"\n{enviVar[v,0]} = {enviVar[v,1]}\n\n");
+										if (enviVar[v, 0].Equals(cmds[1], StringComparison.OrdinalIgnoreCase)) {
+											Console.Write($"\n{enviVar[v, 0]} = {enviVar[v, 1]}\n\n");
 											validVar = true;
 										}
 									}
-									if (!validVar) Console.Write($"{cmds[1]} is not a valid variable.\n");
+									if (!validVar)
+										Console.Write($"{cmds[1]} is not a valid variable.\n");
 									break;
 								case 3:
 									validVar = false;
 									int i;
 									for (i = 0; i < enviVar.GetLength(0); i++) {
-										if (enviVar[i,0].Equals(cmds[1], StringComparison.OrdinalIgnoreCase)) {
+										if (enviVar[i, 0].Equals(cmds[1], StringComparison.OrdinalIgnoreCase)) {
 											validVar = true;
 											break;
 										}
 									}
 									if (validVar) {
-										if (enviVar[i,3].Equals("user")) {
-											switch (enviVar[i,2]) {
+										if (enviVar[i, 3].Equals("user")) {
+											switch (enviVar[i, 2]) {
 												case "bool":
 													if (EqualsIgnoreCaseOr(cmds[2], new string[] { "false", "true", "0", "1" })) {
-														enviVar[i,1] = (EqualsIgnoreCaseOr(cmds[2], new string[] { "true", "1" }) ? "true" : "false");
+														enviVar[i, 1] = EqualsIgnoreCaseOr(cmds[2], new string[] { "true", "1" }) ? "true" : "false";
 													} else
 
-													Console.Write($"\n{enviVar[i,0]} stores a boolean value, must be true or false. (0 and 1 are acceptible)\n");
+														Console.Write($"\n{enviVar[i, 0]} stores a boolean value, must be true or false. (0 and 1 are acceptible)\n");
 													break;
 												case "int":
 												case "double":
 													if (Regex.IsMatch(cmds[2], "-?[0-9]+([.]{1}[0-9]+)?")) {
 														double newVal = double.Parse(cmds[2]);
-														enviVar[i,1] = enviVar[i,2].Equals("int") ? newVal.ToString() : newVal.ToString();
-													} else Console.Write($"\n{enviVar[i,0]} stores a numeric value, must only contain a number, - is optional, if variable stores a double, you may provide a decimal value\n");
+														enviVar[i, 1] = enviVar[i, 2].Equals("int") ? newVal.ToString() : newVal.ToString();
+													} else
+														Console.Write($"\n{enviVar[i, 0]} stores a numeric value, must only contain a number, - is optional, if variable stores a double, you may provide a decimal value\n");
 													break;
 												default:
-													Console.Write($"\n{enviVar[i,0]} did not have a recognized value type, be cautious, and report this bug.\n");
+													Console.Write($"\n{enviVar[i, 0]} did not have a recognized value type, be cautious, and report this bug.\n");
 													goto case "string";
 												case "string":
-													enviVar[i,1] = cmds[2];
+													enviVar[i, 1] = cmds[2];
 													break;
 											}
 											//enviVar[i][1] = cmds[2];
-											Console.Write($"\n{enviVar[i,0]} = {enviVar[i,1]}\n\n");
+											Console.Write($"\n{enviVar[i, 0]} = {enviVar[i, 1]}\n\n");
 										} else
-											Console.Write($"{enviVar[i,0]} is a system variable, and cannot be changed by the user.\n");
+											Console.Write($"{enviVar[i, 0]} is a system variable, and cannot be changed by the user.\n");
 									} else
 										Console.Write($"{cmds[1]} is not a valid variable.\n");
 									break;
-								default: Console.Write("Invalid amount of arguments.\n"); break;
+								default:
+									Console.Write("Invalid amount of arguments.\n");
+									break;
 							}
 							break;
 						case "attach":
@@ -357,7 +381,8 @@ namespace HouseCS {
 														if (CanGoInside(src_i is Clothing ? "Clothing" : src_i.SubType, dst_i.SubType)) {
 															user.RemoveItem(src);
 															WriteColor(new ColorText[] { ((Container)dst_i).AddItem(src_i), new ColorText("\n") });
-														} else Console.WriteLine($"A {src_i.SubType}, cannot be put-in/attached-to a {dst_i.SubType}");
+														} else
+															Console.WriteLine($"A {src_i.SubType}, cannot be put-in/attached-to a {dst_i.SubType}");
 														break;
 													case "Display":
 														if (src_i is Computer || src_i is GameConsole)
@@ -394,7 +419,7 @@ namespace HouseCS {
 											if (user.ChangeItemFocus(item)) {
 												if (user.GoFloor(destination)) {
 													IItem tempItem = user.curItem;
-                      		user.AddItem(tempItem);
+													user.AddItem(tempItem);
 													user.GoFloor(oldFloor);
 													user.RemoveItem(item);
 													user.curItem = tempItem;
@@ -510,7 +535,7 @@ namespace HouseCS {
 						case "look":
 							#region
 							if (cmds.Length > 1) {
-								if (EqualsIgnoreCaseOr(cmds[1], new String[] { "--hand", "--focus", "-h", "-f" }))
+								if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--hand", "--focus", "-h", "-f" }))
 									WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem(), new ColorText("\n\n") });
 								else if (cmds.Length > 2 || EqualsIgnoreCaseOr(cmds[1], new string[] { "-p", "--page" })) {
 									bool page = false;
@@ -539,100 +564,116 @@ namespace HouseCS {
 										invalidArg = i;
 									}
 									if (invalidArg == 0) {
-										if (enviVar[0,1].Equals("false") || user.CurHouse.GetFloor(user.CurFloor).Lights) {
+										if (enviVar[0, 1].Equals("false") || user.CurHouse.GetFloor(user.CurFloor).Lights) {
 											if (page) {
 												int pageCount = user.PageCount(rangeStart, rangeEnd, searchType, 20);
 												switch (pageCount) {
-													case 0: WriteColor(new string[] { "No ", "Items", " match your criteria.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }); break;
-													case -1: Console.Write($"{searchType} is not a valid type.\n"); break;
-													case -2: Console.Write("Floor is empty.\n"); break;
-													case -3: Console.Write("Range start must be greater than or equal to range end.\n"); break;
-													case -4: Console.Write("Range start must be greater than or equal to 0.\n"); break;
+													case 0:
+														WriteColor(new string[] { "No ", "Items", " match your criteria.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+														break;
+													case -1:
+														Console.Write($"{searchType} is not a valid type.\n");
+														break;
+													case -2:
+														Console.Write("Floor is empty.\n");
+														break;
+													case -3:
+														Console.Write("Range start must be greater than or equal to range end.\n");
+														break;
+													case -4:
+														Console.Write("Range start must be greater than or equal to 0.\n");
+														break;
 													default:
-													for (int i = 0; i < pageCount; i++) {
-														WriteColorLine(new string[] {"\n\tFloor ", "Listing", " - Page ", (i + 1).ToString() }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.DarkBlue, ConsoleColor.Cyan });
-														bool endTest = i + 1 < pageCount;
-														WriteColor(user.List(rangeStart, rangeEnd, searchType, 20, i));
-														if (endTest) {
-															Console.Write("Press enter to continue > ");
-															Console.ReadLine();
-														} else Console.WriteLine();
-													}
-													break;
+														for (int i = 0; i < pageCount; i++) {
+															WriteColorLine(new string[] { "\n\tFloor ", "Listing", " - Page ", (i + 1).ToString() }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.DarkBlue, ConsoleColor.Cyan });
+															bool endTest = i + 1 < pageCount;
+															WriteColor(user.List(rangeStart, rangeEnd, searchType, 20, i));
+															if (endTest) {
+																Console.Write("Press enter to continue > ");
+																Console.ReadLine();
+															} else
+																Console.WriteLine();
+														}
+														break;
 												}
-											} else WriteColor(new ColorText[] { user.List(rangeStart, rangeEnd, searchType, user.FloorSize, 0), new ColorText("\n") });
-										} else Console.Write("\nYou can't see anything, the floor is completely dark!\n\n");
-									} else Console.Write($"{cmds[invalidArg]} is not a valid argument.\n");
+											} else
+												WriteColor(new ColorText[] { user.List(rangeStart, rangeEnd, searchType, user.FloorSize, 0), new ColorText("\n") });
+										} else
+											Console.Write("\nYou can't see anything, the floor is completely dark!\n\n");
+									} else
+										Console.Write($"{cmds[invalidArg]} is not a valid argument.\n");
 								} else if (Regex.IsMatch(cmds[1], "[0-9]+")) {
 									if (int.Parse(cmds[1]) < user.FloorSize) {
 										IItem tempItem = user.curItem;
 										user.ChangeItemFocus(int.Parse(cmds[1]));
 										switch (user.curItem.Type) {
-										case "Container":
-											WriteColor(new string[] { "This ", "Item", " is a ", user.curItem.SubType, ", would you like to see:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-											WriteColor(new string[] { "(Y) A specific ", "Item", "\n(N) Just the overall contents\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-											while (true) {
-												Console.Write("[Y/N] > ");
-												String temp = Console.ReadLine().ToUpper();
-												int iC = ((Container)user.curItem).Size;
-												if (temp.Equals("Y") && iC > 0) {
-													WriteColor(new string[] { "\nWhich ", "Item", ":\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-													while (true) {
-														WriteColor(new string[] { "[", "0", "-", (iC - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-														int im = int.Parse(Console.ReadLine());
-														if (im < iC) {
-															WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
-															break;
-														} else
-															WriteColor(new string[] { "There aren't that many ", "Items", " in this ", user.curItem.SubType }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow });
-													}
-												} else if (temp.Equals("N") || ((Container)user.curItem).Size == 0)
-													WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem() });
-												else
-													WriteColor(new string[] { user.curItem.SubType, " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
+											case "Container":
+												WriteColor(new string[] { "This ", "Item", " is a ", user.curItem.SubType, ", would you like to see:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												WriteColor(new string[] { "(Y) A specific ", "Item", "\n(N) Just the overall contents\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												while (true) {
+													Console.Write("[Y/N] > ");
+													string temp = Console.ReadLine().ToUpper();
+													int iC = ((Container)user.curItem).Size;
+													if (temp.Equals("Y") && iC > 0) {
+														WriteColor(new string[] { "\nWhich ", "Item", ":\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+														while (true) {
+															WriteColor(new string[] { "[", "0", "-", (iC - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+															int im = int.Parse(Console.ReadLine());
+															if (im < iC) {
+																WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
+																break;
+															} else
+																WriteColor(new string[] { "There aren't that many ", "Items", " in this ", user.curItem.SubType }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow });
+														}
+													} else if (temp.Equals("N") || ((Container)user.curItem).Size == 0)
+														WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem() });
+													else
+														WriteColor(new string[] { user.curItem.SubType, " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
+													Console.WriteLine();
+													if (EqualsIgnoreCaseOr(temp, new string[] { "Y", "N" }))
+														break;
+												}
 												Console.WriteLine();
-												if (EqualsIgnoreCaseOr(temp, new string[] { "Y", "N" })) break;
-											}
-											Console.WriteLine();
-											break;
-										case "Display":
-											WriteColor(new string[] { "This ", "Item", " is a ", "Display", ", would you like to see:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-											WriteColor(new string[] { "(Y) A specific device\n(N) Just the ", "Display\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
-											while (true) {
-												Console.Write("[Y/N] > ");
-												String temp = Console.ReadLine().ToUpper();
-												if (temp.Equals("Y") && ((Display)user.curItem).DeviceCount > 0) {
-													Console.Write("\nWhich device:\n\n");
-													while (true) {
-														WriteColor(new string[] { "[", "0", "-", (((Display)user.curItem).DeviceCount - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-														int dv = int.Parse(Console.ReadLine());
-														if (dv < ((Display)user.curItem).DeviceCount) {
-															WriteColor(new ColorText[] { new ColorText("\n"), ((Display)user.curItem).GetDevice(dv).ToText() });
-															break;
-														} else
-															WriteColor(new string[] { user.curItem.SubType, " doesn't have that many ", "Items" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Yellow, ConsoleColor.Yellow });
-													}
-												} else if (temp.Equals("N") || ((Display)user.curItem).DeviceCount == 0)
-													WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem() });
+												break;
+											case "Display":
+												WriteColor(new string[] { "This ", "Item", " is a ", "Display", ", would you like to see:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												WriteColor(new string[] { "(Y) A specific device\n(N) Just the ", "Display\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
+												while (true) {
+													Console.Write("[Y/N] > ");
+													string temp = Console.ReadLine().ToUpper();
+													if (temp.Equals("Y") && ((Display)user.curItem).DeviceCount > 0) {
+														Console.Write("\nWhich device:\n\n");
+														while (true) {
+															WriteColor(new string[] { "[", "0", "-", (((Display)user.curItem).DeviceCount - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+															int dv = int.Parse(Console.ReadLine());
+															if (dv < ((Display)user.curItem).DeviceCount) {
+																WriteColor(new ColorText[] { new ColorText("\n"), ((Display)user.curItem).GetDevice(dv).ToText() });
+																break;
+															} else
+																WriteColor(new string[] { user.curItem.SubType, " doesn't have that many ", "Items" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Yellow, ConsoleColor.Yellow });
+														}
+													} else if (temp.Equals("N") || ((Display)user.curItem).DeviceCount == 0)
+														WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem() });
+													Console.WriteLine();
+													if (EqualsIgnoreCaseOr(temp, new string[] { "Y", "N" }))
+														break;
+												}
 												Console.WriteLine();
-												if (EqualsIgnoreCaseOr(temp, new string[] { "Y", "N" })) break;
-											}
-											Console.WriteLine();
-											break;
-										case "Book":
-										case "Computer":
-										case "Console":
-										case "Bed":
-										case "Clothing":
-											WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem(), new ColorText("\n\n") });
-											break;
+												break;
+											case "Book":
+											case "Computer":
+											case "Console":
+											case "Bed":
+											case "Clothing":
+												WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem(), new ColorText("\n\n") });
+												break;
 										}
 										user.curItem = tempItem;
 									} else
 										WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " Items", " on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White });
 								} else
 									WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-							} else if (enviVar[0,1].Equals("false") || user.CurHouse.GetFloor(user.CurFloor).Lights)
+							} else if (enviVar[0, 1].Equals("false") || user.CurHouse.GetFloor(user.CurFloor).Lights)
 								WriteColor(new ColorText[] { user.List(), new ColorText("\n") });
 							else
 								Console.Write("\nYou can't see anything, the floor is completely dark!\n\n");
@@ -770,7 +811,7 @@ namespace HouseCS {
 										break;
 									case "container":
 										WriteColor(new string[] { "\nEnter the ", "Container", " sub-type:\n\tie: Container, Bookshelf, Fridge, etc. (Defaults to Container)\n\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-										String type = Console.ReadLine();
+										string type = Console.ReadLine();
 										IItem tempCon = CreateContainer(type);
 										if (cmds.Length > 2) {
 											if (cmds[2].Equals("arg", StringComparison.OrdinalIgnoreCase)) {
@@ -784,12 +825,16 @@ namespace HouseCS {
 												foreach (string itm in objs) {
 													if (Regex.IsMatch(itm, "[0-9]+")) {
 														int itmID = int.Parse(itm);
-														if (itmID >= 0 && itmID < user.FloorSize) added.Add(itmID);
-														else notAdded.Add(itmID);
-													} else notNumber.Add(itm);
+														if (itmID >= 0 && itmID < user.FloorSize)
+															added.Add(itmID);
+														else
+															notAdded.Add(itmID);
+													} else
+														notNumber.Add(itm);
 												}
 												List<IItem> toAdd = new List<IItem>();
-												foreach (int num in added) toAdd.Add(user.GetItem(num));
+												foreach (int num in added)
+													toAdd.Add(user.GetItem(num));
 												foreach (IItem i in toAdd) {
 													if (CanGoInside(i is Clothing ? "Clothing" : i.Type, tempCon.Type)) {
 														user.RemoveItem(i);
@@ -822,7 +867,8 @@ namespace HouseCS {
 										WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "Item", " type:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 										for (int i = 0; i < cmds.Length; i++)
 											Console.Write(cmds[i] + " ");
-										Console.WriteLine(); Help("add");
+										Console.WriteLine();
+										Help("add");
 										break;
 								}
 							} else
@@ -918,7 +964,7 @@ namespace HouseCS {
 								WriteColor(new string[] { "       remove", " - removes an ", "Item", " from the current floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 								WriteColor(new string[] { "           up", " - goes up 1 floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 								WriteColor(new string[] { "ver / version", " - displays information about the command interpretter\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
-            		Console.Write("\ntype help (command) for more detailed information about a specific command\n\n");
+								Console.Write("\ntype help (command) for more detailed information about a specific command\n\n");
 							}
 							break;
 						#endregion

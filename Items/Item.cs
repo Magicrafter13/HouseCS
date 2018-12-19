@@ -1,9 +1,7 @@
 ﻿using HouseCS.ConsoleUtils;
 
-namespace HouseCS.Items
-{
-	public interface IItem
-	{
+namespace HouseCS.Items {
+	public interface IItem {
 		string Type { get; }
 		string SubType { get; }
 

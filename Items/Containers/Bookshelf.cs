@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
-namespace HouseCS.Items.Containers
-{
+namespace HouseCS.Items.Containers {
 	public class Bookshelf : Container, IItem {
 		private static readonly string typeS = "Bookshelf";
 
 		public Bookshelf() : base() { }
 		public Bookshelf(List<Book> b) : base() {
-			foreach (Book a in b) base.AddItem(a);
+			foreach (Book a in b)
+				base.AddItem(a);
 		}
 
 		public new ColorText AddItem(IItem i) {

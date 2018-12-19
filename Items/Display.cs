@@ -1,30 +1,29 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
-namespace HouseCS.Items
-{
-	public class Display : IItem
-	{
+namespace HouseCS.Items {
+	public class Display : IItem {
 		private static readonly string typeS = "Display";
 		private readonly bool isMonitor;
 		private readonly List<IItem> connectedTo = new List<IItem>();
 		private readonly double sizeInch;
 
 		public Display() : this(false, new List<IItem>(), 20.0) { }
-		public Display(bool mon, List<IItem> con, double sin)
-		{
+		public Display(bool mon, List<IItem> con, double sin) {
 			isMonitor = mon;
 			connectedTo = con;
 			sizeInch = sin > 0 ? sin : 20.0;
 		}
 		public bool HasItem(IItem test) {
-			foreach (IItem i in connectedTo) if (i == test) return true;
+			foreach (IItem i in connectedTo)
+				if (i == test)
+					return true;
 			return false;
 		}
-		public ColorText Connect(IItem item)
-		{
-			if (HasItem(item)) return new ColorText(new string[] { $"This ", "Item", " is already connected." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+		public ColorText Connect(IItem item) {
+			if (HasItem(item))
+				return new ColorText(new string[] { $"This ", "Item", " is already connected." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 			connectedTo.Add(item);
 			List<string> retStr = new List<string>();
 			List<ConsoleColor> retClr = new List<ConsoleColor>();
@@ -44,8 +43,7 @@ namespace HouseCS.Items
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-		public ColorText Disconnect(int item)
-		{
+		public ColorText Disconnect(int item) {
 			if (item < 0 || item >= connectedTo.Count)
 				return connectedTo.Count == 0
 					? new ColorText(new string[] { "Display", " has no devices connected!" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White })
@@ -61,8 +59,7 @@ namespace HouseCS.Items
 		public string Type => typeS;
 		public string SubType => typeS;
 		public ColorText ListInfo(bool before_not_after) => new ColorText(new string[] { before_not_after ? $"{sizeInch}\" {(isMonitor ? "Monitor" : "TV")} (" : $") - {connectedTo.Count} devices are connected to it" }, new ConsoleColor[] { ConsoleColor.White });
-		public ColorText ToText()
-		{
+		public ColorText ToText() {
 			List<string> retStr = new List<string>() { $"{sizeInch}\" {(isMonitor ? "Monitor" : "TV")} (", connectedTo.Count.ToString(), " devices):" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White };
 			for (int i = 0; i < connectedTo.Count; i++) {
@@ -71,13 +68,17 @@ namespace HouseCS.Items
 				retStr.Add(": ");
 				retClr.Add(ConsoleColor.White);
 				ColorText left = connectedTo[i].ListInfo(true);
-				foreach (string str in left.Lines) retStr.Add(str);
-				foreach (ConsoleColor clr in left.Colors) retClr.Add(clr);
+				foreach (string str in left.Lines)
+					retStr.Add(str);
+				foreach (ConsoleColor clr in left.Colors)
+					retClr.Add(clr);
 				retStr.Add(connectedTo[i].Type);
 				retClr.Add(ConsoleColor.Yellow);
 				ColorText right = connectedTo[i].ListInfo(false);
-				foreach (string str in right.Lines) retStr.Add(str);
-				foreach (ConsoleColor clr in right.Colors) retClr.Add(clr);
+				foreach (string str in right.Lines)
+					retStr.Add(str);
+				foreach (ConsoleColor clr in right.Colors)
+					retClr.Add(clr);
 			}
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}

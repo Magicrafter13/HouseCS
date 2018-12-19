@@ -1,10 +1,8 @@
 ﻿using System;
 using HouseCS.ConsoleUtils;
 
-namespace HouseCS.Items
-{
-	public class Computer : IItem
-	{
+namespace HouseCS.Items {
+	public class Computer : IItem {
 		private string computerType;
 		private bool isOn = false;
 		private static int totalComps = 0;
@@ -14,8 +12,7 @@ namespace HouseCS.Items
 		private string family;
 		private string model;
 
-		public void Reset(string b, string f, string m, bool state, string type)
-		{
+		public void Reset(string b, string f, string m, bool state, string type) {
 			computerType = type;
 			isOn = state;
 			brand = b;
@@ -23,8 +20,7 @@ namespace HouseCS.Items
 			model = m;
 		}
 		public Computer() : this("Generic", "PC", "", false, "Desktop") { }
-		public Computer(string b, string f, string m, bool state, string type)
-		{
+		public Computer(string b, string f, string m, bool state, string type) {
 			Reset(b, f, m, state, type);
 			id = totalComps;
 			totalComps++;

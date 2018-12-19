@@ -1,19 +1,16 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 using HouseCS.Items;
 using HouseCS.Items.Containers;
 
-namespace HouseCS
-{
-	public class Viewer
-	{
+namespace HouseCS {
+	public class Viewer {
 		public IItem curItem;
 		public House CurHouse { get; private set; }
 
 		public Viewer() : this(new House()) { }
-		public Viewer(House h)
-		{
+		public Viewer(House h) {
 			CurFloor = 0;
 			curItem = new Empty();
 			CurHouse = h;
@@ -22,7 +19,8 @@ namespace HouseCS
 		public IItem GetItem(int i) => CurHouse.GetItem(CurFloor, i);
 		public bool GoFloor(int f) {
 			bool check = f >= 0 && f < CurHouse.Size;
-			if (check) CurFloor = f;
+			if (check)
+				CurFloor = f;
 			return check;
 		}
 
@@ -45,16 +43,23 @@ namespace HouseCS
 		public void AddItem(IItem i) => CurHouse.AddItem(CurFloor, i);
 		public void RemoveItem(int iN, int sIN) {
 			IItem temp = CurHouse.GetFloor(CurFloor).GetItem(iN, sIN);
-			if (temp == curItem) curItem = new Empty();
-			if (temp.HasItem(curItem)) if (!(temp is Display)) curItem = new Empty();
+			if (temp == curItem)
+				curItem = new Empty();
+			if (temp.HasItem(curItem))
+				if (!(temp is Display))
+					curItem = new Empty();
 			//any Item that can have this item will have it removed - currently no sub items have their own sub items
 			if (CurHouse.GetFloor(CurFloor).RemoveItem(iN, sIN)) {
 				foreach (Floor f in CurHouse.GetFloors) {
 					foreach (IItem i in f.Items) {
 						if (i.HasItem(temp)) {
 							switch (i.Type) {
-								case "Container": ((Container)i).RemoveItem(temp); break;
-								case "Display": ((Display)i).Disconnect(temp); break;
+								case "Container":
+									((Container)i).RemoveItem(temp);
+									break;
+								case "Display":
+									((Display)i).Disconnect(temp);
+									break;
 							}
 						}
 					}
@@ -63,15 +68,22 @@ namespace HouseCS
 		}
 		public void RemoveItem(IItem iN) {
 			IItem temp = iN;
-			if (temp == curItem) curItem = new Empty();
-			if (temp.HasItem(curItem)) if (!(temp is Display)) curItem = new Empty();
+			if (temp == curItem)
+				curItem = new Empty();
+			if (temp.HasItem(curItem))
+				if (!(temp is Display))
+					curItem = new Empty();
 			//any Item that can have this item will have it removed
 			foreach (Floor f in CurHouse.GetFloors) {
 				foreach (IItem i in f.Items) {
 					if (i.HasItem(temp)) {
 						switch (i.Type) {
-							case "Container": ((Container)i).RemoveItem(temp); break;
-							case "Display": ((Display)i).Disconnect(temp); break;
+							case "Container":
+								((Container)i).RemoveItem(temp);
+								break;
+							case "Display":
+								((Display)i).Disconnect(temp);
+								break;
 						}
 					}
 				}
@@ -80,16 +92,14 @@ namespace HouseCS
 		}
 		public void RemoveItem(int iN) => RemoveItem(CurHouse.GetFloor(CurFloor).GetItem(iN));
 		public int CurFloor { get; private set; }
-		public string GoUp()
-		{
+		public string GoUp() {
 			CurFloor++;
 			if (CurFloor < CurHouse.Size)
 				return $"\nWelcome to floor {CurFloor}.\n";
 			CurFloor--;
 			return "\nYou are currently on the top floor, floor unchanged.\n";
 		}
-		public string GoDown()
-		{
+		public string GoDown() {
 			if (CurFloor <= 0)
 				return "\nYou are currently on the bottom floor, floor unchanged.\n";
 			CurFloor--;
@@ -97,7 +107,8 @@ namespace HouseCS
 		}
 		public bool ChangeItemFocus(int i) {
 			bool check = i >= 0 && i < CurHouse.GetFloor(CurFloor).Size();
-			if (check) curItem = CurHouse.GetItem(CurFloor, i);
+			if (check)
+				curItem = CurHouse.GetItem(CurFloor, i);
 			return check;
 		}
 		public int ChangeItemFocus(int i, int sI) {
@@ -107,8 +118,7 @@ namespace HouseCS
 			}
 			return 2;
 		}
-		public void ChangeHouseFocus(House h)
-		{
+		public void ChangeHouseFocus(House h) {
 			CurFloor = 0;
 			curItem = new Empty();
 			CurHouse = h;

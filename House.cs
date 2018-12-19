@@ -3,24 +3,20 @@ using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 using HouseCS.Items;
 
-namespace HouseCS
-{
-	public class House
-	{
+namespace HouseCS {
+	public class House {
 		private static readonly string[] colors = { "White", "Red", "Brown", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black" };
 		public static readonly string[] types = { "*", "Bed", "Book", "Computer", "Console", "Display",
 			"Bookshelf", "Container", "Dresser", "Fridge", "Table",
 			"Clothing", "Pants", "Shirt" };
 		private readonly int color;
 
-		private void InitializeFloors()
-		{
+		private void InitializeFloors() {
 			for (int i = 0; i < GetFloors.Length; i++)
 				GetFloors[i] = new Floor();
 		}
 		public House() : this(0, 1) { }
-		public House(int c, int f)
-		{
+		public House(int c, int f) {
 			color = c >= 0 && c <= 9 ? c : 0;
 			Size = f > 0 ? f : 1;
 			GetFloors = new Floor[Size];
@@ -33,14 +29,21 @@ namespace HouseCS
 		}
 		public int PageCount(int f, int rangeStart, int rangeEnd, String searchType, int pageLength) {
 			bool validType = false;
-			foreach (String t in types) if (searchType.Equals(t, StringComparison.OrdinalIgnoreCase)) validType = true;
-			if (!validType) return -1;
-			if (GetFloors[f].Size() == 0) return -2;
-			if (rangeStart >= rangeEnd) return -3;
-			if (rangeStart < 0) return -4;
+			foreach (String t in types)
+				if (searchType.Equals(t, StringComparison.OrdinalIgnoreCase))
+					validType = true;
+			if (!validType)
+				return -1;
+			if (GetFloors[f].Size() == 0)
+				return -2;
+			if (rangeStart >= rangeEnd)
+				return -3;
+			if (rangeStart < 0)
+				return -4;
 			int items = 0;
 			for (int i = rangeStart; i < rangeEnd; i++) {
-				if (i > GetFloors[f].Size()) continue;
+				if (i > GetFloors[f].Size())
+					continue;
 				if (searchType.Equals("*") ||
 					searchType.Equals(GetFloors[f].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase) ||
 					searchType.Equals(GetFloors[f].GetItem(i).Type)) {
@@ -76,7 +79,8 @@ namespace HouseCS
 					itemIds.Add(i);
 				}
 			}
-			if (items.Count == 0) return new ColorText(new string[] { "Floor has no ", $"{type} Items", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+			if (items.Count == 0)
+				return new ColorText(new string[] { "Floor has no ", $"{type} Items", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 			for (int i = pageLength * page; i < pageLength * (page + 1); i++) {
 				if (i >= items.Count)
 					continue;
@@ -85,13 +89,17 @@ namespace HouseCS
 				retStr.Add(": ");
 				retClr.Add(ConsoleColor.White);
 				ColorText left = items[i].ListInfo(true);
-				foreach (string str in left.Lines) retStr.Add(str);
-				foreach (ConsoleColor clr in left.Colors) retClr.Add(clr);
+				foreach (string str in left.Lines)
+					retStr.Add(str);
+				foreach (ConsoleColor clr in left.Colors)
+					retClr.Add(clr);
 				retStr.Add(items[i].SubType);
 				retClr.Add(ConsoleColor.Yellow);
 				ColorText right = items[i].ListInfo(false);
-				foreach (string str in right.Lines) retStr.Add(str);
-				foreach (ConsoleColor clr in right.Colors) retClr.Add(clr);
+				foreach (string str in right.Lines)
+					retStr.Add(str);
+				foreach (ConsoleColor clr in right.Colors)
+					retClr.Add(clr);
 				retStr.Add("\n");
 				retClr.Add(ConsoleColor.White);
 			}
@@ -102,7 +110,8 @@ namespace HouseCS
 		public int Size { get; }
 		public bool AddItem(int f, IItem i) {
 			bool check = f >= 0 && f < Size;
-			if (check) GetFloors[f].AddItem(i);
+			if (check)
+				GetFloors[f].AddItem(i);
 			return check;
 		}
 		public IItem GetItem(int f, int i) => GetFloors[f].GetItem(i);

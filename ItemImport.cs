@@ -3,10 +3,8 @@ using HouseCS.Items;
 using HouseCS.Items.Clothes;
 using HouseCS.Items.Containers;
 
-namespace HouseCS
-{
-	public class ItemImport
-	{
+namespace HouseCS {
+	public class ItemImport {
 		public static readonly Bookshelf[] bookshelfs =
 		{
 			new Bookshelf(new List<Book>()
@@ -71,7 +69,7 @@ namespace HouseCS
 		public static readonly int[] bedsH = { 0, 0 };
 		public static readonly Container[] containers = {
 			new Container(new List<IItem>()),
-    	new Container(new List<IItem>())
+		new Container(new List<IItem>())
 		};
 		public static readonly int[] containersF = { 0, 0 };
 		public static readonly int[] containersH = { 0, 0 };
@@ -109,20 +107,29 @@ namespace HouseCS
 		public static readonly int[] tablesH = { 0 };
 
 		public static List<House> houses = new List<House>(); //this is required (though it doesn't have to be an empty constructor if you wish)
-    public static void InitializeItems() { //this method is required, though it doesn't actually need to do anything if you define all the items in the variable from the start, however I will eventually use this method to add a "reset" functionality
-      House myHouse = new House(5, 2);
-      House fakeHouse = new House(6, 3);
-      houses.Add(myHouse);
-      houses.Add(fakeHouse);
-      for (int i = 0; i < bookshelfs.Length; i++) houses[bookshelfsH[i]].AddItem(bookshelfsF[i], bookshelfs[i]);
-      for (int i = 0; i < computers.Length; i++) houses[computersH[i]].AddItem(computersF[i], computers[i]);
-      for (int i = 0; i < consoles.Length; i++) houses[consolesH[i]].AddItem(consolesF[i], consoles[i]);
-      for (int i = 0; i < displays.Length; i++) houses[displaysH[i]].AddItem(displaysF[i], displays[i]);
-      for (int i = 0; i < beds.Length; i++) houses[bedsH[i]].AddItem(bedsF[i], beds[i]);
-      for (int i = 0; i < containers.Length; i++) houses[containersH[i]].AddItem(containersF[i], containers[i]);
-      for (int i = 0; i < fridges.Length; i++) houses[fridgesH[i]].AddItem(fridgesF[i], fridges[i]);
-      for (int i = 0; i < dressers.Length; i++) houses[dressersH[i]].AddItem(dressersF[i], dressers[i]);
-      for (int i = 0; i < tables.Length; i++) houses[tablesH[i]].AddItem(tablesF[i], tables[i]);
-    }
+		public static void InitializeItems() { //this method is required, though it doesn't actually need to do anything if you define all the items in the variable from the start, however I will eventually use this method to add a "reset" functionality
+			House myHouse = new House(5, 2);
+			House fakeHouse = new House(6, 3);
+			houses.Add(myHouse);
+			houses.Add(fakeHouse);
+			for (int i = 0; i < bookshelfs.Length; i++)
+				houses[bookshelfsH[i]].AddItem(bookshelfsF[i], bookshelfs[i]);
+			for (int i = 0; i < computers.Length; i++)
+				houses[computersH[i]].AddItem(computersF[i], computers[i]);
+			for (int i = 0; i < consoles.Length; i++)
+				houses[consolesH[i]].AddItem(consolesF[i], consoles[i]);
+			for (int i = 0; i < displays.Length; i++)
+				houses[displaysH[i]].AddItem(displaysF[i], displays[i]);
+			for (int i = 0; i < beds.Length; i++)
+				houses[bedsH[i]].AddItem(bedsF[i], beds[i]);
+			for (int i = 0; i < containers.Length; i++)
+				houses[containersH[i]].AddItem(containersF[i], containers[i]);
+			for (int i = 0; i < fridges.Length; i++)
+				houses[fridgesH[i]].AddItem(fridgesF[i], fridges[i]);
+			for (int i = 0; i < dressers.Length; i++)
+				houses[dressersH[i]].AddItem(dressersF[i], dressers[i]);
+			for (int i = 0; i < tables.Length; i++)
+				houses[tablesH[i]].AddItem(tablesF[i], tables[i]);
+		}
 	}
 }

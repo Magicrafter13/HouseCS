@@ -1,10 +1,8 @@
 ﻿using System;
 using HouseCS.ConsoleUtils;
 
-namespace HouseCS.Items
-{
-	public class Empty : IItem
-	{
+namespace HouseCS.Items {
+	public class Empty : IItem {
 		private static readonly string message = "You have no items/objects selected";
 		private static readonly string typeS = "No Item";
 

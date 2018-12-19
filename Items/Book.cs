@@ -1,22 +1,18 @@
 ﻿using System;
 using HouseCS.ConsoleUtils;
 
-namespace HouseCS.Items
-{
-	public class Book : IItem
-	{
+namespace HouseCS.Items {
+	public class Book : IItem {
 		private static int totalBooks = 0;
 		private static readonly string typeS = "Book";
 
-		public void Reset(string t, string a, int y)
-		{
+		public void Reset(string t, string a, int y) {
 			Title = t;
 			Author = a;
 			Year = y >= 1600 ? y : 1600;
 		}
 		public Book() : this("none", "none", 1600) { }
-		public Book(string t, string a, int y)
-		{
+		public Book(string t, string a, int y) {
 			Reset(t, a, y);
 			totalBooks++;
 			ID = totalBooks;
