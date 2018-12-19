@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using HouseCS.ConsoleUtils;
+using HouseCS.Exceptions;
 using HouseCS.Items;
 using HouseCS.Items.Clothes;
 using HouseCS.Items.Containers;
@@ -9,7 +10,7 @@ using HouseCS.Items.Containers;
 namespace HouseCS {
 	internal class Program {
 		private static readonly int verMajor = 2;
-		private static readonly int verMinor = 0;
+		private static readonly int verMinor = 1;
 		private static readonly int verFix = 0;
 		private static string CurVer => $"{verMajor}.{verMinor}.{verFix}";
 		public static readonly string RED = "31";
@@ -37,99 +38,188 @@ namespace HouseCS {
 			WriteColor(lines, colors);
 			Console.WriteLine();
 		}
-		private static void Help(string cmd) {
+		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container" };
+		public static readonly string[] floorInteracts = { "light (or lights)" };
+		private static ColorText[] Help(string cmd) {
+			ColorText[] retCT = { ColorText.Empty };
 			switch (cmd) {
 				case "add":
-					WriteColor(new string[] { "\nSyntax", " is: ", "add ", "item ", "[arg]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red, ConsoleColor.Green });
-					WriteColor(new string[] { "\titem", " - must be a valid type\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White });
-					WriteColor(new string[] { "\t arg", " - causes you to be prompted for the required info to create a new\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White });
-					WriteColor(new string[] { "\t                Item", " of this type (without ", "arg", ", a default ", "Item", " is created)\n\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-					WriteColor(new string[] { "Adds", " Item ", "to the current floor\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "add ", "item ", "[arg]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red, ConsoleColor.Green }),
+						new ColorText(new string[] { "\titem", " - must be an Item type, or House\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "\t arg", " - causes you to be prompted for the required info to create a new\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White }),
+						new ColorText(new string[] { "\t                Item", " of this type (without ", "arg", ", a default ", "Item", " is created)\n\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "Adds", " Item ", "to the current floor\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.White })
+					};
 					break;
 				case "attach":
-					WriteColor(new string[] { "\nSyntax", " is: ", "attach ", "src dst ", "[-d]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red, ConsoleColor.Green });
-					WriteColor(new string[] { "\tsrc", " - ", "integer", " of an ", "Item", " on the current floor (when used with ", "-d", ", ", "src\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Red });
-					WriteColor(new string[] { "\t      must be the ", "integer", " of the ", "Item", " that is attached)\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-					WriteColor(new string[] { "\tdst", " - ", "integer", " of an ", "Item", " on the current floor\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-					WriteColor(new string[] { "\t -d", " - ", "detaches", " source", " from ", "destination\n\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.DarkRed, ConsoleColor.White, ConsoleColor.DarkRed });
-					WriteColor(new string[] { "[De/A]ttaches ", "src", " [from/to] ", "dst", ".\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "attach ", "src dst ", "[-d]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red, ConsoleColor.Green }),
+						new ColorText(new string[] { "\tsrc", " - ", "integer", " of an ", "Item", " on the current floor (when used with ", "-d", ", ", "src\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Red }),
+						new ColorText(new string[] { "\t      must be the ", "integer", " of the ", "Item", " that is attached)\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "\tdst", " - ", "integer", " of an ", "Item", " on the current floor\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "\t -d", " - ", "detaches", " source", " from ", "destination\n\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.DarkRed, ConsoleColor.White, ConsoleColor.DarkRed }),
+						new ColorText(new string[] { "[De/A]ttaches ", "src", " [from/to] ", "dst", ".\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White })
+					};
 					break;
 				case "clear":
-					WriteColor(new string[] { "\nSyntax", " is: ", "clear\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue });
-					WriteColor(new string[] { "Clears", " the console, and places cursor at home position\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White });
+				case "cls":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", $"{cmd.ToLower()}clear\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue }),
+						new ColorText(new string[] { "Clears", " the console, and places cursor at home position\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White })
+					};
 					break;
 				case "down":
-					WriteColor(new string[] { "\nSyntax", " is: ", "down\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue });
-					WriteColor(new string[] { "Moves to the next floor ", "down", ", unless you are at the bottom\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "down", " [floors]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red }),
+						new ColorText(new string[] { "\tfloors", " - ", "integer", " of how many floors you want to go down\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White }),
+						new ColorText(new string[] { "Moves to the next floor ", "down", ", unless you are at the bottom\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White })
+					};
 					break;
 				case "exit":
-					WriteColor(new string[] { "\nSyntax", " is: ", "exit\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue });
-					WriteColor(new string[] { "Stops the program, and returns to your command line/operating environment\n\n" }, new ConsoleColor[] { ConsoleColor.White });
+				case "quit":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", $"{cmd.ToLower()}\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue }),
+						new ColorText(new string[] { "Stops the program, and returns to your command line/operating environment\n\n" }, new ConsoleColor[] { ConsoleColor.White })
+					};
 					break;
 				case "grab":
-					WriteColor(new string[] { "\nSyntax", " is: ", "grab ", "item\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red });
-					WriteColor(new string[] { "\titem", " - ", "integer", " of ", "Item", " (see ", "list", ")\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
-					WriteColor(new string[] { "Changes the \"Viewer\"'s current ", "Item\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
+				case "select":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", cmd.ToLower(), " item\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red }),
+						new ColorText(new string[] { "\titem", " - ", "integer", " of ", "Item", " (see ", "list", ")\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White }),
+						new ColorText(new string[] { "Changes the \"Viewer\"'s current ", "Item\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow })
+					};
 					break;
 				case "help":
-					WriteColor(new string[] { "\nSyntax", " is: ", "help ", "[command]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red });
-					WriteColor(new string[] { "\tcommand", " - a valid ", "command\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Blue });
-					WriteColor(new string[] { "Colors:\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\t   R", "e", "d", " - warning -or- argument name (usually an integer)\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.DarkRed, ConsoleColor.Red, ConsoleColor.White });
-					WriteColor(new string[] { "\t         dark: usually expanded name of a commands argument (to show\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\t         meaning)\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\tY", "e", "l", "l", "o", "w", " - Item\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkYellow, ConsoleColor.Yellow, ConsoleColor.DarkYellow, ConsoleColor.Yellow, ConsoleColor.White });
-					WriteColor(new string[] { "\t         dark: when talking about an Item but not using the exact term\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\t         \"Item\" (or the exact name of an Item)\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\t G", "r", "e", "e", "n", " - string argument (type it as it appears [without any brackets])\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.DarkGreen, ConsoleColor.Green, ConsoleColor.DarkGreen, ConsoleColor.Green, ConsoleColor.White });
-					WriteColor(new string[] { "\t         dark: (no use yet)\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\t  C", "y", "a", "n", " - an integer for use when a command requires an item number\n" }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.DarkCyan, ConsoleColor.Cyan, ConsoleColor.DarkCyan, ConsoleColor.White });
-					WriteColor(new string[] { "\t         dark: Item integer for sub-items (ie: a book in a bookshelf)\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\t  B", "l", "u", "e", " - command\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.DarkBlue, ConsoleColor.Blue, ConsoleColor.DarkBlue, ConsoleColor.White });
-					WriteColor(new string[] { "\t         dark: when referencing the command without using its exact name\n\n" }, new ConsoleColor[] { ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "help ", "[ ", "command", " [ ", "sub-topic", " ] ]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "\t  command", " - a valid ", "command\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Blue }),
+						new ColorText(new string[] { "\tsub-topic", " - some ", "commands", " can give you more info about their arguments\nColors:\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White }),
+						new ColorText(new string[] { "Colors:\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\t   R", "e", "d", " - warning -or- argument name (usually an integer)\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.DarkRed, ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "\t         dark: usually expanded name of a commands argument (to show\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\t         meaning)\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\tY", "e", "l", "l", "o", "w", " - Item\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkYellow, ConsoleColor.Yellow, ConsoleColor.DarkYellow, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "\t         dark: when talking about an Item but not using the exact term\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\t         \"Item\" (or the exact name of an Item)\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\t G", "r", "e", "e", "n", " - string argument (type it as it appears [without any brackets])\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.DarkGreen, ConsoleColor.Green, ConsoleColor.DarkGreen, ConsoleColor.Green, ConsoleColor.White }),
+						new ColorText(new string[] { "\t         dark: (no use yet)\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\t  C", "y", "a", "n", " - an integer for use when a command requires an item number\n" }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.DarkCyan, ConsoleColor.Cyan, ConsoleColor.DarkCyan, ConsoleColor.White }),
+						new ColorText(new string[] { "\t         dark: Item integer for sub-items (ie: a book in a bookshelf)\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\t  B", "l", "u", "e", " - command\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.DarkBlue, ConsoleColor.Blue, ConsoleColor.DarkBlue, ConsoleColor.White }),
+						new ColorText(new string[] { "\t         dark: when referencing the command without using its exact name\n\n" }, new ConsoleColor[] { ConsoleColor.White }),
+					};
 					break;
 				case "info":
-					WriteColor(new string[] { "\nSyntax", " is: ", "info\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue });
-					WriteColor(new string[] { "Returns ", "info", " about the current 'Viewer'\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
+				case "status":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", $"{cmd.ToLower()}\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue }),
+						new ColorText(new string[] { "Returns ", "info", " about the current 'Viewer'\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White })
+					};
 					break;
 				case "list":
-					WriteColor(new string[] { "\nSyntax", " is: ", "list ", "[", "item", "] [(", "-h", " / ", "-f", ")] [", "-r ", "start end", "] [", "-p", "] [", "-i ", "Item", "]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.White });
-					WriteColor(new string[] { "\t   item", " - ", "integer", " of ", "Item", " (see ", "list", ")\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
-					WriteColor(new string[] { "\t-h / -f", " - will show the \"Viewer\"'s current ", "Item\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Yellow });
-					WriteColor(new string[] { "\t          Long version is ", "--hand", " or ", "--focus\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green });
-					WriteColor(new string[] { "\t     -r", " - will ", "list", " Items", " between [", "start", "] and [", "end", "]\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White });
-					WriteColor(new string[] { "\t          Long version is ", "--range\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green });
-					WriteColor(new string[] { "\t     -p", " - ", "lists", " all ", "Items", " on the floor one page at a time (page is\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-					WriteColor(new string[] { "\t          defined as 20 lines)\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "\t          Long version is ", "--page\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green });
-					WriteColor(new string[] { "\t-i ", "Item", " - ", "lists", " all ", "Items", " of type ", "Item", " (", "Item", " string)\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-					WriteColor(new string[] { "\t          Long version is ", "--item\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green });
-					WriteColor(new string[] { "Used for getting info about an ", "Item", ", or multiple ", "Items", ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
+				case "look":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", cmd.ToLower(), " [", "item", "] [(", "-h", " / ", "-f", ")] [", "-r ", "start end", "] [", "-p", "] [", "-i ", "Item", "]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "\t   item", " - ", "integer", " of ", "Item", " (see ", "list", ")\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White }),
+						new ColorText(new string[] { "\t-h / -f", " - will show the \"Viewer\"'s current ", "Item\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Yellow }),
+						new ColorText(new string[] { "\t          Long version is ", "--hand", " or ", "--focus\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green }),
+						new ColorText(new string[] { "\t     -r", " - will ", "list", " Items", " between [", "start", "] and [", "end", "]\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "\t          Long version is ", "--range\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green }),
+						new ColorText(new string[] { "\t     -p", " - ", "lists", " all ", "Items", " on the floor one page at a time (page is\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "\t          defined as 20 lines)\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "\t          Long version is ", "--page\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green }),
+						new ColorText(new string[] { "\t-i ", "Item", " - ", "lists", " all ", "Items", " of type ", "Item", " (", "Item", " string)\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "\t          Long version is ", "--item\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green }),
+						new ColorText(new string[] { "Used for getting info about an ", "Item", ", or multiple ", "Items", ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White }),
+					};
 					break;
 				case "move":
-					WriteColor(new string[] { "\nSyntax", " is: ", "move ", "item floor\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red });
-					WriteColor(new string[] { "\t item", " - ", "integer", " of ", "Item", " (see ", "list", ")\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
-					WriteColor(new string[] { "\tfloor", " - ", "integer", " of floor (or: ", "<", " for next floor down or ", ">", " for next floor\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-					WriteColor(new string[] { "\t        up)\n\n" }, new ConsoleColor[] { ConsoleColor.White });
-					WriteColor(new string[] { "Moves", " an ", "Item", " from your current floor to the specified floor.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "move ", "item floor\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red }),
+						new ColorText(new string[] { "\t item", " - ", "integer", " of ", "Item", " (see ", "list", ")\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White }),
+						new ColorText(new string[] { "\tfloor", " - ", "integer", " of floor (or: ", "<", " for next floor down or ", ">", " for next floor\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White }),
+						new ColorText(new string[] { "\t        up)\n\n" }, new ConsoleColor[] { ConsoleColor.White }),
+						new ColorText(new string[] { "Moves", " an ", "Item", " from your current floor to the specified floor.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White })
+					};
 					break;
 				case "remove":
-					WriteColor(new string[] { "\nSyntax", " is: ", "remove ", "item\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red });
-					WriteColor(new string[] { "\titem", " - ", "integer", " of ", "Item", " (see ", "list", ")\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
-					WriteColor(new string[] { "Removes", " specified ", "Item", " from current floor.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "remove ", "item\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red }),
+						new ColorText(new string[] { "\t    item", " - ", "integer", " of ", "Item", " (see ", "list", ")\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White }),
+						new ColorText(new string[] { "\tsub-item", " - ", "integer", " of ", "subItem\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.DarkYellow }),
+						new ColorText(new string[] { "Removes", " specified ", "Item", " from current floor.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White })
+					};
+					break;
+				case "set":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "set", " [", "variable", " [", "value", "] ]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "\tvariable", " - displays what said ", "variable", " is currently set to\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "\t   value", " - sets ", "variable", " to ", "value\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red }),
+						new ColorText(new string[] { "Sets", " and views variables.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White })
+					};
 					break;
 				case "up":
-					WriteColor(new string[] { "\nSyntax", " is: ", "up\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue });
-					WriteColor(new string[] { "Moves to the next floor ", "up", ", unless you are at the top\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "up", " [", "floors", "]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "\tfloors", " - ", "integer", " of how many floors you want to go up\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White }),
+						new ColorText(new string[] { "Moves to the next floor ", "up", ", unless you are at the top\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White })
+					};
+					break;
+				case "use":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "use", " object\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red }),
+						new ColorText(new string[] { "\tobject", " - an object to interact with\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White }),
+						new ColorText(new string[] { "Uses", " an interactable object.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White })
+					};
 					break;
 				case "ver":
-					WriteColor(new string[] { "\nSyntax", " is: ", "ver\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue });
-					WriteColor(new string[] { "Tells you the current ", "version", " of the Check Command Interpretter\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", $"{cmd.ToLower()}\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue }),
+						new ColorText(new string[] { "Tells you the current ", "version", " of the Check Command Interpretter\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White }),
+					};
+					break;
+				case "visit":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", "visit", " house\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red }),
+						new ColorText(new string[] { "\thouse", " - ", "integer", " of house to go to\n\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White }),
+						new ColorText(new string[] { "Visits", " a specified house.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White })
+					};
+					break;
+				//start sub-help
+				case "top-item":
+					List<string> retStr = new List<string>() { "\nItem", " must be one of these types:\n" };
+					List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.Yellow, ConsoleColor.White };
+					foreach (string type in topTypes) {
+						retStr.Add($"\n\t* {type}");
+						retClr.Add(ConsoleColor.Yellow);
+					}
+					retStr.Add("\n\n");
+					retClr.Add(ConsoleColor.White);
+					retCT = new ColorText[] { new ColorText(retStr.ToArray(), retClr.ToArray()) };
+					break;
+				case "floor-interact":
+					List<string> retStr2 = new List<string>() { "\nObject", " must be one of these types:\n" };
+					List<ConsoleColor> retClr2 = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.White };
+					foreach (string obj in floorInteracts) {
+						retStr2.Add($"\n\t* {obj}");
+						retClr2.Add(ConsoleColor.Yellow);
+					}
+					retStr2.Add("\n\n");
+					retClr2.Add(ConsoleColor.White);
+					retCT = new ColorText[] { new ColorText(retStr2.ToArray(), retClr2.ToArray()) };
+					break;
+				case "bad-sub":
+					retCT = new ColorText[] { new ColorText("\nInvalid help sub-topic.\n\n") };
 					break;
 				default:
-					WriteColor(new string[] { "Code error!!! (Please report, as this message shouldn't be possible to see.)" }, new ConsoleColor[] { ConsoleColor.Red });
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "Code error!!! (Please report, as this message shouldn't be possible to see.)" }, new ConsoleColor[] { ConsoleColor.Red })
+					};
 					break;
 			}
+			return retCT;
 		}
 		private static bool EqualsIgnoreCaseOr(string test, string[] strs) {
 			for (int i = 0; i < strs.Length; i++)
@@ -222,13 +312,60 @@ namespace HouseCS {
 			{"temperature", "70.0", "double", "system"},
 			{"house", "0", "int", "system"}
 		};
+		public static int GetInput(int min, int max) {
+			if (min >= max)
+				throw new InvalidRange(min, max);
+			do {
+				WriteColor(new string[] { "\n[", min.ToString(), "-", (max - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+				string lineIn = Console.ReadLine();
+				if (Regex.IsMatch(lineIn, "-?[0-9]+") && int.Parse(lineIn) >= min && int.Parse(lineIn) < max)
+					return int.Parse(lineIn);
+			} while (true);
+		}
+		public static double GetInput(double min, double max) {
+			if (min >= max)
+				throw new InvalidRange(min, max);
+			do {
+				WriteColor(new string[] { "\n[", min.ToString(), "-", (max - 1.0).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+				string lineIn = Console.ReadLine();
+				if (Regex.IsMatch(lineIn, "-?[0-9]+([.]{1}[0-9]+)?") && double.Parse(lineIn) >= min && double.Parse(lineIn) <= max - 1.0)
+					return double.Parse(lineIn);
+			} while (true);
+		}
+		public static string GetInput(ColorText message, List<string> values, bool ignoreCase) {
+			if (values.Count == 0)
+				throw new ArrayTooSmall(1, values.Count);
+			do {
+				WriteColor(new ColorText[] { new ColorText("\n"), message, new ColorText("> ") });
+				string lineIn = Console.ReadLine();
+				foreach (string test in values)
+					if ((ignoreCase && lineIn.Equals(test, StringComparison.OrdinalIgnoreCase)) || (!ignoreCase && lineIn.Equals(test)))
+						return lineIn;
+			} while (true);
+		}
+		public static string GetInput(ColorText message, string[] values, bool ignoreCase) {
+			try {
+				return GetInput(message, new List<string>(values), ignoreCase);
+			} catch (ArrayTooSmall e) { throw e; }
+		}
+		public static string GetInput(List<string> values, bool ignoreCase) {
+			try {
+				return GetInput(ColorText.Empty, values, ignoreCase);
+			} catch (ArrayTooSmall e) { throw e; }
+		}
+		public static string GetInput(string[] values, bool ignoreCase) {
+			try {
+				return GetInput(ColorText.Empty, values, ignoreCase);
+			} catch (ArrayTooSmall e) { throw e; }
+		}
+		public static int house = 0;
 
 		private static void Main(string[] args) {
 			string command;
 			string[] cmds;
 
 			//This is to keep the contents of my actual house a little more private.
-			//Just make your own .java file that returns Items.
+			//Just make your own .cs file that returns Items. (See example)
 			ItemImport.InitializeItems();
 			List<House> houseData = ItemImport.houses;
 			List<Viewer> viewers = new List<Viewer>();
@@ -253,6 +390,7 @@ namespace HouseCS {
 									int dst = int.Parse(cmds[1]);
 									if (dst < houseData.Count) {
 										user = viewers[dst];
+										house = dst;
 										Console.WriteLine($"\nWelcome to House {dst}.\n");
 									} else
 										Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
@@ -478,28 +616,32 @@ namespace HouseCS {
 								if (Regex.IsMatch(cmds[1], "[0-9]+")) {
 									IItem tempItem = user.curItem;
 									bool validAnswer = false;
+									bool validItem = false;
+									bool subItem = false;
 									if (cmds.Length > 2) {
-										if (Regex.IsMatch(cmds[2], "[0-9]+")) {
+										subItem = true;
+										if (EqualsIgnoreCaseOr(cmds[2], new string[] { "-h", "--house" })) {
+											if (int.Parse(cmds[1]) < houseData.Count) {
+												houseData.RemoveAt(int.Parse(cmds[1]));
+												viewers.RemoveAt(int.Parse(cmds[1]));
+												Console.WriteLine($"\nHouse {cmds[1]} removed.\n");
+												if (house > int.Parse(cmds[1]))
+													house--;
+												if (house == int.Parse(cmds[1])) {
+													Console.Write("\nPlease select a pre-existing House to go to now.\n");
+													int newHouse = GetInput(0, houseData.Count);
+													user = viewers[newHouse];
+												}
+											} else
+												Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
+										} else
+											if (Regex.IsMatch(cmds[2], "[0-9]+")) {
 											switch (user.ChangeItemFocus(int.Parse(cmds[1]), int.Parse(cmds[2]))) {
 												case 0:
-													while (!validAnswer) {
-														WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Item", " is:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), user.curItem.ToText(), new ColorText("\n\n") });
-														WriteColor(new string[] { "Are you sure you want to delete this? [Y/N] > " }, new ConsoleColor[] { ConsoleColor.Red });
-														user.curItem = tempItem;
-														string yenu = Console.ReadLine().ToUpper();
-														Console.WriteLine();
-														switch (yenu) {
-															case "Y":
-																user.RemoveItem(int.Parse(cmds[1]), int.Parse(cmds[2]));
-																goto case "N";
-															case "N":
-																validAnswer = true;
-																break;
-														}
-													}
+													validItem = true;
 													break;
 												case 1:
-													WriteColor(new string[] { "This ", "Item", " either has no ", "sub-Items", " on it, or the ", "integer", " is too high\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+													WriteColor(new string[] { "This ", "Item", " either has no ", "sub-Items", " on it, or the ", "integer", " is too high\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 													break;
 												case 2:
 													WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " items on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
@@ -507,24 +649,31 @@ namespace HouseCS {
 											}
 										} else
 											WriteColor(new string[] { $"\"{cmds[2]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-									} else if (user.ChangeItemFocus(int.Parse(cmds[1]))) {
+									} else
+										validItem = user.ChangeItemFocus(int.Parse(cmds[1]));
+									if (validItem) {
 										while (!validAnswer) {
-											WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Item", " is:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), user.curItem.ToText(), new ColorText("\n\n") });
-											WriteColor(new string[] { "Are you sure you want to delete this? [Y/N] > " }, new ConsoleColor[] { ConsoleColor.Red });
+											WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Item", " is:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), user.curItem.ToText() });
 											user.curItem = tempItem;
-											string yenu = Console.ReadLine().ToUpper();
+											string yenu = string.Empty;
+											try {
+												yenu = GetInput(new ColorText("Are you sure you want to delete this? [Y/N] ", ConsoleColor.Red), new string[] { "y", "n" }, true);
+											} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 											Console.WriteLine();
-											switch (yenu) {
+											switch (yenu.ToUpper()) {
 												case "Y":
-													user.RemoveItem(int.Parse(cmds[1]));
+													if (subItem)
+														user.RemoveItem(int.Parse(cmds[1]), int.Parse(cmds[2]));
+													else
+														user.RemoveItem(int.Parse(cmds[1]));
 													goto case "N";
 												case "N":
 													validAnswer = true;
 													break;
 											}
 										}
-									} else
-										WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString() }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+									} else if (!subItem)
+										WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " items on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 								} else
 									WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
 							} else
@@ -609,28 +758,25 @@ namespace HouseCS {
 										switch (user.curItem.Type) {
 											case "Container":
 												WriteColor(new string[] { "This ", "Item", " is a ", user.curItem.SubType, ", would you like to see:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-												WriteColor(new string[] { "(Y) A specific ", "Item", "\n(N) Just the overall contents\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												WriteColor(new string[] { "(Y) A specific ", "Item", "\n(N) Just the overall contents\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												while (true) {
 													Console.Write("[Y/N] > ");
-													string temp = Console.ReadLine().ToUpper();
+													string yenu = string.Empty;
+													try {
+														yenu = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true);
+													} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 													int iC = ((Container)user.curItem).Size;
-													if (temp.Equals("Y") && iC > 0) {
-														WriteColor(new string[] { "\nWhich ", "Item", ":\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-														while (true) {
-															WriteColor(new string[] { "[", "0", "-", (iC - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-															int im = int.Parse(Console.ReadLine());
-															if (im < iC) {
-																WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
-																break;
-															} else
-																WriteColor(new string[] { "There aren't that many ", "Items", " in this ", user.curItem.SubType }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow });
-														}
-													} else if (temp.Equals("N") || ((Container)user.curItem).Size == 0)
+													if (yenu.Equals("Y") && iC > 0) {
+														WriteColor(new string[] { "\nWhich ", "Item", ":\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+														int im = 0;
+														im = GetInput(0, iC);
+														WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
+													} else if (yenu.Equals("N") || ((Container)user.curItem).Size == 0)
 														WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem() });
 													else
 														WriteColor(new string[] { user.curItem.SubType, " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
 													Console.WriteLine();
-													if (EqualsIgnoreCaseOr(temp, new string[] { "Y", "N" }))
+													if (EqualsIgnoreCaseOr(yenu, new string[] { "Y", "N" }))
 														break;
 												}
 												Console.WriteLine();
@@ -640,7 +786,10 @@ namespace HouseCS {
 												WriteColor(new string[] { "(Y) A specific device\n(N) Just the ", "Display\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
 												while (true) {
 													Console.Write("[Y/N] > ");
-													string temp = Console.ReadLine().ToUpper();
+													string temp = string.Empty;
+													try {
+														temp = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).ToUpper();
+													} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 													if (temp.Equals("Y") && ((Display)user.curItem).DeviceCount > 0) {
 														Console.Write("\nWhich device:\n\n");
 														while (true) {
@@ -683,6 +832,31 @@ namespace HouseCS {
 							#region
 							if (cmds.Length > 1) {
 								switch (cmds[1].ToLower()) {
+									case "house":
+										if (cmds.Length > 2) {
+											if (cmds[2].Equals("arg", StringComparison.OrdinalIgnoreCase)) {
+												int color;
+												Console.WriteLine("\nChoose from these colors:\n");
+												for (int i = 0; i < House.colors.Length; i++)
+													WriteColor(new string[] { i.ToString(), $": {House.colors[i]} " }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.White });
+												Console.WriteLine();
+												color = GetInput(0, House.colors.Length);
+												int floors;
+												Console.Write("\nHow many floors will this house have?\n");
+												floors = GetInput(1, 101); //Kinda just had to pick an arbitrary number here
+												House newHouse = new House(color, floors);
+												houseData.Add(newHouse);
+												viewers.Add(new Viewer(newHouse));
+												Console.WriteLine($"\n{floors} story, {House.colors[color]} House, number {(houseData.Count - 1).ToString()} added.\n");
+											} else
+												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										} else {
+											House newHouse = new House();
+											houseData.Add(newHouse);
+											viewers.Add(new Viewer(newHouse));
+											Console.WriteLine($"\nHouse {(houseData.Count - 1).ToString()} added.\n");
+										}
+										break;
 									case "book":
 										Book tempBook = new Book();
 										if (cmds.Length > 2) {
@@ -692,8 +866,8 @@ namespace HouseCS {
 												WriteColor(new string[] { "\nEnter ", "Book", " Author > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												string author = Console.ReadLine();
 												Console.Write("\nEnter Publishing Year > ");
-												int year = int.Parse(Console.ReadLine());
-												tempBook.Reset(title, author, year);
+												string year = Console.ReadLine();
+												tempBook.Reset(title, author, Regex.IsMatch(year, "[0-9]+") ? int.Parse(year) : 0);
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Book", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempBook.ToText(), new ColorText("\n\n") });
 											} else
 												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
@@ -713,9 +887,12 @@ namespace HouseCS {
 												string family = Console.ReadLine();
 												WriteColor(new string[] { "Computer", " Model (ie: dv6, Pro 3) > " }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
 												string model = Console.ReadLine();
-												Console.Write("\nIs it on? (Invalid input will default to no)\nYes or no? [Y/N] > ");
-												string is_on = Console.ReadLine().ToUpper();
-												tempComp.Reset(brand, family, model, is_on.Equals("Y"), computer);
+												Console.Write("\nIs the computer turned on?");
+												string isOn = string.Empty;
+												try {
+													isOn = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).ToUpper();
+												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
+												tempComp.Reset(brand, family, model, isOn.Equals("Y"), computer);
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Computer", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempComp.ToText(), new ColorText("\n\n") });
 											} else
 												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
@@ -748,8 +925,11 @@ namespace HouseCS {
 										Display tempDisp = new Display();
 										if (cmds.Length > 2) {
 											if (string.Equals(cmds[2], "arg", StringComparison.OrdinalIgnoreCase)) {
-												Console.Write("\nIs it a Monitor (Y) or a TV (N)?\nWill default to (Y)es if next input is invalid.\n[Y/N] > ");
-												string is_mon = Console.ReadLine().ToUpper();
+												Console.Write("\nIs it a Monitor (Y) or a TV (N)?");
+												string isMon = string.Empty;
+												try {
+													isMon = GetInput(new ColorText("[Y/N "), new string[] { "y", "n" }, true).ToUpper();
+												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 												WriteColor(new string[] { "\nType the number for each device connected to this ", "Display", " seperated by a space.\n(Optional)\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												string[] conDevs = Regex.Split(Console.ReadLine(), " +");
 												List<IItem> validDevs = new List<IItem>();
@@ -775,12 +955,12 @@ namespace HouseCS {
 												Console.Write("\n\nNot a number: ");
 												foreach (string str_num in notNumber)
 													Console.Write(str_num + " ");
-												WriteColor(new string[] { "\n\nEnter the ", "Display's", " size in inches (decimals allowed) > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
-												double size = double.Parse(Console.ReadLine());
+												WriteColor(new string[] { "\n\nEnter the ", "Display's", " size in inches (decimals allowed)" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
+												double size = GetInput(0.0, 100.0);
 												List<IItem> new_items = new List<IItem>();
 												foreach (int id in added)
 													new_items.Add(user.GetItem(id));
-												tempDisp = new Display(is_mon.Equals("N"), new_items, size);
+												tempDisp = new Display(isMon.Equals("N"), new_items, size);
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Display", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempDisp.ToText(), new ColorText("\n\n") });
 											} else
 												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
@@ -793,14 +973,12 @@ namespace HouseCS {
 										if (cmds.Length > 2) {
 											if (cmds[2].Equals("arg", StringComparison.OrdinalIgnoreCase)) {
 												WriteColor(new string[] { "\nIs this ", "Bed", " adjustable? (Invalid input will default to N)\n[Y/N] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-												bool canMove = Console.ReadLine().ToUpper().Equals("Y");
+												bool canMove = false;
+												try {
+													canMove = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).Equals("Y", StringComparison.OrdinalIgnoreCase);
+												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 												Console.WriteLine();
-												for (int i = 0; i < Bed.types.Length; i++)
-													WriteColor(new string[] { "[", i.ToString(), $"] {Bed.types[i]} " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-												WriteColor(new string[] { "\nInvalid input defaults to ", "2" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-												WriteColor(new string[] { "\n[", "0", "-", (Bed.types.Length - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-												string typeInput = Console.ReadLine();
-												int bedType = Regex.IsMatch(typeInput, "[0-9]+") && int.Parse(typeInput) < Bed.types.Length ? int.Parse(typeInput) : 2;
+												int bedType = GetInput(0, Bed.types.Length);
 												tempBed = new Bed(canMove, bedType);
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Bed", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempBed.ToText(), new ColorText("\n\n") });
 											} else
@@ -884,13 +1062,45 @@ namespace HouseCS {
 						case ">":
 						case "up":
 							#region
-							Console.WriteLine(user.GoUp());
+							switch (cmds.Length) {
+								case 1:
+									Console.WriteLine(user.GoUp());
+									break;
+								case 2:
+									if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+										if (user.GoFloor(user.CurFloor + int.Parse(cmds[1])))
+											WriteColor(new string[] { "\nWelcome to floor ", user.CurFloor.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										else
+											Console.WriteLine("\nYou are currently on the top floor, floor unchanged.\n");
+									} else
+										WriteColor(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+									break;
+								default:
+									Console.WriteLine($"{cmds[0]} only accepts 1 argument.");
+									break;
+							}
 							break;
 						#endregion
 						case "<":
 						case "down":
 							#region
-							Console.WriteLine(user.GoDown());
+							switch (cmds.Length) {
+								case 1:
+									Console.WriteLine(user.GoDown());
+									break;
+								case 2:
+									if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+										if (user.GoFloor(user.CurFloor - int.Parse(cmds[1])))
+											WriteColor(new string[] { "\nWelcome to floor ", user.CurFloor.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										else
+											Console.WriteLine("\nYou are currently on the bottom floor, floor unchanged.\n");
+									} else
+										WriteColor(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+									break;
+								default:
+									Console.WriteLine($"{cmds[0]} only accepts 1 argument.");
+									break;
+							}
 							break;
 						#endregion
 						case "":
@@ -898,56 +1108,27 @@ namespace HouseCS {
 						case "help":
 							#region
 							if (cmds.Length > 1) {
-								switch (cmds[1].ToLower()) {
-									case "add":
-										Help("add");
-										break;
-									case "attach":
-										Help("attach");
-										break;
-									case "clear":
-									case "cls":
-										Help("clear");
-										break;
-									case "down":
-										Help("down");
-										break;
-									case "exit":
-									case "quit":
-										Help("exit");
-										break;
-									case "grab":
-									case "select":
-										Help("grab");
-										break;
-									case "help":
-										Help("help");
-										break;
-									case "info":
-									case "status":
-										Help("info");
-										break;
-									case "list":
-									case "look":
-										Help("list");
-										break;
-									case "move":
-										Help("move");
-										break;
-									case "remove":
-										Help("remove");
-										break;
-									case "up":
-										Help("up");
-										break;
-									case "ver":
-									case "version":
-										Help("ver");
-										break;
-									default:
-										Console.Write("\nNo help was found for this command.\n\n");
-										break;
-								}
+								if (cmds.Length > 2) {
+									switch (cmds[1].ToLower()) {
+										case "add":
+										case "list":
+											if (cmds[2].Equals("item", StringComparison.OrdinalIgnoreCase))
+												WriteColor(Help("top-item"));
+											else
+												WriteColor(Help("bad-sub"));
+											break;
+										case "use":
+											if (cmds[2].Equals("object", StringComparison.OrdinalIgnoreCase))
+												WriteColor(Help("floor-interact"));
+											else
+												WriteColor(Help("bad-sub"));
+											break;
+										default:
+											WriteColor(Help("."));
+											break;
+									}
+								} else
+									WriteColor(Help(cmds[1].ToLower()));
 							} else {
 								Console.WriteLine();
 								WriteColor(new string[] { "          add", " - adds an ", "Item", " to the current floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
@@ -962,8 +1143,11 @@ namespace HouseCS {
 								WriteColor(new string[] { "                specific ", "Item\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
 								WriteColor(new string[] { "         move", " - moves an ", "Item", " to another floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 								WriteColor(new string[] { "       remove", " - removes an ", "Item", " from the current floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+								WriteColor(new string[] { "          set", " - used to set variables in the command interpretter\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 								WriteColor(new string[] { "           up", " - goes up 1 floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+								WriteColor(new string[] { "          use", " - interacts with certain items (for interactive mode)\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 								WriteColor(new string[] { "ver / version", " - displays information about the command interpretter\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+								WriteColor(new string[] { "        visit", " - changes which House (and which viewer) you are in\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 								Console.Write("\ntype help (command) for more detailed information about a specific command\n\n");
 							}
 							break;

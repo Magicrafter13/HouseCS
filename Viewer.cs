@@ -123,6 +123,6 @@ namespace HouseCS {
 			curItem = new Empty();
 			CurHouse = h;
 		}
-		public override string ToString() => $"\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
+		public override string ToString() => $"\tCurrent House: {CurHouse}\n\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
 	}
 }

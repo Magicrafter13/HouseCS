@@ -5,7 +5,7 @@ using HouseCS.Items;
 
 namespace HouseCS {
 	public class House {
-		private static readonly string[] colors = { "White", "Red", "Brown", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black" };
+		public static readonly string[] colors = { "White", "Red", "Brown", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black" };
 		public static readonly string[] types = { "*", "Bed", "Book", "Computer", "Console", "Display",
 			"Bookshelf", "Container", "Dresser", "Fridge", "Table",
 			"Clothing", "Pants", "Shirt" };
@@ -27,9 +27,9 @@ namespace HouseCS {
 			Size = fs.Length;
 			GetFloors = fs;
 		}
-		public int PageCount(int f, int rangeStart, int rangeEnd, String searchType, int pageLength) {
+		public int PageCount(int f, int rangeStart, int rangeEnd, string searchType, int pageLength) {
 			bool validType = false;
-			foreach (String t in types)
+			foreach (string t in types)
 				if (searchType.Equals(t, StringComparison.OrdinalIgnoreCase))
 					validType = true;
 			if (!validType)
