@@ -114,7 +114,7 @@ namespace HouseCS {
 						type.Equals("*") ||
 						type.Equals(Floors[floor].GetItem(i).Type, StringComparison.OrdinalIgnoreCase) ||
 						type.Equals(Floors[floor].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase)
-					) && (room == -2 || Floors[floor].GetItem(i).Room == room)) {
+					) && (room == -2 || Floors[floor].GetItem(i).RoomID == room)) {
 					items.Add(Floors[floor].GetItem(i));
 					itemIds.Add(i);
 				}
