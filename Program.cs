@@ -9,17 +9,24 @@ using HouseCS.Items.Containers;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2;
-		private static readonly int verMinor = 2;
-		private static readonly int verFix = 0;
+		private static readonly int verMajor = 2, verMinor = 2, verFix = 1;
+
+		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container" };
+
+		public static readonly string[] floorInteracts = { "light (or lights)" };
+
+		public static string[,] enviVar = {
+			{"interactive", "false", "bool", "user"}, //tells the environment whether or not to do certain things
+			{"temperature", "70.0", "double", "system"}, //the ambient house temperature
+			{"house", "0", "int", "system"}, //integer representation of current viewer
+			{"use_rooms", "false", "bool", "user"}, //off by default so previous users aren't confused as to where their items are
+			{"cur_room", "-1", "int", "system"}, //current room to get items from
+		};
+
+		public static int house = 0;
+
 		private static string CurVer => $"{verMajor}.{verMinor}.{verFix}";
-		public static readonly string RED = "31";
-		public static readonly string GREEN = "32";
-		public static readonly string YELLOW = "33";
-		public static readonly string BLUE = "34";
-		public static readonly string PURPLE = "35";
-		public static readonly string CYAN = "36";
-		public static readonly string WHITE = "37";
+
 		public static void WriteColor(string[] lines, ConsoleColor[] colors) {
 			if (lines.Length != colors.Length)
 				return;
@@ -29,17 +36,19 @@ namespace HouseCS {
 			}
 			Console.ResetColor();
 		}
+
 		public static void WriteColor(ColorText text) => WriteColor(text.Lines, text.Colors);
+
 		public static void WriteColor(ColorText[] lines) {
 			foreach (ColorText line in lines)
 				WriteColor(line.Lines, line.Colors);
 		}
+
 		public static void WriteColorLine(string[] lines, ConsoleColor[] colors) {
 			WriteColor(lines, colors);
 			Console.WriteLine();
 		}
-		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container" };
-		public static readonly string[] floorInteracts = { "light (or lights)" };
+
 		private static ColorText[] Help(string cmd) {
 			ColorText[] retCT = { ColorText.Empty };
 			switch (cmd) {
@@ -229,18 +238,21 @@ namespace HouseCS {
 			}
 			return retCT;
 		}
+
 		private static bool EqualsIgnoreCaseOr(string test, string[] strs) {
 			for (int i = 0; i < strs.Length; i++)
 				if (string.Equals(test, strs[i], StringComparison.OrdinalIgnoreCase))
 					return true;
 			return false;
 		}
+
 		private static bool MatchesAnd(string[] strs, string match) {
 			for (int i = 0; i < strs.Length; i++)
 				if (!Regex.IsMatch(strs[i], match))
 					return false;
 			return true;
 		}
+
 		private static bool CanGoInside(string src, string dst) {
 			switch (dst.ToLower()) {
 				case "bookshelf":
@@ -291,6 +303,7 @@ namespace HouseCS {
 					return false;
 			}
 		}
+
 		public static IItem CreateContainer(string type) {
 			switch (type.ToLower()) {
 				case "fridge":
@@ -305,6 +318,7 @@ namespace HouseCS {
 					return new Container();
 			}
 		}
+
 		public static IItem CreateClothing(string type) {
 			switch (type.ToLower()) {
 				case "shirt":
@@ -315,13 +329,7 @@ namespace HouseCS {
 					return new Clothing();
 			}
 		}
-		public static string[,] enviVar = {
-			{"interactive", "false", "bool", "user"}, //tells the environment whether or not to do certain things
-			{"temperature", "70.0", "double", "system"}, //the ambient house temperature
-			{"house", "0", "int", "system"}, //integer representation of current viewer
-			{"use_rooms", "false", "bool", "user"}, //off by default so previous users aren't confused as to where their items are
-			{"cur_room", "-1", "int", "system"}, //current room to get items from
-		};
+
 		public static int GetInput(int min, int max) {
 			if (min >= max)
 				throw new InvalidRange(min, max);
@@ -332,6 +340,7 @@ namespace HouseCS {
 					return int.Parse(lineIn);
 			} while (true);
 		}
+
 		public static double GetInput(double min, double max) {
 			if (min >= max)
 				throw new InvalidRange(min, max);
@@ -342,6 +351,7 @@ namespace HouseCS {
 					return double.Parse(lineIn);
 			} while (true);
 		}
+
 		public static string GetInput(ColorText message, List<string> values, bool ignoreCase) {
 			if (values.Count == 0)
 				throw new ArrayTooSmall(1, values.Count);
@@ -353,23 +363,25 @@ namespace HouseCS {
 						return lineIn;
 			} while (true);
 		}
+
 		public static string GetInput(ColorText message, string[] values, bool ignoreCase) {
 			try {
 				return GetInput(message, new List<string>(values), ignoreCase);
 			} catch (ArrayTooSmall e) { throw e; }
 		}
+
 		public static string GetInput(List<string> values, bool ignoreCase) {
 			try {
 				return GetInput(ColorText.Empty, values, ignoreCase);
 			} catch (ArrayTooSmall e) { throw e; }
 		}
+
 		public static string GetInput(string[] values, bool ignoreCase) {
 			try {
 				return GetInput(ColorText.Empty, values, ignoreCase);
 			} catch (ArrayTooSmall e) { throw e; }
 		}
-		public static int house = 0;
-
+		
 		private static void Main(string[] args) {
 			string command;
 			string[] cmds;
@@ -389,9 +401,9 @@ namespace HouseCS {
 			while (here) {
 				Console.Write("> ");
 				command = Console.ReadLine();
-				string[] temp_arr = Regex.Split(command, " +");
-				cmds = new string[temp_arr.Length];
-				cmds = temp_arr; //I don't really think it matters if it's a clone or not...
+				cmds = Regex.Split(command, " +");
+				/*cmds = new string[temp_arr.Length];
+				cmds = temp_arr; //I don't really think it matters if it's a clone or not...*/
 				if (cmds.Length > 0) {
 					switch (cmds[0].ToLower()) {
 						/*case "save":

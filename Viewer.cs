@@ -275,7 +275,7 @@ namespace HouseCS {
 		/// ToString override showing status of Viewer
 		/// </summary>
 		/// <returns>string containing current house index, current floor index, and type of current Item</returns>
-		public override string ToString() => $"\tCurrent House: {CurHouse}\n\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
+		public override string ToString() => $"\tCurrent House: {Program.house}\n\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
 
 		/// <summary>
 		/// Creates a Viewer with a new default House
