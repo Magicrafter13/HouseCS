@@ -84,6 +84,7 @@ namespace HouseCS.Items.Containers {
 		/// Creates a dresser with Items
 		/// </summary>
 		/// <param name="items">Items in dresser</param>
-		public Dresser(List<IItem> items) : base(items) { }
+		/// <param name="room">Room for dresser</param>
+		public Dresser(List<IItem> items, int room) : base(items, room) { }
 	}
 }

@@ -14,6 +14,11 @@ namespace HouseCS.Items {
 		private static readonly string typeS = "Bed";
 
 		/// <summary>
+		/// Room the bed is in
+		/// </summary>
+		public int RoomID { get; private set; }
+
+		/// <summary>
 		/// Boolean for whether or not the bed moves
 		/// </summary>
 		private bool Adjustable { get; set; }
@@ -56,16 +61,18 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Creates non adjustable Twin bed
 		/// </summary>
-		public Bed() : this(false, 2) { }
+		public Bed() : this(false, 2, -1) { }
 
 		/// <summary>
 		/// Creates a bed, set adjustability, and set size
 		/// </summary>
 		/// <param name="adjustable">True if bed moves, False if not</param>
 		/// <param name="type">Index of bed type</param>
-		public Bed(bool adjustable, int type) {
+		/// <param name="room">Room the bed is in</param>
+		public Bed(bool adjustable, int type, int room) {
 			Adjustable = adjustable;
 			BedType = type >= 0 && type < types.Length ? type : 2;
+			RoomID = room;
 		}
 	}
 }

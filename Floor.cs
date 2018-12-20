@@ -9,6 +9,11 @@ namespace HouseCS {
 	/// </summary>
 	public class Floor {
 		/// <summary>
+		/// List of all room names on floor
+		/// </summary>
+		public List<string> RoomNames { get; private set; }
+
+		/// <summary>
 		/// List of all Items on the floor.
 		/// </summary>
 		public List<IItem> Items { get; set; }
@@ -17,6 +22,12 @@ namespace HouseCS {
 		/// Boolean representation of whether or not the lights are turned on, on this floor.
 		/// </summary>
 		public bool Lights { get; private set; }
+
+		/// <summary>
+		/// Adds a room to the floor
+		/// </summary>
+		/// <param name="room">Room name</param>
+		public void AddRoom(string room) => RoomNames.Add(room);
 
 		/// <summary>
 		/// Toggles Boolean Lights, and returns ColorText to tell the user what state the Lights are now in.
@@ -121,16 +132,18 @@ namespace HouseCS {
 		/// <summary>
 		/// Creates a floor with an empty List of Items, and with the lights off
 		/// </summary>
-		public Floor() : this(new List<IItem>(), false) { }
+		public Floor() : this(new List<IItem>(), false, new List<string>()) { }
 
 		/// <summary>
 		/// Creates a floor with a set List of Items
 		/// </summary>
 		/// <param name="i">List of Items for the floor</param>
 		/// <param name="l">Sets state of lights, true = on, false = off</param>
-		public Floor(List<IItem> i, bool l) {
+		/// <param name="roomNames">Names of each room on the floor</param>
+		public Floor(List<IItem> i, bool l, List<string> roomNames) {
 			Items = i;
 			Lights = l;
+			RoomNames = roomNames;
 		}
 
 		/// <summary>
@@ -143,6 +156,33 @@ namespace HouseCS {
 		/// Creates a floor with the lights on or off
 		/// </summary>
 		/// <param name="l">Lights, true = on, false = off</param>
-		public Floor(bool l) : this(new List<IItem>(), l) { }
+		public Floor(bool l) : this(new List<IItem>(), l, new List<string>()) { }
+
+		/// <summary>
+		/// Creates a floor with set rooms, and no Items, with lights off
+		/// </summary>
+		/// <param name="rooms">Room names</param>
+		public Floor(List<string> rooms) : this(new List<IItem>(), false, rooms) { }
+
+		/// <summary>
+		/// Creates a floor with Items, set lights, and no rooms
+		/// </summary>
+		/// <param name="items">Items on floor</param>
+		/// <param name="lights">Whether lights are on or off</param>
+		public Floor(List<IItem> items, bool lights) : this(items, lights, new List<string>()) { }
+
+		/// <summary>
+		/// Creates a floor with Items, rooms, and lights off
+		/// </summary>
+		/// <param name="items">Items on floor</param>
+		/// <param name="rooms">Rooms on floor</param>
+		public Floor(List<IItem> items, List<string> rooms) : this(items, false, rooms) { }
+
+		/// <summary>
+		/// Creates a floor with no Items, rooms, and set lights
+		/// </summary>
+		/// <param name="lights">Lights, true = on, false = off</param>
+		/// <param name="rooms">Rooms on floor</param>
+		public Floor(bool lights, List<string> rooms) : this(new List<IItem>(), lights, rooms) { }
 	}
 }

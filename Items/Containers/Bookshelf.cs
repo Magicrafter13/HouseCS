@@ -95,7 +95,8 @@ namespace HouseCS.Items.Containers {
 		/// Creates a bookshelf with books on it
 		/// </summary>
 		/// <param name="books">List of books</param>
-		public Bookshelf(List<Book> books) : base() {
+		/// <param name="room">Room for bookshelf</param>
+		public Bookshelf(List<Book> books, int room) : base() {
 			foreach (Book a in books)
 				base.AddItem(a);
 		}

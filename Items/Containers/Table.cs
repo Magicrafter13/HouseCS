@@ -69,7 +69,8 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Creates table with Items
 		/// </summary>
-		/// <param name="items"></param>
-		public Table(List<IItem> items) : base(items) { }
+		/// <param name="items">Items on table</param>
+		/// <param name="room">Room for table</param>
+		public Table(List<IItem> items, int room) : base(items, room) { }
 	}
 }

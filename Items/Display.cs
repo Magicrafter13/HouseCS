@@ -9,7 +9,12 @@ namespace HouseCS.Items {
 	public class Display : IItem {
 		private static readonly string typeS = "Display";
 
-		private readonly List<IItem> connectedTo = new List<IItem>();
+		private readonly List<IItem> connectedTo;
+
+		/// <summary>
+		/// Room the display is in
+		/// </summary>
+		public int RoomID { get; private set; }
 
 		/// <summary>
 		/// Displays size in inches
@@ -144,7 +149,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Creates a TV, with no connected devices, that is 20 inches
 		/// </summary>
-		public Display() : this(false, new List<IItem>(), 20.0) { }
+		public Display() : this(false, new List<IItem>(), 20.0, -1) { }
 
 		/// <summary>
 		/// Creates a set sized display, with a set type, and a list of connected devices
@@ -152,10 +157,12 @@ namespace HouseCS.Items {
 		/// <param name="isMonitor">Whether or not it's a monitor</param>
 		/// <param name="connectedDevs">List of connected devices</param>
 		/// <param name="inchSize">Display size in inches</param>
-		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize) {
+		/// <param name="room">Room for display</param>
+		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize, int room) {
 			IsMonitor = isMonitor;
 			connectedTo = connectedDevs;
 			SizeInch = inchSize > 0 ? inchSize : 20.0;
+			RoomID = room;
 		}
 	}
 }

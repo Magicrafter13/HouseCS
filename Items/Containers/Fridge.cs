@@ -135,15 +135,17 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Creates empty fridge, without freezer
 		/// </summary>
-		public Fridge() : this(false) { }
+		public Fridge() : this(new List<IItem>(), false, -1) { }
 
 		/// <summary>
 		/// Creates fridge with Items, without freezer
 		/// </summary>
 		/// <param name="items">Items in fridge</param>
-		public Fridge(List<IItem> items) : base(items) { }
+		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
+		/// <param name="room">Room for fridge</param>
+		public Fridge(List<IItem> items, bool hasFreezer, int room) : base(items, room) => HasFreezer = hasFreezer;
 
-		/// <summary>
+		/*/// <summary>
 		/// Creates empty fridge, with or without a freezer
 		/// </summary>
 		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
@@ -154,6 +156,6 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="items">Items in fridge</param>
 		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
-		public Fridge(List<IItem> items, bool hasFreezer) : base(items) => HasFreezer = hasFreezer;
+		public Fridge(List<IItem> items, bool hasFreezer) : base(items) => HasFreezer = hasFreezer;*/
 	}
 }

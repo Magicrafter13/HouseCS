@@ -87,8 +87,9 @@ namespace HouseCS {
 		/// <param name="type">Item type to find</param>
 		/// <param name="pageLength">How many Items per page</param>
 		/// <param name="page">Page</param>
+		/// <param name="room">Room to search</param>
 		/// <returns>ColorText object either containing a List of Items based on the criteria, or a message explaining what was wrong with the arguments</returns>
-		public ColorText List(int floor, int start, int end, string type, int pageLength, int page) {
+		public ColorText List(int floor, int start, int end, string type, int pageLength, int page, int room) {
 			bool validType = false;
 			foreach (string t in types)
 				if (type.Equals(t, StringComparison.OrdinalIgnoreCase))
@@ -108,9 +109,12 @@ namespace HouseCS {
 			for (int i = start; i < end; i++) {
 				if (i > Floors[floor].Size)
 					continue;
-				if (type.Equals("*") ||
-					type.Equals(Floors[floor].GetItem(i).Type, StringComparison.OrdinalIgnoreCase) ||
-					type.Equals(Floors[floor].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase)) {
+				if (
+					(
+						type.Equals("*") ||
+						type.Equals(Floors[floor].GetItem(i).Type, StringComparison.OrdinalIgnoreCase) ||
+						type.Equals(Floors[floor].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase)
+					) && (room == -2 || Floors[floor].GetItem(i).Room == room)) {
 					items.Add(Floors[floor].GetItem(i));
 					itemIds.Add(i);
 				}
@@ -142,20 +146,20 @@ namespace HouseCS {
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
 
-		/// <summary>
+		/*/// <summary>
 		/// Lists all Items on floor
 		/// </summary>
 		/// <param name="floor">Index of floor in house</param>
 		/// <returns>ColorText object containing list of all Items on floor</returns>
-		public ColorText List(int floor) => List(floor, 0, Floors[floor].Size, "*", Floors[floor].Size, 0);
+		public ColorText List(int floor) => List(floor, 0, Floors[floor].Size, "*", Floors[floor].Size, 0);*/
 
-		/// <summary>
+		/*/// <summary>
 		/// Lists all Items of type on floor
 		/// </summary>
 		/// <param name="floor">Index of floor in house</param>
 		/// <param name="type">Item type to find</param>
 		/// <returns>ColorText object containing list of all type Items on floor</returns>
-		public ColorText List(int floor, string type) => List(floor, 0, Floors[floor].Size, type, Floors[floor].Size, 0);
+		public ColorText List(int floor, string type) => List(floor, 0, Floors[floor].Size, type, Floors[floor].Size, 0);*/
 
 		/// <summary>
 		/// Adds an Item to floor

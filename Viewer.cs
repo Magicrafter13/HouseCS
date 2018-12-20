@@ -15,6 +15,11 @@ namespace HouseCS {
 		public IItem curItem;
 
 		/// <summary>
+		/// Room the viewer is stationed in
+		/// </summary>
+		public int CurRoom { get; private set; }
+
+		/// <summary>
 		/// House cache for viewer
 		/// </summary>
 		public House CurHouse { get; private set; }
@@ -28,6 +33,28 @@ namespace HouseCS {
 		/// Index of current floor for current house
 		/// </summary>
 		public int CurFloor { get; private set; }
+
+		/// <summary>
+		/// Names of rooms on current floor of current house
+		/// </summary>
+		public List<string> RoomNames => CurHouse.GetFloor(CurFloor).RoomNames;
+
+		/// <summary>
+		/// Changes viewers current room
+		/// </summary>
+		/// <param name="room">Destination room</param>
+		/// <returns>Status code of what happened</returns>
+		public int GoRoom(int room) {
+			if (room < -1)
+				return 1;
+			List<string> rooms = RoomNames;
+			if (room >= rooms.Count)
+				return 2;
+			CurRoom = room;
+			if (room == -1)
+				return 3;
+			return 0;
+		}
 
 		/// <summary>
 		/// Tells you if index of Item is valid
@@ -88,8 +115,9 @@ namespace HouseCS {
 		/// <param name="type"></param>
 		/// <param name="length"></param>
 		/// <param name="page"></param>
+		/// <param name="room">Room for listing</param>
 		/// <returns>ColorText object of list of Items</returns>
-		public ColorText List(int start, int end, string type, int length, int page) => CurHouse.List(CurFloor, start, end, type, length, page);
+		public ColorText List(int start, int end, string type, int length, int page, int room) => CurHouse.List(CurFloor, start, end, type, length, page, room);
 
 		/// <summary>
 		/// Lists all Items on current floor of current house

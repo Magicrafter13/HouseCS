@@ -6,6 +6,11 @@ namespace HouseCS.Items {
 	/// </summary>
 	public interface IItem {
 		/// <summary>
+		/// Room the Item is in
+		/// </summary>
+		int RoomID { get; }
+
+		/// <summary>
 		/// string of Item parent type
 		/// </summary>
 		string Type { get; }

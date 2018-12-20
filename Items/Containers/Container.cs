@@ -10,6 +10,11 @@ namespace HouseCS.Items.Containers {
 		private const string typeS = "Container";
 
 		/// <summary>
+		/// Room the container is in
+		/// </summary>
+		public int RoomID { get; private set; }
+
+		/// <summary>
 		/// Items in container
 		/// </summary>
 		public List<IItem> Items { get; private set; }
@@ -145,12 +150,16 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Creates an empty container
 		/// </summary>
-		public Container() : this(new List<IItem>()) { }
+		public Container() : this(new List<IItem>(), -1) { }
 
 		/// <summary>
 		/// Creates a container with a List of Items
 		/// </summary>
-		/// <param name="items"></param>
-		public Container(List<IItem> items) => Items = items;
+		/// <param name="items">Items in the container</param>
+		/// <param name="room">Room for container</param>
+		public Container(List<IItem> items, int room) {
+			Items = items;
+			RoomID = room;
+		}
 	}
 }

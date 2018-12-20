@@ -14,6 +14,11 @@ namespace HouseCS.Items {
 		private const string typeS = "Book";
 
 		/// <summary>
+		/// Room the book is in
+		/// </summary>
+		public int RoomID { get; private set; }
+
+		/// <summary>
 		/// Book title
 		/// </summary>
 		public string Title { get; private set; }
@@ -78,7 +83,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Creates a book titled "none", written by "none", in 1600 AD
 		/// </summary>
-		public Book() : this("none", "none", 1600) { }
+		public Book() : this("none", "none", 1600, -1) { }
 
 		/// <summary>
 		/// Creates a book titled tile, written by author, in year AD
@@ -86,10 +91,12 @@ namespace HouseCS.Items {
 		/// <param name="title">Book title</param>
 		/// <param name="author">Book author</param>
 		/// <param name="year">Book publishing year</param>
-		public Book(string title, string author, int year) {
+		/// <param name="room">Room the book is in</param>
+		public Book(string title, string author, int year, int room) {
 			Reset(title, author, year);
 			totalBooks++;
 			ID = totalBooks;
+			RoomID = room;
 		}
 	}
 }

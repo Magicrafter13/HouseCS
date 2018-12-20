@@ -35,6 +35,7 @@ namespace HouseCS.Items.Clothes {
 		/// Creates colored shirt
 		/// </summary>
 		/// <param name="color">Color for shirt</param>
-		public Shirt(string color) : base(color) { }
+		/// <param name="room">Room for shirt</param>
+		public Shirt(string color, int room) : base(color, room) { }
 	}
 }

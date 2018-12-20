@@ -9,6 +9,11 @@ namespace HouseCS.Items.Clothes {
 		private const string typeS = "Clothing";
 
 		/// <summary>
+		/// Room the clothes are in
+		/// </summary>
+		public int RoomID { get; private set; }
+
+		/// <summary>
 		/// Clothes color
 		/// </summary>
 		public string Color { get; set; }
@@ -46,12 +51,16 @@ namespace HouseCS.Items.Clothes {
 		/// <summary>
 		/// Creates a black piece of clothing
 		/// </summary>
-		public Clothing() : this("Black") { }
+		public Clothing() : this("Black", -1) { }
 
 		/// <summary>
 		/// Creates a colored piece of clothing
 		/// </summary>
 		/// <param name="color">Color for clothes</param>
-		public Clothing(string color) => Color = color;
+		/// <param name="room">Room for clothing</param>
+		public Clothing(string color, int room) {
+			Color = color;
+			RoomID = room;
+		}
 	}
 }

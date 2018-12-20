@@ -13,6 +13,11 @@ namespace HouseCS.Items {
 		private static readonly string typeS = "Computer";
 
 		/// <summary>
+		/// Room the computer is in
+		/// </summary>
+		public int RoomID { get; private set; }
+
+		/// <summary>
 		/// string to indicate type of computer
 		/// </summary>
 		public string ComputerType { get; private set; }
@@ -55,12 +60,14 @@ namespace HouseCS.Items {
 		/// <param name="model">Computer family model</param>
 		/// <param name="state">Computer power state</param>
 		/// <param name="type">Computer type</param>
-		public void Reset(string brand, string family, string model, bool state, string type) {
+		/// <param name="id">Room ID</param>
+		public void Reset(string brand, string family, string model, bool state, string type, int id) {
 			ComputerType = type;
 			IsOn = state;
 			Brand = brand;
 			Family = family;
 			Model = model;
+			RoomID = id;
 		}
 
 		/// <summary>
@@ -96,7 +103,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Creates a "Generic" brand, "PC", [no model], Desktop computer that is turned off
 		/// </summary>
-		public Computer() : this("Generic", "PC", "", false, "Desktop") { }
+		public Computer() : this("Generic", "PC", "", false, "Desktop", -1) { }
 
 		/// <summary>
 		/// Creates a brand, family model, computer, with a set power state, and of set type
@@ -106,8 +113,9 @@ namespace HouseCS.Items {
 		/// <param name="model">Computer family model</param>
 		/// <param name="state">Computer power state</param>
 		/// <param name="type">Computer type</param>
-		public Computer(string brand, string family, string model, bool state, string type) {
-			Reset(brand, family, model, state, type);
+		/// <param name="room">Room for computer</param>
+		public Computer(string brand, string family, string model, bool state, string type, int room) {
+			Reset(brand, family, model, state, type, room);
 			id = totalComps;
 			totalComps++;
 		}

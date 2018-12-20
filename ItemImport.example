@@ -5,34 +5,45 @@ using HouseCS.Items.Containers;
 
 namespace HouseCS {
   public class ItemImport {
+	public static final String[][][] roomNames = {
+		{
+			{"Kitchen", "Dining Room", "Family Room", "Laundry Room", "Garage"},
+			{"Master Bedroom", "Office", "Game Room", "Master Bathroom"}
+		}, //Floor 0 and 1 of House 0
+		{
+			{"Room"},
+			{"Room"},
+			{"Room"}
+		} //3 Floors of House 1
+	};
     public static readonly Bookshelf[] bookshelfs = {
       new Bookshelf(new List<Book>() {
-        new Book("The Hobbit", "J.R.R. Tolkien", 1937) //A book in a bookshelf
-      })
+        new Book("The Hobbit", "J.R.R. Tolkien", 1937) //A book in a bookshelf, in the "Master Bedroom"
+      }, 0) //0 indicating that the bookshelf is also in the Master Bedroom
     };
     public static readonly int[] bookshelfsF = { 1 }; //the bookshelf is on floor 1...
     public static readonly int[] bookshelfsH = { 0 }; //...of house 0
     public static readonly Computer[] computers = {
-      new Computer("Tandy", "1000", "TL/2", false, "Desktop") //An old computer
+      new Computer("Tandy", "1000", "TL/2", false, "Desktop", -1) //An old computer in the hallway (Room -1)
     };
     public static readonly int[] computersF = { 1 }; //the PC is on floor 1...
     public static readonly int[] computersH = { 0 }; //...of house 0
     public static readonly GameConsole[] consoles = {
-      new GameConsole(0, "Nintendo", "Wii U"), //console 0
-      new GameConsole(0, "Microsoft", "Xbox 360"), //console 1
-      new GameConsole(1, "Nintendo", "New 3DS XL") //console 2
-    };
+      new GameConsole(0, "Nintendo", "Wii U", 2), //console 0
+      new GameConsole(0, "Microsoft", "Xbox 360", 2), //console 1
+      new GameConsole(1, "Nintendo", "New 3DS XL", 2) //console 2
+    }; //3 consoles in room 2 (Game Room)
     public static readonly int[] consolesF = { 1, 1, 1 }; //all of them on floor 1...
     public static readonly int[] consolesH = { 0, 0, 0 }; //...of house 0
     public static readonly Display[] displays = {
       new Display(true, new List<IItem>() { //a 24" monitor...
         computers[0] //...with the old PC attached to it
-      }, 24)
+      }, 24, 2)
     };
     public static readonly int[] displaysF = { 1 }; //on floor 1...
     public static readonly int[] displaysH = { 0 }; //...of house 0
     public static readonly Bed[] beds = {
-      new Bed(false, 2) //standard bed
+      new Bed(false, 2, 0) //standard bed
     };
     public static readonly int[] bedsF = { 1 }; //on floor 1...
     public static readonly int[] bedsH = { 0 }; //...of house 0
@@ -44,33 +55,33 @@ namespace HouseCS {
     public static readonly int[] containersH = { 0, 0 }; //...of house 0
     public static readonly Fridge[] fridges = {
       new Fridge(new List<IItem>() {//fridges with books (ya know, a normal fridge)
-        new Book("One", "Two", 3),
-        new Book("Four", "Five", 6)
-      }, false),
+        new Book("One", "Two", 3, 0),
+        new Book("Four", "Five", 6, 0)
+      }, false, 0), //a fridge in the kitchen... where it belongs
       new Fridge(new List<IItem>() {
-        new Book("Seven", "Eight", 9)
-      }, false)
+        new Book("Seven", "Eight", 9, 0)
+      }, false, 4) //room 4 = garage
     };
     public static readonly int[] fridgesF = { 0, 0 }; //all on floor 0...
     public static readonly int[] fridgesH = { 0, 0 }; //...of house 0
     public static readonly Dresser[] dressers = {
       new Dresser(new List<IItem>() { //clothes dressers
-        new Shirt("Red"),
-        new Pants("Blue"),
-        new Pants("Black")
-      }),
+        new Shirt("Red", 0),
+        new Pants("Blue", 0),
+        new Pants("Black", 0)
+      }, 0),
       new Dresser(new List<IItem>() {
-        new Pants("Black")
-      })
+        new Pants("Black", 0)
+      }, 0)
     };
     public static readonly int[] dressersF = { 1, 1 }; //floor 1
     public static readonly int[] dressersH = { 0, 0 }; //house 0 (I think we get it by now)
     public static readonly Table[] tables = {
       new Table(new List<IItem>() { //a table full of retro goodness
-        new GameConsole(0, "Atari", "VCS 2600"),
-        new GameConsole(0, "Nintendo", "NES"),
-        new GameConsole(0, "Sega", "Genesis")
-      })
+        new GameConsole(0, "Atari", "VCS 2600",2),
+        new GameConsole(0, "Nintendo", "NES", 2),
+        new GameConsole(0, "Sega", "Genesis", 2)
+      }, 2)
     };
     public static readonly int[] tables_f = { 1 }; //floor 1...
     public static readonly int[] tables_h = { 0 }; //house 0...
@@ -83,6 +94,10 @@ namespace HouseCS {
       House fakeHouse = new House(6, 3);
       houses.Add(myHouse);
       houses.Add(fakeHouse);
+	  for (int h = 0; h < houses.size(); h++) //this abomination adds the room names to the floors of the houses
+		  for (int f = 0; f < houses.get(h).Floors.Count; f++)
+			foreach (string room in roomNames[h][f])
+			  houses[h].Floors[f].AddRoom(room);
       for (int i = 0; i < bookshelfs.Length; i++) houses[bookshelfsH[i]].AddItem(bookshelfsF[i], bookshelfs[i]);
       for (int i = 0; i < computers.Length; i++) houses[computersH[i]].AddItem(computersF[i], computers[i]);
       for (int i = 0; i < consoles.Length; i++) houses[consolesH[i]].AddItem(consolesF[i], consoles[i]);
