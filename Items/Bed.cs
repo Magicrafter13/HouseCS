@@ -2,21 +2,70 @@ using System;
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items {
+	/// <summary>
+	/// Bed, can be adjustable, and there are different sizes
+	/// </summary>
 	public class Bed : IItem {
+		/// <summary>
+		/// Bed sizes
+		/// </summary>
 		public static readonly string[] types = { "King", "Queen", "Twin", "Single" };
-		private readonly bool adjustable;
-		private readonly int bedType;
+
 		private static readonly string typeS = "Bed";
 
-		public Bed() : this(false, 2) { }
-		public Bed(bool a, int t) {
-			adjustable = a;
-			bedType = t >= 0 && t < types.Length ? t : 2;
-		}
-		public bool HasItem(IItem test) => false;
+		/// <summary>
+		/// Boolean for whether or not the bed moves
+		/// </summary>
+		private bool Adjustable { get; set; }
+
+		/// <summary>
+		/// Set bed size
+		/// </summary>
+		private int BedType { get; set; }
+
+		/// <summary>
+		/// string of Item type
+		/// </summary>
 		public string Type => typeS;
-		public string SubType => Type;
-		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{types[bedType]} " : adjustable ? " - Adjustable" : "" }, new ConsoleColor[] { ConsoleColor.White });
-		public ColorText ToText() => new ColorText(new string[] { $"{(adjustable ? "Adjustable" : "Non adjustable")} {types[bedType]} size bed" }, new ConsoleColor[] { ConsoleColor.White });
+
+		/// <summary>
+		/// string of Item sub-type
+		/// </summary>
+		public string SubType => typeS;
+
+		/// <summary>
+		/// Don't use
+		/// </summary>
+		/// <param name="item">test Item</param>
+		/// <returns>false</returns>
+		public bool HasItem(IItem item) => false;
+
+		/// <summary>
+		/// Minor details for list
+		/// </summary>
+		/// <param name="beforeNotAfter">True for left side, False for right side</param>
+		/// <returns>ColorText object of minor bed details</returns>
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{types[BedType]} " : Adjustable ? " - Adjustable" : "" }, new ConsoleColor[] { ConsoleColor.White });
+
+		/// <summary>
+		/// Information about bed
+		/// </summary>
+		/// <returns>ColorText object of important info</returns>
+		public ColorText ToText() => new ColorText(new string[] { $"{(Adjustable ? "Adjustable" : "Non adjustable")} {types[BedType]} size bed" }, new ConsoleColor[] { ConsoleColor.White });
+
+		/// <summary>
+		/// Creates non adjustable Twin bed
+		/// </summary>
+		public Bed() : this(false, 2) { }
+
+		/// <summary>
+		/// Creates a bed, set adjustability, and set size
+		/// </summary>
+		/// <param name="adjustable">True if bed moves, False if not</param>
+		/// <param name="type">Index of bed type</param>
+		public Bed(bool adjustable, int type) {
+			Adjustable = adjustable;
+			BedType = type >= 0 && type < types.Length ? type : 2;
+		}
 	}
 }

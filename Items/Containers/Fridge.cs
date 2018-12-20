@@ -3,18 +3,34 @@ using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items.Containers {
+	/// <summary>
+	/// Fridge, has Items
+	/// </summary>
 	public class Fridge : Container, IItem {
-		private static readonly string typeS = "Fridge";
+		private const string typeS = "Fridge";
+
 		private double temperature = 35.0;
+
 		private bool celsius = false;
+
 		private double freezerTemp = 0.0;
+
 		private bool freezerCelsius = false;
 
-		public Fridge() : this(false) { }
-		public Fridge(List<IItem> iS) : base(iS) { }
-		public Fridge(bool f) : base() => HasFreezer = f;
-		public Fridge(List<IItem> iS, bool f) : base(iS) => HasFreezer = f;
+		/// <summary>
+		/// Whether or not this fridge has a freezer
+		/// </summary>
 		public bool HasFreezer { get; private set; }
+
+		/// <summary>
+		/// string of Item sub-type
+		/// </summary>
+		public new string SubType => typeS;
+
+		/// <summary>
+		/// Switches temperature of fridge or freezer to celsius
+		/// </summary>
+		/// <param name="freezer">True to set freezer, False to set fridge</param>
 		public void ToCelsius(bool freezer) {
 			if (freezer) {
 				if (!freezerCelsius) {
@@ -28,32 +44,64 @@ namespace HouseCS.Items.Containers {
 				}
 			}
 		}
+
+		/// <summary>
+		/// Switches temperature of fridge or freezer to farenheit
+		/// </summary>
+		/// <param name="freezer">True to set freezer, False to set fridge</param>
 		public void ToFarenheit(bool freezer) {
 			if (freezer) {
 				if (freezerCelsius) {
 					freezerCelsius = false;
-					freezerTemp = (freezerTemp * 9.0 / 5.0) + 32.0;
+					freezerTemp = freezerTemp * 9.0 / 5.0 + 32.0;
 				}
 			} else {
 				if (celsius) {
 					celsius = false;
-					temperature = (temperature * 9.0 / 5.0) + 32.0;
+					temperature = temperature * 9.0 / 5.0 + 32.0;
 				}
 			}
 		}
-		public void tempInc() => temperature += 1.0;
-		public void tempDec() => temperature -= 1.0;
-		public void tempChange(double n) => temperature += n;
-		public void tempReset() {
+
+		/// <summary>
+		/// Increment the temperature by 1
+		/// </summary>
+		public void TempInc() => temperature += 1.0;
+
+		/// <summary>
+		/// Decrement the temperature by 1
+		/// </summary>
+		public void TempDec() => temperature -= 1.0;
+
+		/// <summary>
+		/// Changes temperature of fridge
+		/// </summary>
+		/// <param name="newTemp">New temperature for fridge</param>
+		public void TempChange(double newTemp) => temperature += newTemp;
+
+		/// <summary>
+		/// Resets temperature, and sets to farenheit
+		/// </summary>
+		public void TempReset() {
 			celsius = false;
 			temperature = 35.0;
 		}
-		public new string SubType => typeS;
+
+		/// <summary>
+		/// Minor details for list
+		/// </summary>
+		/// <param name="beforeNotAfter">True for left side, False for right side</param>
+		/// <returns>ColorText object of minor fridge details</returns>
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
 			? new ColorText($"{temperature}° ", ConsoleColor.White)
 			: Size > 0
 				? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
 				: new ColorText(new string[] { " - ", "Empty", $"]{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
+
+		/// <summary>
+		/// Information about fridge
+		/// </summary>
+		/// <returns>ColorText object of important info</returns>
 		public new ColorText ToText() {
 			List<string> retStr = new List<string>() { "Items", " in this ", "Fridge", ":" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White };
@@ -83,5 +131,29 @@ namespace HouseCS.Items.Containers {
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
+
+		/// <summary>
+		/// Creates empty fridge, without freezer
+		/// </summary>
+		public Fridge() : this(false) { }
+
+		/// <summary>
+		/// Creates fridge with Items, without freezer
+		/// </summary>
+		/// <param name="items">Items in fridge</param>
+		public Fridge(List<IItem> items) : base(items) { }
+
+		/// <summary>
+		/// Creates empty fridge, with or without a freezer
+		/// </summary>
+		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
+		public Fridge(bool hasFreezer) : base() => HasFreezer = hasFreezer;
+
+		/// <summary>
+		/// Creates empty fridge with Items, with or without a freezer
+		/// </summary>
+		/// <param name="items">Items in fridge</param>
+		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
+		public Fridge(List<IItem> items, bool hasFreezer) : base(items) => HasFreezer = hasFreezer;
 	}
 }

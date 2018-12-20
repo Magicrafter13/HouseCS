@@ -3,24 +3,56 @@ using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items {
+	/// <summary>
+	/// Display, can be a monitor or a TV, and can have devices connected to it, also has a set size
+	/// </summary>
 	public class Display : IItem {
 		private static readonly string typeS = "Display";
-		private readonly bool isMonitor;
-		private readonly List<IItem> connectedTo = new List<IItem>();
-		private readonly double sizeInch;
 
-		public Display() : this(false, new List<IItem>(), 20.0) { }
-		public Display(bool mon, List<IItem> con, double sin) {
-			isMonitor = mon;
-			connectedTo = con;
-			sizeInch = sin > 0 ? sin : 20.0;
-		}
-		public bool HasItem(IItem test) {
+		private readonly List<IItem> connectedTo = new List<IItem>();
+
+		/// <summary>
+		/// Displays size in inches
+		/// </summary>
+		public double SizeInch { get; private set; }
+
+		/// <summary>
+		/// Whether or not the Display is a monitor, or a TV
+		/// </summary>
+		public bool IsMonitor { get; private set; }
+
+		/// <summary>
+		/// How many devices are connected to the display
+		/// </summary>
+		public int DeviceCount => connectedTo.Count;
+
+		/// <summary>
+		/// string of Item type
+		/// </summary>
+		public string Type => typeS;
+
+		/// <summary>
+		/// string of Item sub-type
+		/// </summary>
+		public string SubType => typeS;
+
+		/// <summary>
+		/// Checks if Item is connected
+		/// </summary>
+		/// <param name="item">test Item</param>
+		/// <returns>True if Item is connected, false if not</returns>
+		public bool HasItem(IItem item) {
 			foreach (IItem i in connectedTo)
-				if (i == test)
+				if (i == item)
 					return true;
 			return false;
 		}
+
+		/// <summary>
+		/// Connects Item to display
+		/// </summary>
+		/// <param name="item">connecting Item</param>
+		/// <returns>ColorText object showing the Item is connected, or tells the user the Item is already connected</returns>
 		public ColorText Connect(IItem item) {
 			if (HasItem(item))
 				return new ColorText(new string[] { $"This ", "Item", " is already connected." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
@@ -43,6 +75,12 @@ namespace HouseCS.Items {
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
+
+		/// <summary>
+		/// Disconnects Item from display
+		/// </summary>
+		/// <param name="item">Index of disconnecting Item</param>
+		/// <returns>ColorText object showing the Item was disconnected, or tells the user the Item isn't connected</returns>
 		public ColorText Disconnect(int item) {
 			if (item < 0 || item >= connectedTo.Count)
 				return connectedTo.Count == 0
@@ -51,16 +89,36 @@ namespace HouseCS.Items {
 			connectedTo.RemoveAt(item);
 			return new ColorText(new string[] { $"\nDevice {item}", " disconnected", ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White });
 		}
-		public ColorText Disconnect(IItem d) => connectedTo.Remove(d)
+
+		/// <summary>
+		/// Disconnects Item from display
+		/// </summary>
+		/// <param name="item">disconnecting Item</param>
+		/// <returns>ColorText object showing the Item was disconnected, or tells the user the Item isn't connected</returns>
+		public ColorText Disconnect(IItem item) => connectedTo.Remove(item)
 			? new ColorText(new string[] { "\nDevice", ", ", "disconnected\n" }, new ConsoleColor[] { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.DarkBlue })
 			: new ColorText(new string[] { "No matching ", "Device", " found." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
-		public int DeviceCount => connectedTo.Count;
-		public IItem GetDevice(int i) => connectedTo[i];
-		public string Type => typeS;
-		public string SubType => typeS;
-		public ColorText ListInfo(bool before_not_after) => new ColorText(new string[] { before_not_after ? $"{sizeInch}\" {(isMonitor ? "Monitor" : "TV")} (" : $") - {connectedTo.Count} devices are connected to it" }, new ConsoleColor[] { ConsoleColor.White });
+
+		/// <summary>
+		/// Gets a connected device
+		/// </summary>
+		/// <param name="item">Index of Item</param>
+		/// <returns>Item object of connected device</returns>
+		public IItem GetDevice(int item) => connectedTo[item];
+
+		/// <summary>
+		/// Minor details for list
+		/// </summary>
+		/// <param name="beforeNotAfter">True for left side, False for right side</param>
+		/// <returns>ColorText object of minor display details</returns>
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{SizeInch}\" {(IsMonitor ? "Monitor" : "TV")} (" : $") - {connectedTo.Count} devices are connected to it" }, new ConsoleColor[] { ConsoleColor.White });
+
+		/// <summary>
+		/// Information about display
+		/// </summary>
+		/// <returns>ColorText object of important info</returns>
 		public ColorText ToText() {
-			List<string> retStr = new List<string>() { $"{sizeInch}\" {(isMonitor ? "Monitor" : "TV")} (", connectedTo.Count.ToString(), " devices):" };
+			List<string> retStr = new List<string>() { $"{SizeInch}\" {(IsMonitor ? "Monitor" : "TV")} (", connectedTo.Count.ToString(), " devices):" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White };
 			for (int i = 0; i < connectedTo.Count; i++) {
 				retStr.Add($"\n\t{i.ToString()}");
@@ -81,6 +139,23 @@ namespace HouseCS.Items {
 					retClr.Add(clr);
 			}
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
+		}
+
+		/// <summary>
+		/// Creates a TV, with no connected devices, that is 20 inches
+		/// </summary>
+		public Display() : this(false, new List<IItem>(), 20.0) { }
+
+		/// <summary>
+		/// Creates a set sized display, with a set type, and a list of connected devices
+		/// </summary>
+		/// <param name="isMonitor">Whether or not it's a monitor</param>
+		/// <param name="connectedDevs">List of connected devices</param>
+		/// <param name="inchSize">Display size in inches</param>
+		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize) {
+			IsMonitor = isMonitor;
+			connectedTo = connectedDevs;
+			SizeInch = inchSize > 0 ? inchSize : 20.0;
 		}
 	}
 }

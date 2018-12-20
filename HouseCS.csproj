@@ -3,10 +3,38 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Copyright>GNU Lesser GPL 2.1 License</Copyright>
+    <PackageLicenseUrl>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Magicrafter13/HouseCS</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Magicrafter13/HouseCS</RepositoryUrl>
+    <RepositoryType>GitHub (Git)</RepositoryType>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>A port of my Java project "House".
+https://github.com/Magicrafter13/House</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>C:\Users\Matthew\Source\Repos\HouseCS\HouseCS\HouseCS.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Temp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

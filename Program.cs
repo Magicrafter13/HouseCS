@@ -685,7 +685,7 @@ namespace HouseCS {
 							#region
 							if (cmds.Length > 1) {
 								if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--hand", "--focus", "-h", "-f" }))
-									WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem(), new ColorText("\n\n") });
+									WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem(), new ColorText("\n\n") });
 								else if (cmds.Length > 2 || EqualsIgnoreCaseOr(cmds[1], new string[] { "-p", "--page" })) {
 									bool page = false;
 									int rangeStart = 0;
@@ -772,7 +772,7 @@ namespace HouseCS {
 														im = GetInput(0, iC);
 														WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
 													} else if (yenu.Equals("N") || ((Container)user.curItem).Size == 0)
-														WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem() });
+														WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem() });
 													else
 														WriteColor(new string[] { user.curItem.SubType, " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
 													Console.WriteLine();
@@ -802,7 +802,7 @@ namespace HouseCS {
 																WriteColor(new string[] { user.curItem.SubType, " doesn't have that many ", "Items" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Yellow, ConsoleColor.Yellow });
 														}
 													} else if (temp.Equals("N") || ((Display)user.curItem).DeviceCount == 0)
-														WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem() });
+														WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem() });
 													Console.WriteLine();
 													if (EqualsIgnoreCaseOr(temp, new string[] { "Y", "N" }))
 														break;
@@ -814,7 +814,7 @@ namespace HouseCS {
 											case "Console":
 											case "Bed":
 											case "Clothing":
-												WriteColor(new ColorText[] { new ColorText("\n"), user.GetViewCurItem(), new ColorText("\n\n") });
+												WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem(), new ColorText("\n\n") });
 												break;
 										}
 										user.curItem = tempItem;

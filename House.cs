@@ -4,37 +4,62 @@ using HouseCS.ConsoleUtils;
 using HouseCS.Items;
 
 namespace HouseCS {
+	/// <summary>
+	/// Object containing Floor objects, and a paint color.
+	/// </summary>
 	public class House {
+		/// <summary>
+		/// Possible colors for the House
+		/// </summary>
 		public static readonly string[] colors = { "White", "Red", "Brown", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black" };
+
+		/// <summary>
+		/// Possible Item types
+		/// </summary>
 		public static readonly string[] types = { "*", "Bed", "Book", "Computer", "Console", "Display",
 			"Bookshelf", "Container", "Dresser", "Fridge", "Table",
 			"Clothing", "Pants", "Shirt" };
-		private readonly int color;
 
+		/// <summary>
+		/// int of House Color (index for colors)
+		/// </summary>
+		private int Color { get; }
+
+		/// <summary>
+		/// How many floors the house has
+		/// </summary>
+		public int Size => Floors.Length;
+
+		/// <summary>
+		/// The floors of this house
+		/// </summary>
+		public Floor[] Floors { get; }
+
+		/// <summary>
+		/// Makes sure none of the floors are null, by using the default constructor
+		/// </summary>
 		private void InitializeFloors() {
-			for (int i = 0; i < GetFloors.Length; i++)
-				GetFloors[i] = new Floor();
+			for (int i = 0; i < Floors.Length; i++)
+				Floors[i] = new Floor();
 		}
-		public House() : this(0, 1) { }
-		public House(int c, int f) {
-			color = c >= 0 && c <= 9 ? c : 0;
-			Size = f > 0 ? f : 1;
-			GetFloors = new Floor[Size];
-			InitializeFloors();
-		}
-		public House(int c, Floor[] fs) {
-			color = c >= 0 && c <= 9 ? c : 0;
-			Size = fs.Length;
-			GetFloors = fs;
-		}
-		public int PageCount(int f, int rangeStart, int rangeEnd, string searchType, int pageLength) {
+
+		/// <summary>
+		/// Returns page count for listing Items
+		/// </summary>
+		/// <param name="floor">Index of floor in house</param>
+		/// <param name="rangeStart">Index of first Item on floor</param>
+		/// <param name="rangeEnd">Index of last Item on floor</param>
+		/// <param name="searchType">string of Item type being searched for</param>
+		/// <param name="pageLength">int of how many Items are to be shown per page</param>
+		/// <returns>How many pages a listing will take, based on Item type, range, and page length</returns>
+		public int PageCount(int floor, int rangeStart, int rangeEnd, string searchType, int pageLength) {
 			bool validType = false;
 			foreach (string t in types)
 				if (searchType.Equals(t, StringComparison.OrdinalIgnoreCase))
 					validType = true;
 			if (!validType)
 				return -1;
-			if (GetFloors[f].Size() == 0)
+			if (Floors[floor].Size == 0)
 				return -2;
 			if (rangeStart >= rangeEnd)
 				return -3;
@@ -42,40 +67,51 @@ namespace HouseCS {
 				return -4;
 			int items = 0;
 			for (int i = rangeStart; i < rangeEnd; i++) {
-				if (i > GetFloors[f].Size())
+				if (i > Floors[floor].Size)
 					continue;
 				if (searchType.Equals("*") ||
-					searchType.Equals(GetFloors[f].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase) ||
-					searchType.Equals(GetFloors[f].GetItem(i).Type)) {
+					searchType.Equals(Floors[floor].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase) ||
+					searchType.Equals(Floors[floor].GetItem(i).Type)) {
 					items++;
 				}
 			}
 			return items / pageLength + (items % pageLength == 0 ? 0 : 1);
 		}
-		public ColorText List(int f, int s, int e, string type, int pageLength, int page) {
+
+		/// <summary>
+		/// Lists Items on the specified floor
+		/// </summary>
+		/// <param name="floor">Floor on this House to search</param>
+		/// <param name="start">Index of first Item</param>
+		/// <param name="end">Index of last Item</param>
+		/// <param name="type">Item type to find</param>
+		/// <param name="pageLength">How many Items per page</param>
+		/// <param name="page">Page</param>
+		/// <returns>ColorText object either containing a List of Items based on the criteria, or a message explaining what was wrong with the arguments</returns>
+		public ColorText List(int floor, int start, int end, string type, int pageLength, int page) {
 			bool validType = false;
 			foreach (string t in types)
 				if (type.Equals(t, StringComparison.OrdinalIgnoreCase))
 					validType = true;
 			if (!validType)
 				return new ColorText(new string[] { type, " is not a valid ", "Item", " type." }, new ConsoleColor[] { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-			if (GetFloors[f].Size() == 0)
+			if (Floors[floor].Size == 0)
 				return new ColorText(new string[] { "Floor is empty!" }, new ConsoleColor[] { ConsoleColor.White });
-			if (s >= e)
+			if (start >= end)
 				return new ColorText(new string[] { "Start", " must be less than ", "End" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red });
-			if (s < 0)
+			if (start < 0)
 				return new ColorText(new string[] { "Start", " must be greater than or equal to ", "0" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan });
 			List<string> retStr = new List<string>() { "\n" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White };
 			List<IItem> items = new List<IItem>();
 			List<int> itemIds = new List<int>();
-			for (int i = s; i < e; i++) {
-				if (i > GetFloors[f].Size())
+			for (int i = start; i < end; i++) {
+				if (i > Floors[floor].Size)
 					continue;
 				if (type.Equals("*") ||
-					type.Equals(GetFloors[f].GetItem(i).Type, StringComparison.OrdinalIgnoreCase) ||
-					type.Equals(GetFloors[f].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase)) {
-					items.Add(GetFloors[f].GetItem(i));
+					type.Equals(Floors[floor].GetItem(i).Type, StringComparison.OrdinalIgnoreCase) ||
+					type.Equals(Floors[floor].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase)) {
+					items.Add(Floors[floor].GetItem(i));
 					itemIds.Add(i);
 				}
 			}
@@ -105,21 +141,89 @@ namespace HouseCS {
 			}
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-		public ColorText List(int f) => List(f, 0, GetFloors[f].Size(), "*", GetFloors[f].Size(), 0);
-		public ColorText List(int f, string type) => List(f, 0, GetFloors[f].Size(), type, GetFloors[f].Size(), 0);
-		public int Size { get; }
-		public bool AddItem(int f, IItem i) {
-			bool check = f >= 0 && f < Size;
+
+		/// <summary>
+		/// Lists all Items on floor
+		/// </summary>
+		/// <param name="floor">Index of floor in house</param>
+		/// <returns>ColorText object containing list of all Items on floor</returns>
+		public ColorText List(int floor) => List(floor, 0, Floors[floor].Size, "*", Floors[floor].Size, 0);
+
+		/// <summary>
+		/// Lists all Items of type on floor
+		/// </summary>
+		/// <param name="floor">Index of floor in house</param>
+		/// <param name="type">Item type to find</param>
+		/// <returns>ColorText object containing list of all type Items on floor</returns>
+		public ColorText List(int floor, string type) => List(floor, 0, Floors[floor].Size, type, Floors[floor].Size, 0);
+
+		/// <summary>
+		/// Adds an Item to floor
+		/// </summary>
+		/// <param name="floor">Index of floor in house</param>
+		/// <param name="item">Item object</param>
+		/// <returns>True if Item was added to the floor, False if Item was already on the floor</returns>
+		public bool AddItem(int floor, IItem item) {
+			bool check = floor >= 0 && floor < Size;
 			if (check)
-				GetFloors[f].AddItem(i);
+				Floors[floor].AddItem(item);
 			return check;
 		}
-		public IItem GetItem(int f, int i) => GetFloors[f].GetItem(i);
-		public IItem GetItem(int f, int i, int si) => GetFloors[f].GetItem(i, si);
-		public Floor GetFloor(int f) => GetFloors[f];
 
-		public Floor[] GetFloors { get; }
+		/// <summary>
+		/// Gets Item from floor
+		/// </summary>
+		/// <param name="floor">Index of floor in house</param>
+		/// <param name="item">Index of Item on floor in house</param>
+		/// <returns>Item object from floor in house</returns>
+		public IItem GetItem(int floor, int item) => Floors[floor].GetItem(item);
 
-		public override string ToString() => $"Color: {colors[color]}\nFloors: {Size}";
+		/// <summary>
+		/// Gets sub Item from floor
+		/// </summary>
+		/// <param name="floor">Index of floor in house</param>
+		/// <param name="item">Index of Item on floor in house</param>
+		/// <param name="subItem">Index of sub Item in Item on floor in house</param>
+		/// <returns>Item object from Item from floor in house</returns>
+		public IItem GetItem(int floor, int item, int subItem) => Floors[floor].GetItem(item, subItem);
+
+		/// <summary>
+		/// Gets a floor from the house
+		/// </summary>
+		/// <param name="floor">Index of floor in house</param>
+		/// <returns>Floor object from house</returns>
+		public Floor GetFloor(int floor) => Floors[floor];
+
+		/// <summary>
+		/// ToString override showing info about the house
+		/// </summary>
+		/// <returns>string containing the color of the house, and how many floors it has</returns>
+		public override string ToString() => $"Color: {colors[Color]}\nFloors: {Size}";
+
+		/// <summary>
+		/// Creates a white house, with 1 floor
+		/// </summary>
+		public House() : this(0, 1) { }
+
+		/// <summary>
+		/// Creates a house with a set color, and floor count
+		/// </summary>
+		/// <param name="color">Index of color for house</param>
+		/// <param name="floor">floor count</param>
+		public House(int color, int floor) {
+			Color = color >= 0 && color <= 9 ? color : 0;
+			Floors = new Floor[floor];
+			InitializeFloors();
+		}
+
+		/// <summary>
+		/// Creates a house with a set color, and an array of floors
+		/// </summary>
+		/// <param name="color">Index of color for house</param>
+		/// <param name="floors">Array of floor objects</param>
+		public House(int color, Floor[] floors) {
+			Color = color >= 0 && color <= 9 ? color : 0;
+			Floors = floors;
+		}
 	}
 }
