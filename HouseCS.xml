@@ -49,6 +49,11 @@
             Object containing Items, and lights that are on or off.
             </summary>
         </member>
+        <member name="P:HouseCS.Floor.RoomNames">
+            <summary>
+            List of all room names on floor
+            </summary>
+        </member>
         <member name="P:HouseCS.Floor.Items">
             <summary>
             List of all Items on the floor.
@@ -58,6 +63,12 @@
             <summary>
             Boolean representation of whether or not the lights are turned on, on this floor.
             </summary>
+        </member>
+        <member name="M:HouseCS.Floor.AddRoom(System.String)">
+            <summary>
+            Adds a room to the floor
+            </summary>
+            <param name="room">Room name</param>
         </member>
         <member name="M:HouseCS.Floor.ToggleLights">
             <summary>
@@ -122,12 +133,13 @@
             Creates a floor with an empty List of Items, and with the lights off
             </summary>
         </member>
-        <member name="M:HouseCS.Floor.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Boolean)">
+        <member name="M:HouseCS.Floor.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Boolean,System.Collections.Generic.List{System.String})">
             <summary>
             Creates a floor with a set List of Items
             </summary>
             <param name="i">List of Items for the floor</param>
             <param name="l">Sets state of lights, true = on, false = off</param>
+            <param name="roomNames">Names of each room on the floor</param>
         </member>
         <member name="M:HouseCS.Floor.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem})">
             <summary>
@@ -140,6 +152,33 @@
             Creates a floor with the lights on or off
             </summary>
             <param name="l">Lights, true = on, false = off</param>
+        </member>
+        <member name="M:HouseCS.Floor.#ctor(System.Collections.Generic.List{System.String})">
+            <summary>
+            Creates a floor with set rooms, and no Items, with lights off
+            </summary>
+            <param name="rooms">Room names</param>
+        </member>
+        <member name="M:HouseCS.Floor.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Boolean)">
+            <summary>
+            Creates a floor with Items, set lights, and no rooms
+            </summary>
+            <param name="items">Items on floor</param>
+            <param name="lights">Whether lights are on or off</param>
+        </member>
+        <member name="M:HouseCS.Floor.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Collections.Generic.List{System.String})">
+            <summary>
+            Creates a floor with Items, rooms, and lights off
+            </summary>
+            <param name="items">Items on floor</param>
+            <param name="rooms">Rooms on floor</param>
+        </member>
+        <member name="M:HouseCS.Floor.#ctor(System.Boolean,System.Collections.Generic.List{System.String})">
+            <summary>
+            Creates a floor with no Items, rooms, and set lights
+            </summary>
+            <param name="lights">Lights, true = on, false = off</param>
+            <param name="rooms">Rooms on floor</param>
         </member>
         <member name="T:HouseCS.House">
             <summary>
@@ -187,7 +226,7 @@
             <param name="pageLength">int of how many Items are to be shown per page</param>
             <returns>How many pages a listing will take, based on Item type, range, and page length</returns>
         </member>
-        <member name="M:HouseCS.House.List(System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+        <member name="M:HouseCS.House.List(System.Int32,System.Int32,System.Int32,System.String,System.Int32,System.Int32,System.Int32)">
             <summary>
             Lists Items on the specified floor
             </summary>
@@ -197,22 +236,8 @@
             <param name="type">Item type to find</param>
             <param name="pageLength">How many Items per page</param>
             <param name="page">Page</param>
+            <param name="room">Room to search</param>
             <returns>ColorText object either containing a List of Items based on the criteria, or a message explaining what was wrong with the arguments</returns>
-        </member>
-        <member name="M:HouseCS.House.List(System.Int32)">
-            <summary>
-            Lists all Items on floor
-            </summary>
-            <param name="floor">Index of floor in house</param>
-            <returns>ColorText object containing list of all Items on floor</returns>
-        </member>
-        <member name="M:HouseCS.House.List(System.Int32,System.String)">
-            <summary>
-            Lists all Items of type on floor
-            </summary>
-            <param name="floor">Index of floor in house</param>
-            <param name="type">Item type to find</param>
-            <returns>ColorText object containing list of all type Items on floor</returns>
         </member>
         <member name="M:HouseCS.House.AddItem(System.Int32,HouseCS.Items.IItem)">
             <summary>
@@ -274,6 +299,11 @@
         <member name="T:HouseCS.ItemImport">
             <summary>
             Class to store House, Floor, and Item data
+            </summary>
+        </member>
+        <member name="F:HouseCS.ItemImport.roomNames">
+            <summary>
+            Names of Rooms on floors in houses
             </summary>
         </member>
         <member name="F:HouseCS.ItemImport.bookshelfs">
@@ -431,6 +461,11 @@
             Bed sizes
             </summary>
         </member>
+        <member name="P:HouseCS.Items.Bed.RoomID">
+            <summary>
+            Room the bed is in
+            </summary>
+        </member>
         <member name="P:HouseCS.Items.Bed.Adjustable">
             <summary>
             Boolean for whether or not the bed moves
@@ -476,12 +511,13 @@
             Creates non adjustable Twin bed
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Bed.#ctor(System.Boolean,System.Int32)">
+        <member name="M:HouseCS.Items.Bed.#ctor(System.Boolean,System.Int32,System.Int32)">
             <summary>
             Creates a bed, set adjustability, and set size
             </summary>
             <param name="adjustable">True if bed moves, False if not</param>
             <param name="type">Index of bed type</param>
+            <param name="room">Room the bed is in</param>
         </member>
         <member name="T:HouseCS.Items.Book">
             <summary>
@@ -491,6 +527,11 @@
         <member name="F:HouseCS.Items.Book.totalBooks">
             <summary>
             Total book count for program
+            </summary>
+        </member>
+        <member name="P:HouseCS.Items.Book.RoomID">
+            <summary>
+            Room the book is in
             </summary>
         </member>
         <member name="P:HouseCS.Items.Book.Title">
@@ -556,17 +597,23 @@
             Creates a book titled "none", written by "none", in 1600 AD
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Book.#ctor(System.String,System.String,System.Int32)">
+        <member name="M:HouseCS.Items.Book.#ctor(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Creates a book titled tile, written by author, in year AD
             </summary>
             <param name="title">Book title</param>
             <param name="author">Book author</param>
             <param name="year">Book publishing year</param>
+            <param name="room">Room the book is in</param>
         </member>
         <member name="T:HouseCS.Items.Clothes.Clothing">
             <summary>
             Clothing, can have a color
+            </summary>
+        </member>
+        <member name="P:HouseCS.Items.Clothes.Clothing.RoomID">
+            <summary>
+            Room the clothes are in
             </summary>
         </member>
         <member name="P:HouseCS.Items.Clothes.Clothing.Color">
@@ -609,11 +656,12 @@
             Creates a black piece of clothing
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Clothes.Clothing.#ctor(System.String)">
+        <member name="M:HouseCS.Items.Clothes.Clothing.#ctor(System.String,System.Int32)">
             <summary>
             Creates a colored piece of clothing
             </summary>
             <param name="color">Color for clothes</param>
+            <param name="room">Room for clothing</param>
         </member>
         <member name="T:HouseCS.Items.Clothes.Pants">
             <summary>
@@ -643,11 +691,12 @@
             Creates black pants
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Clothes.Pants.#ctor(System.String)">
+        <member name="M:HouseCS.Items.Clothes.Pants.#ctor(System.String,System.Int32)">
             <summary>
             Creates colored pants
             </summary>
             <param name="color">Color for clothes</param>
+            <param name="room">Room for pants</param>
         </member>
         <member name="T:HouseCS.Items.Clothes.Shirt">
             <summary>
@@ -677,15 +726,21 @@
             Creates black shirt
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Clothes.Shirt.#ctor(System.String)">
+        <member name="M:HouseCS.Items.Clothes.Shirt.#ctor(System.String,System.Int32)">
             <summary>
             Creates colored shirt
             </summary>
             <param name="color">Color for shirt</param>
+            <param name="room">Room for shirt</param>
         </member>
         <member name="T:HouseCS.Items.Computer">
             <summary>
             Computer, has a Brand, Family, Model, power state, and unique id
+            </summary>
+        </member>
+        <member name="P:HouseCS.Items.Computer.RoomID">
+            <summary>
+            Room the computer is in
             </summary>
         </member>
         <member name="P:HouseCS.Items.Computer.ComputerType">
@@ -723,7 +778,7 @@
             string of Item sub-type
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Computer.Reset(System.String,System.String,System.String,System.Boolean,System.String)">
+        <member name="M:HouseCS.Items.Computer.Reset(System.String,System.String,System.String,System.Boolean,System.String,System.Int32)">
             <summary>
             Does the same as the constructor, sets brand, family, model, power state, and type
             </summary>
@@ -732,6 +787,7 @@
             <param name="model">Computer family model</param>
             <param name="state">Computer power state</param>
             <param name="type">Computer type</param>
+            <param name="id">Room ID</param>
         </member>
         <member name="M:HouseCS.Items.Computer.HasItem(HouseCS.Items.IItem)">
             <summary>
@@ -768,7 +824,7 @@
             Creates a "Generic" brand, "PC", [no model], Desktop computer that is turned off
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Computer.#ctor(System.String,System.String,System.String,System.Boolean,System.String)">
+        <member name="M:HouseCS.Items.Computer.#ctor(System.String,System.String,System.String,System.Boolean,System.String,System.Int32)">
             <summary>
             Creates a brand, family model, computer, with a set power state, and of set type
             </summary>
@@ -777,6 +833,7 @@
             <param name="model">Computer family model</param>
             <param name="state">Computer power state</param>
             <param name="type">Computer type</param>
+            <param name="room">Room for computer</param>
         </member>
         <member name="T:HouseCS.Items.Containers.Bookshelf">
             <summary>
@@ -827,15 +884,21 @@
             Creates a bookshelf with no books on it
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Containers.Bookshelf.#ctor(System.Collections.Generic.List{HouseCS.Items.Book})">
+        <member name="M:HouseCS.Items.Containers.Bookshelf.#ctor(System.Collections.Generic.List{HouseCS.Items.Book},System.Int32)">
             <summary>
             Creates a bookshelf with books on it
             </summary>
             <param name="books">List of books</param>
+            <param name="room">Room for bookshelf</param>
         </member>
         <member name="T:HouseCS.Items.Containers.Container">
             <summary>
             Container, has Items
+            </summary>
+        </member>
+        <member name="P:HouseCS.Items.Containers.Container.RoomID">
+            <summary>
+            Room the container is in
             </summary>
         </member>
         <member name="P:HouseCS.Items.Containers.Container.Items">
@@ -911,11 +974,12 @@
             Creates an empty container
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Containers.Container.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem})">
+        <member name="M:HouseCS.Items.Containers.Container.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Int32)">
             <summary>
             Creates a container with a List of Items
             </summary>
-            <param name="items"></param>
+            <param name="items">Items in the container</param>
+            <param name="room">Room for container</param>
         </member>
         <member name="T:HouseCS.Items.Containers.Dresser">
             <summary>
@@ -952,11 +1016,12 @@
             Creates an empty dresser
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Containers.Dresser.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem})">
+        <member name="M:HouseCS.Items.Containers.Dresser.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Int32)">
             <summary>
             Creates a dresser with Items
             </summary>
             <param name="items">Items in dresser</param>
+            <param name="room">Room for dresser</param>
         </member>
         <member name="T:HouseCS.Items.Containers.Fridge">
             <summary>
@@ -1024,24 +1089,13 @@
             Creates empty fridge, without freezer
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Containers.Fridge.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem})">
+        <member name="M:HouseCS.Items.Containers.Fridge.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Boolean,System.Int32)">
             <summary>
             Creates fridge with Items, without freezer
             </summary>
             <param name="items">Items in fridge</param>
-        </member>
-        <member name="M:HouseCS.Items.Containers.Fridge.#ctor(System.Boolean)">
-            <summary>
-            Creates empty fridge, with or without a freezer
-            </summary>
             <param name="hasFreezer">Whether or not this fridge has a freezer</param>
-        </member>
-        <member name="M:HouseCS.Items.Containers.Fridge.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Boolean)">
-            <summary>
-            Creates empty fridge with Items, with or without a freezer
-            </summary>
-            <param name="items">Items in fridge</param>
-            <param name="hasFreezer">Whether or not this fridge has a freezer</param>
+            <param name="room">Room for fridge</param>
         </member>
         <member name="T:HouseCS.Items.Containers.Table">
             <summary>
@@ -1071,15 +1125,21 @@
             Creates empty table
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Containers.Table.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem})">
+        <member name="M:HouseCS.Items.Containers.Table.#ctor(System.Collections.Generic.List{HouseCS.Items.IItem},System.Int32)">
             <summary>
             Creates table with Items
             </summary>
-            <param name="items"></param>
+            <param name="items">Items on table</param>
+            <param name="room">Room for table</param>
         </member>
         <member name="T:HouseCS.Items.Display">
             <summary>
             Display, can be a monitor or a TV, and can have devices connected to it, also has a set size
+            </summary>
+        </member>
+        <member name="P:HouseCS.Items.Display.RoomID">
+            <summary>
+            Room the display is in
             </summary>
         </member>
         <member name="P:HouseCS.Items.Display.SizeInch">
@@ -1160,17 +1220,23 @@
             Creates a TV, with no connected devices, that is 20 inches
             </summary>
         </member>
-        <member name="M:HouseCS.Items.Display.#ctor(System.Boolean,System.Collections.Generic.List{HouseCS.Items.IItem},System.Double)">
+        <member name="M:HouseCS.Items.Display.#ctor(System.Boolean,System.Collections.Generic.List{HouseCS.Items.IItem},System.Double,System.Int32)">
             <summary>
             Creates a set sized display, with a set type, and a list of connected devices
             </summary>
             <param name="isMonitor">Whether or not it's a monitor</param>
             <param name="connectedDevs">List of connected devices</param>
             <param name="inchSize">Display size in inches</param>
+            <param name="room">Room for display</param>
         </member>
         <member name="T:HouseCS.Items.Empty">
             <summary>
             Empty Item, used in place of null, so the program can actually handle it on run-time
+            </summary>
+        </member>
+        <member name="P:HouseCS.Items.Empty.RoomID">
+            <summary>
+            Room the 'empty' is in
             </summary>
         </member>
         <member name="P:HouseCS.Items.Empty.Type">
@@ -1225,6 +1291,11 @@
             Types of consoles
             </summary>
         </member>
+        <member name="P:HouseCS.Items.GameConsole.RoomID">
+            <summary>
+            Room the console is in
+            </summary>
+        </member>
         <member name="P:HouseCS.Items.GameConsole.SysType">
             <summary>
             Console type
@@ -1275,17 +1346,23 @@
             Creates a console, Generic System 1000 from Generi-sys
             </summary>
         </member>
-        <member name="M:HouseCS.Items.GameConsole.#ctor(System.Int32,System.String,System.String)">
+        <member name="M:HouseCS.Items.GameConsole.#ctor(System.Int32,System.String,System.String,System.Int32)">
             <summary>
             Creates a type, system from company
             </summary>
             <param name="type">Console type</param>
             <param name="company">Console company</param>
             <param name="system">Console system</param>
+            <param name="room">Room for console</param>
         </member>
         <member name="T:HouseCS.Items.IItem">
             <summary>
             Interface for all floor Items (the basis of this software)
+            </summary>
+        </member>
+        <member name="P:HouseCS.Items.IItem.RoomID">
+            <summary>
+            Room the Item is in
             </summary>
         </member>
         <member name="P:HouseCS.Items.IItem.Type">
@@ -1328,6 +1405,11 @@
             Item cache for viewer
             </summary>
         </member>
+        <member name="P:HouseCS.Viewer.CurRoom">
+            <summary>
+            Room the viewer is stationed in
+            </summary>
+        </member>
         <member name="P:HouseCS.Viewer.CurHouse">
             <summary>
             House cache for viewer
@@ -1342,6 +1424,18 @@
             <summary>
             Index of current floor for current house
             </summary>
+        </member>
+        <member name="P:HouseCS.Viewer.RoomNames">
+            <summary>
+            Names of rooms on current floor of current house
+            </summary>
+        </member>
+        <member name="M:HouseCS.Viewer.GoRoom(System.Int32)">
+            <summary>
+            Changes viewers current room
+            </summary>
+            <param name="room">Destination room</param>
+            <returns>Status code of what happened</returns>
         </member>
         <member name="M:HouseCS.Viewer.IsItem(System.Int32)">
             <summary>
@@ -1380,7 +1474,7 @@
             <param name="length">Length of list pages</param>
             <returns>int count of how many pages the list will use</returns>
         </member>
-        <member name="M:HouseCS.Viewer.List(System.Int32,System.Int32,System.String,System.Int32,System.Int32)">
+        <member name="M:HouseCS.Viewer.List(System.Int32,System.Int32,System.String,System.Int32,System.Int32,System.Int32)">
             <summary>
             Lists Items on the current floor of the current house
             </summary>
@@ -1389,28 +1483,8 @@
             <param name="type"></param>
             <param name="length"></param>
             <param name="page"></param>
+            <param name="room">Room for listing</param>
             <returns>ColorText object of list of Items</returns>
-        </member>
-        <member name="M:HouseCS.Viewer.List">
-            <summary>
-            Lists all Items on current floor of current house
-            </summary>
-            <returns>ColorText object of list of all Items</returns>
-        </member>
-        <member name="M:HouseCS.Viewer.List(System.Int32,System.Int32)">
-            <summary>
-            Lists range of Items on current floor of current house
-            </summary>
-            <param name="start">Index of start Item</param>
-            <param name="end">Index of end Item</param>
-            <returns>ColorText object of range list of Items</returns>
-        </member>
-        <member name="M:HouseCS.Viewer.List(System.String)">
-            <summary>
-            Lists type Items on current floor of current house
-            </summary>
-            <param name="type">Item type to find</param>
-            <returns>ColorText object of list of type Items</returns>
         </member>
         <member name="M:HouseCS.Viewer.AddItem(HouseCS.Items.IItem)">
             <summary>
