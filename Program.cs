@@ -336,7 +336,7 @@ namespace HouseCS {
 			do {
 				WriteColor(new string[] { "\n[", min.ToString(), "-", (max - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 				string lineIn = Console.ReadLine();
-				if (Regex.IsMatch(lineIn, "-?[0-9]+") && int.Parse(lineIn) >= min && int.Parse(lineIn) < max)
+				if (Regex.IsMatch(lineIn, @"^-?\d+$") && int.Parse(lineIn) >= min && int.Parse(lineIn) < max)
 					return int.Parse(lineIn);
 			} while (true);
 		}
@@ -347,7 +347,7 @@ namespace HouseCS {
 			do {
 				WriteColor(new string[] { "\n[", min.ToString(), "-", (max - 1.0).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 				string lineIn = Console.ReadLine();
-				if (Regex.IsMatch(lineIn, "-?[0-9]+([.]{1}[0-9]+)?") && double.Parse(lineIn) >= min && double.Parse(lineIn) <= max - 1.0)
+				if (Regex.IsMatch(lineIn, @"^-?\d+([.]{1}\d+)?$") && double.Parse(lineIn) >= min && double.Parse(lineIn) <= max - 1.0)
 					return double.Parse(lineIn);
 			} while (true);
 		}
@@ -417,7 +417,7 @@ namespace HouseCS {
 							break;*/
 						case "goto":
 							if (cmds.Length > 1) {
-								if (Regex.IsMatch(cmds[1], "(-1)|([0-9]+)")) {
+								if (Regex.IsMatch(cmds[1], @"^((-1)|\d+)$")) {
 									int room = int.Parse(cmds[1]);
 									switch (user.GoRoom(room)) {
 										case 1: WriteColor(new ColorText("Error: user.GoRoom returned 1! Please report this bug!\n", ConsoleColor.Red)); break;
@@ -426,7 +426,7 @@ namespace HouseCS {
 										case 0: Console.WriteLine($"\nWelcome to room {cmds[1]}.\n"); break;
 									}
 									enviVar[4,1] = cmds[1];
-								} else WriteColor(new string[] { "room", " must be a positive ", "integer", ", or ", "-1", "." }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Cyan });
+								} else WriteColorLine(new string[] { "room", " must be a positive ", "integer", ", or ", "-1", "." }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Cyan });
 							} else {
 								Console.WriteLine("\nRooms on this floor:\n");
 								for (int i = 0; i < user.RoomNames.Count; i++) Console.WriteLine($"{i.ToString()}: {user.RoomNames[i]}");
@@ -439,8 +439,8 @@ namespace HouseCS {
 							}
 							break;
 						case "visit":
-							if (cmds.Length == 2) {
-								if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+							if (cmds.Length > 1) {
+								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									int dst = int.Parse(cmds[1]);
 									if (dst < houseData.Count) {
 										user = viewers[dst];
@@ -449,7 +449,7 @@ namespace HouseCS {
 									} else
 										Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
 								} else
-									WriteColor(new string[] { "House number must be a positive ", "Integer", $", that is less than {houseData.Count.ToString()}." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+									WriteColor(new string[] { "House number must be a positive ", "Integer", $", that is less than {houseData.Count.ToString()}.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 							} else
 								Console.WriteLine($"Visit which house? (There are {houseData.Count})");
 							break;
@@ -511,7 +511,7 @@ namespace HouseCS {
 													break;
 												case "int":
 												case "double":
-													if (Regex.IsMatch(cmds[2], "-?[0-9]+([.]{1}[0-9]+)?")) {
+													if (Regex.IsMatch(cmds[2], @"^-?\d+([.]{1}\d+)?$")) {
 														double newVal = double.Parse(cmds[2]);
 														enviVar[i, 1] = enviVar[i, 2].Equals("int") ? newVal.ToString() : newVal.ToString();
 													} else
@@ -539,9 +539,9 @@ namespace HouseCS {
 						case "attach":
 							#region
 							if (cmds.Length > 1) {
-								if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									if (cmds.Length > 2) {
-										if (Regex.IsMatch(cmds[2], "[0-9]+")) {
+										if (Regex.IsMatch(cmds[2], @"^\d+$")) {
 											int src = Math.Abs(int.Parse(cmds[1]));
 											int dst = Math.Abs(int.Parse(cmds[2]));
 											if (cmds.Length > 3) {
@@ -601,12 +601,12 @@ namespace HouseCS {
 						case "move":
 							#region
 							if (cmds.Length > 1) {
-								if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									if (cmds.Length > 2) {
-										if (Regex.IsMatch(cmds[2], "([0-9]+)|<|>")) {
+										if (Regex.IsMatch(cmds[2], @"(^\d+$)|^<$|^>$")) {
 											IItem old_item = user.curItem;
 											int item = int.Parse(cmds[1]);
-											int destination = Regex.IsMatch(cmds[2], "[0-9]+") ? int.Parse(cmds[2]) : (cmds[2].Equals("<") ? user.CurFloor - 1 : user.CurFloor + 1);
+											int destination = Regex.IsMatch(cmds[2], @"^\d+$") ? int.Parse(cmds[2]) : (cmds[2].Equals("<") ? user.CurFloor - 1 : user.CurFloor + 1);
 											int oldFloor = user.CurFloor;
 											if (user.ChangeItemFocus(item)) {
 												if (user.GoFloor(destination)) {
@@ -635,9 +635,9 @@ namespace HouseCS {
 						case "select":
 							#region
 							if (cmds.Length > 1) {
-								if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									if (cmds.Length > 2) {
-										if (Regex.IsMatch(cmds[2], "[0-9]+")) {
+										if (Regex.IsMatch(cmds[2], @"^\d+$")) {
 											switch (user.ChangeItemFocus(int.Parse(cmds[1]), int.Parse(cmds[2]))) {
 												case 0:
 													WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Item", " selected: (of type ", user.curItem.Type, ")\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), user.curItem.ToText(), new ColorText("\n\n") });
@@ -667,7 +667,7 @@ namespace HouseCS {
 						case "remove":
 							#region
 							if (cmds.Length > 1) {
-								if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									IItem tempItem = user.curItem;
 									bool validAnswer = false;
 									bool validItem = false;
@@ -689,7 +689,7 @@ namespace HouseCS {
 											} else
 												Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
 										} else
-											if (Regex.IsMatch(cmds[2], "[0-9]+")) {
+											if (Regex.IsMatch(cmds[2], @"^\d+$")) {
 											switch (user.ChangeItemFocus(int.Parse(cmds[1]), int.Parse(cmds[2]))) {
 												case 0:
 													validItem = true;
@@ -753,7 +753,7 @@ namespace HouseCS {
 											continue;
 										}
 										if (EqualsIgnoreCaseOr(cmds[i], new string[] { "-r", "--range" }) && (i + 2 < cmds.Length)) {
-											if (Regex.IsMatch(cmds[i + 1], "[0-9]+") && Regex.IsMatch(cmds[i + 2], "[0-9]+")) {
+											if (Regex.IsMatch(cmds[i + 1], @"^\d+$") && Regex.IsMatch(cmds[i + 2], @"^\d+$")) {
 												rangeStart = int.Parse(cmds[i + 1]);
 												rangeEnd = int.Parse(cmds[i + 2]);
 												i += 2;
@@ -805,7 +805,7 @@ namespace HouseCS {
 											Console.Write("\nYou can't see anything, the floor is completely dark!\n\n");
 									} else
 										Console.Write($"{cmds[invalidArg]} is not a valid argument.\n");
-								} else if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+								} else if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									if (int.Parse(cmds[1]) < user.FloorSize) {
 										IItem tempItem = user.curItem;
 										user.ChangeItemFocus(int.Parse(cmds[1]));
@@ -837,9 +837,8 @@ namespace HouseCS {
 												break;
 											case "Display":
 												WriteColor(new string[] { "This ", "Item", " is a ", "Display", ", would you like to see:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-												WriteColor(new string[] { "(Y) A specific device\n(N) Just the ", "Display\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
+												WriteColor(new string[] { "(Y) A specific device\n(N) Just the ", "Display\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
 												while (true) {
-													Console.Write("[Y/N] > ");
 													string temp = string.Empty;
 													try {
 														temp = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).ToUpper();
@@ -847,8 +846,7 @@ namespace HouseCS {
 													if (temp.Equals("Y") && ((Display)user.curItem).DeviceCount > 0) {
 														Console.Write("\nWhich device:\n\n");
 														while (true) {
-															WriteColor(new string[] { "[", "0", "-", (((Display)user.curItem).DeviceCount - 1).ToString(), "] > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-															int dv = int.Parse(Console.ReadLine());
+															int dv = GetInput(0, ((Display)user.curItem).DeviceCount);
 															if (dv < ((Display)user.curItem).DeviceCount) {
 																WriteColor(new ColorText[] { new ColorText("\n"), ((Display)user.curItem).GetDevice(dv).ToText() });
 																break;
@@ -921,7 +919,7 @@ namespace HouseCS {
 												string author = Console.ReadLine();
 												Console.Write("\nEnter Publishing Year > ");
 												string year = Console.ReadLine();
-												tempBook.Reset(title, author, Regex.IsMatch(year, "[0-9]+") ? int.Parse(year) : 0);
+												tempBook.Reset(title, author, Regex.IsMatch(year, @"^\d{4,}$") ? int.Parse(year) : 0);
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Book", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempBook.ToText(), new ColorText("\n\n") });
 											} else
 												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
@@ -962,7 +960,7 @@ namespace HouseCS {
 													WriteColor(new string[] { i.ToString(), $": {GameConsole.types[i]} " }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.White });
 												Console.WriteLine();
 												WriteColor(new string[] { "\nEnter ", "Console", " Type > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-												int tempType = int.Parse(Console.ReadLine());
+												int tempType = GetInput(0, GameConsole.types.Length);
 												WriteColor(new string[] { "\nEnter ", "Console", " Manufacturer (ie Nintendo) > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												string com = Console.ReadLine();
 												WriteColor(new string[] { "\nEnter ", "Console", " Name (ie GameCube) > " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
@@ -982,7 +980,7 @@ namespace HouseCS {
 												Console.Write("\nIs it a Monitor (Y) or a TV (N)?");
 												string isMon = string.Empty;
 												try {
-													isMon = GetInput(new ColorText("[Y/N "), new string[] { "y", "n" }, true).ToUpper();
+													isMon = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).ToUpper();
 												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 												WriteColor(new string[] { "\nType the number for each device connected to this ", "Display", " seperated by a space.\n(Optional)\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												string[] conDevs = Regex.Split(Console.ReadLine(), " +");
@@ -991,7 +989,7 @@ namespace HouseCS {
 												List<int> notAdded = new List<int>();
 												List<string> notNumber = new List<string>();
 												foreach (string dev in conDevs) {
-													if (Regex.IsMatch(dev, "[0-9]+")) {
+													if (Regex.IsMatch(dev, @"^\d+$")) {
 														int devID = int.Parse(dev);
 														if (devID >= 0 && devID < user.FloorSize && CanGoInside(user.GetItem(devID).Type, "Display"))
 															added.Add(devID);
@@ -1011,10 +1009,9 @@ namespace HouseCS {
 													Console.Write(str_num + " ");
 												WriteColor(new string[] { "\n\nEnter the ", "Display's", " size in inches (decimals allowed)" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
 												double size = GetInput(0.0, 100.0);
-												List<IItem> new_items = new List<IItem>();
+												tempDisp = new Display(isMon.Equals("N"), new List<IItem>(), size, int.Parse(enviVar[4,1]));
 												foreach (int id in added)
-													new_items.Add(user.GetItem(id));
-												tempDisp = new Display(isMon.Equals("N"), new_items, size, int.Parse(enviVar[4,1]));
+													tempDisp.Connect(user.GetItem(id));
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Display", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempDisp.ToText(), new ColorText("\n\n") });
 											} else
 												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
@@ -1055,7 +1052,7 @@ namespace HouseCS {
 												List<int> notAdded = new List<int>();
 												List<string> notNumber = new List<string>();
 												foreach (string itm in objs) {
-													if (Regex.IsMatch(itm, "[0-9]+")) {
+													if (Regex.IsMatch(itm, @"^\d+$")) {
 														int itmID = int.Parse(itm);
 														if (itmID >= 0 && itmID < user.FloorSize)
 															added.Add(itmID);
@@ -1121,7 +1118,7 @@ namespace HouseCS {
 									Console.WriteLine(user.GoUp());
 									break;
 								case 2:
-									if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+									if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 										if (user.GoFloor(user.CurFloor + int.Parse(cmds[1]))) {
 											WriteColor(new string[] { "\nWelcome to floor ", user.CurFloor.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 											enviVar[4,1] = "-1";
@@ -1145,7 +1142,7 @@ namespace HouseCS {
 									Console.WriteLine(user.GoDown());
 									break;
 								case 2:
-									if (Regex.IsMatch(cmds[1], "[0-9]+")) {
+									if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 										if (user.GoFloor(user.CurFloor - int.Parse(cmds[1]))) {
 											WriteColor(new string[] { "\nWelcome to floor ", user.CurFloor.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 											enviVar[4,1] = "-1";
