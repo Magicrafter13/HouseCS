@@ -54,7 +54,23 @@ namespace HouseCS.Items {
 			retStr += $"new Container({(IsMonitor ? "true" : "false")}, new List<IItem>() {{\n";
 			for (int i = 0; i < connectedTo.Count; i++) {
 				if (connectedTo[i] is Container) {
-					retStr += ((Container)connectedTo[i]).Export(space + 2);
+					switch (connectedTo[i].SubType) {
+						case "Bookshelf":
+							retStr += ((Bookshelf)connectedTo[i]).Export(space + 2);
+							break;
+						case "Dresser":
+							retStr += ((Dresser)connectedTo[i]).Export(space + 2);
+							break;
+						case "Fridge":
+							retStr += ((Fridge)connectedTo[i]).Export(space + 2);
+							break;
+						case "Table":
+							retStr += ((Table)connectedTo[i]).Export(space + 2);
+							break;
+						default:
+							retStr += ((Container)connectedTo[i]).Export(space + 2);
+							break;
+					}
 					continue;
 				}
 				if (connectedTo[i] is Display) {
