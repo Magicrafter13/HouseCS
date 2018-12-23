@@ -26,6 +26,14 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Exports Empty information
+		/// </summary>
+		/// <returns>String of empty constructor</returns>
+		public string Export() {
+			return "new Empty(),";
+		}
+
+		/// <summary>
 		/// Don't use
 		/// </summary>
 		/// <param name="item">Index of sub item</param>

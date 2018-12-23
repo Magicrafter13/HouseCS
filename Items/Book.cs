@@ -49,6 +49,14 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Exports Book information
+		/// </summary>
+		/// <returns>String of Book constructor</returns>
+		public string Export() {
+			return $"new Book(\"{Title}\", \"{Author}\", {Year}, {RoomID}),";
+		}
+
+		/// <summary>
 		/// Does the same as the constructor, sets title, author, and publishing year
 		/// </summary>
 		/// <param name="title">Book title</param>

@@ -14,6 +14,14 @@ namespace HouseCS.Items.Clothes {
 		public new string SubType => typeS;
 
 		/// <summary>
+		/// Exports Shirt information
+		/// </summary>
+		/// <returns>String of shirt constructor</returns>
+		public new string Export() {
+			return $"new Shirt(\"{Color}\", {RoomID}),";
+		}
+
+		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>

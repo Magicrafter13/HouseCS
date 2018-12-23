@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
+using HouseCS.Items.Containers;
 
 namespace HouseCS.Items {
 	/// <summary>
@@ -40,6 +41,40 @@ namespace HouseCS.Items {
 		/// string of Item sub-type
 		/// </summary>
 		public string SubType => typeS;
+
+		/// <summary>
+		/// Exports Display information
+		/// </summary>
+		/// <param name="space">How many spaces to start the string with</param>
+		/// <returns>String of display constructor</returns>
+		public string Export(int space) {
+			string retStr = string.Empty;
+			for (int i = 0; i < space; i++)
+				retStr += " ";
+			retStr += $"new Container({(IsMonitor ? "true" : "false")}, new List<IItem>() {{\n";
+			for (int i = 0; i < connectedTo.Count; i++) {
+				if (connectedTo[i] is Container) {
+					retStr += ((Container)connectedTo[i]).Export(space + 2);
+					continue;
+				}
+				if (connectedTo[i] is Display) {
+					retStr += ((Display)connectedTo[i]).Export(space + 2);
+					continue;
+				}
+				for (int s = 0; s < space + 2; s++)
+					retStr += " ";
+				retStr += connectedTo[i].Export();
+			}
+			for (int i = 0; i < space; i++)
+				retStr += " ";
+			return $"{retStr}}}, {SizeInch}, {RoomID}),";
+		}
+
+		/// <summary>
+		/// Exports Display information
+		/// </summary>
+		/// <returns>String of display constructor</returns>
+		public string Export() => $"new Display({(IsMonitor ? "true" : "false")}, new List<IItem>() {{ /*Connected Items*/ }}, {SizeInch}, {RoomID}),";
 
 		/// <summary>
 		/// Checks if Item is connected

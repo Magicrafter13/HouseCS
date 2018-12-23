@@ -21,6 +21,12 @@ namespace HouseCS.Items {
 		string SubType { get; }
 
 		/// <summary>
+		/// Exports Item information
+		/// </summary>
+		/// <returns>String containing a constructor for the Item</returns>
+		string Export();
+
+		/// <summary>
 		/// Tests if Item has sub Item
 		/// </summary>
 		/// <param name="item">test Item</param>

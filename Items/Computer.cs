@@ -53,6 +53,14 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Exports Computer information
+		/// </summary>
+		/// <returns>String of computer constructor</returns>
+		public string Export() {
+			return $"new Computer(\"{Brand}\", \"{Family}\", \"{Model}\", {(IsOn ? "true" : "false")}, \"{ComputerType}\", {RoomID}),";
+		}
+
+		/// <summary>
 		/// Does the same as the constructor, sets brand, family, model, power state, and type
 		/// </summary>
 		/// <param name="brand">Computer brand</param>

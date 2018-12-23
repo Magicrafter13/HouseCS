@@ -44,6 +44,14 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Exports GameConsole information
+		/// </summary>
+		/// <returns>String of gameconsole constructor</returns>
+		public string Export() {
+			return $"new GameConsole({SysType}, \"{Company}\", \"{System}\", {RoomID}),";
+		}
+
+		/// <summary>
 		/// Don't use
 		/// </summary>
 		/// <param name="item">test Item</param>

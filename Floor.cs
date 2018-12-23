@@ -30,6 +30,46 @@ namespace HouseCS {
 		public void AddRoom(string room) => RoomNames.Add(room);
 
 		/// <summary>
+		/// Exports Item information
+		/// </summary>
+		/// <param name="floor">Floor number</param>
+		/// <returns>String with all Items on the floor</returns>
+		public string Export(int floor) {
+			string retStr = $"  Floor {floor}\n    Room Names = {{ \"{RoomNames[0]}\"";
+			for (int i = 1; i < RoomNames.Count; i++)
+				retStr += $", \"{RoomNames[i]}\"";
+			retStr += " }\n";
+			for (int i = 0; i < Items.Count; i++) {
+				if (Items[i] is Container) {
+					switch (Items[i].SubType) {
+						case "Bookshelf":
+							retStr += ((Bookshelf)Items[i]).Export(4);
+							break;
+						case "Dresser":
+							retStr += ((Dresser)Items[i]).Export(4);
+							break;
+						case "Fridge":
+							retStr += ((Fridge)Items[i]).Export(4);
+							break;
+						case "Table":
+							retStr += ((Table)Items[i]).Export(4);
+							break;
+						default:
+							retStr += ((Container)Items[i]).Export(4);
+							break;
+					}
+					continue;
+				}
+				if (Items[i] is Display) {
+					retStr += ((Display)Items[i]).Export(4);
+					continue;
+				}
+				retStr += $"    {Items[i].Export()}\n";
+			}
+			return $"{retStr}  End Floor {floor}\n";
+		}
+
+		/// <summary>
 		/// Toggles Boolean Lights, and returns ColorText to tell the user what state the Lights are now in.
 		/// </summary>
 		/// <returns>ColorText object saying if the Lights are on or off</returns>

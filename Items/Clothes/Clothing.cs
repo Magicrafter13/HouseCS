@@ -29,6 +29,14 @@ namespace HouseCS.Items.Clothes {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Exports Clothing information
+		/// </summary>
+		/// <returns>String of clothing constructor</returns>
+		public string Export() {
+			return $"new Clothing(\"{Color}\", {RoomID}),";
+		}
+
+		/// <summary>
 		/// Don't use
 		/// </summary>
 		/// <param name="item">test Item</param>

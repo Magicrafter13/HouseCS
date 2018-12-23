@@ -39,6 +39,14 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Exports Bed information
+		/// </summary>
+		/// <returns>String of bed constructor</returns>
+		public string Export() {
+			return $"new Bed({(Adjustable ? "true" : "false")}, {BedType}, {RoomID}),";
+		}
+
+		/// <summary>
 		/// Don't use
 		/// </summary>
 		/// <param name="item">test Item</param>

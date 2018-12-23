@@ -36,6 +36,18 @@ namespace HouseCS {
 		public Floor[] Floors { get; }
 
 		/// <summary>
+		/// Exports Item information
+		/// </summary>
+		/// <param name="house">House number</param>
+		/// <returns>String with all Items in the house</returns>
+		public string Export(int house) {
+			string retStr = $"House {house}\n";
+			for (int i = 0; i < Floors.Length; i++)
+				retStr += Floors[i].Export(i);
+			return $"{retStr}End House {house}\n";
+		}
+
+		/// <summary>
 		/// Makes sure none of the floors are null, by using the default constructor
 		/// </summary>
 		private void InitializeFloors() {

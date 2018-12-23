@@ -35,6 +35,57 @@ namespace HouseCS.Items.Containers {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Exports Container information
+		/// </summary>
+		/// <param name="space">How many spaces to start the string with</param>
+		/// <returns>String of container constructor</returns>
+		public string Export(int space) {
+			string retStr = string.Empty;
+			for (int i = 0; i < space; i++)
+				retStr += " ";
+			retStr += $"new {SubType}(new List<IItem>() {{{(Items.Count > 0 ? "\n" : " ")}";
+			for (int i = 0; i < Items.Count; i++) {
+				if (Items[i] is Container) {
+					switch (Items[i].SubType) {
+						case "Bookshelf":
+							retStr += ((Bookshelf)Items[i]).Export(space + 2);
+							break;
+						case "Dresser":
+							retStr += ((Dresser)Items[i]).Export(space + 2);
+							break;
+						case "Fridge":
+							retStr += ((Fridge)Items[i]).Export(space + 2);
+							break;
+						case "Table":
+							retStr += ((Table)Items[i]).Export(space + 2);
+							break;
+						default:
+							retStr += ((Container)Items[i]).Export(space + 2);
+							break;
+					}
+					continue;
+				}
+				if (Items[i] is Display) {
+					retStr += $"{((Display)Items[i]).Export(space + 2)}\n";
+					continue;
+				}
+				for (int s = 0; s < space + 2; s++)
+					retStr += " ";
+				retStr += $"{Items[i].Export()}\n";
+			}
+			if (Items.Count > 0)
+				for (int i = 0; i < space; i++)
+					retStr += " ";
+			return $"{retStr}}}, {RoomID}),\n";
+		}
+
+		/// <summary>
+		/// Exports Container information
+		/// </summary>
+		/// <returns>String of container constructor</returns>
+		public string Export() => $"new Container(new List<IItem>() {{ /*Items in Container*/ }}, {RoomID}),";
+
+		/// <summary>
 		/// Gets an Item from the container
 		/// </summary>
 		/// <param name="item">Index of Item</param>
