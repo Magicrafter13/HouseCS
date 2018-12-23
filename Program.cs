@@ -9,7 +9,7 @@ using HouseCS.Items.Containers;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 3, verFix = 1;
+		private static readonly int verMajor = 2, verMinor = 4, verFix = 0;
 
 		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container" };
 
@@ -409,12 +409,35 @@ namespace HouseCS {
 						case "save":
 						case "export":
 							if (cmds.Length > 1) {
-
+								if (cmds.Length > 2) {
+									switch (cmds[2].ToLower()) {
+										case "-h":
+											if (Regex.IsMatch(cmds[1], @"^\d+$")) {
+												if (int.Parse(cmds[1]) >= 0 && int.Parse(cmds[1]) < houseData.Count) {
+													System.IO.File.WriteAllText("exportedHouse.txt", $"{houseData[int.Parse(cmds[1])].Export(int.Parse(cmds[1]))}\n");
+													Console.WriteLine($"\nHouse {cmds[1]} exported.\n");
+												} else WriteColor(new string[] { "house", " must be greater than or equal to ", "0", " and less than ", houseData.Count.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											 } else WriteColor(new string[] { $"{cmds[1]} is not a valid ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											break;
+										case "-f":
+											if (Regex.IsMatch(cmds[1], @"^\d+$")) {
+												if (int.Parse(cmds[1]) >= 0 && int.Parse(cmds[1]) < user.CurHouse.GetFloor(user.CurFloor).Size) {
+													System.IO.File.WriteAllText("exportedFloor.txt", $"{user.CurHouse.GetFloor(int.Parse(cmds[1])).Export(int.Parse(cmds[1]))}\n");
+													Console.WriteLine($"\nFloor {cmds[1]} exported.\n");
+												}
+											}
+											break;
+										default:
+											Console.WriteLine($"{cmds[2]} is not a valid argument.");
+											break;
+									}
+								} else
+								Console.WriteLine($"{cmds[0].ToLower()} accepts 0 or 2 arguments.");
 							} else {
 								string exportData = string.Empty;
 								for (int i = 0; i < houseData.Count; i++)
 									exportData += $"{houseData[i].Export(i)}\n";
-								System.IO.File.WriteAllText(@".\exportedItems.txt", exportData);
+								System.IO.File.WriteAllText(@"exportedItems.txt", exportData);
 								Console.Write($"\nAll House Data {cmds[0].ToUpper()[0]}{cmds[0].Substring(1).ToLower()}{(cmds[0].Equals("export", StringComparison.OrdinalIgnoreCase) ? "e" : "")}d\n\n");
 							}
 							break;
