@@ -9,7 +9,7 @@ using HouseCS.Items.Containers;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 4, verFix = 0;
+		private static readonly int verMajor = 2, verMinor = 4, verFix = 1;
 
 		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container" };
 
@@ -359,7 +359,7 @@ namespace HouseCS {
 				WriteColor(new ColorText[] { new ColorText("\n"), message, new ColorText("> ") });
 				string lineIn = Console.ReadLine();
 				foreach (string test in values)
-					if ((ignoreCase && lineIn.Equals(test, StringComparison.OrdinalIgnoreCase)) || (!ignoreCase && lineIn.Equals(test)))
+					if ((ignoreCase && lineIn.Equals(test, StringComparison.OrdinalIgnoreCase)) || lineIn.Equals(test))
 						return lineIn;
 			} while (true);
 		}
@@ -854,18 +854,17 @@ namespace HouseCS {
 												WriteColor(new string[] { "This ", "Item", " is a ", user.curItem.SubType, ", would you like to see:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												WriteColor(new string[] { "(Y) A specific ", "Item", "\n(N) Just the overall contents\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												while (true) {
-													Console.Write("[Y/N] > ");
 													string yenu = string.Empty;
 													try {
 														yenu = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true);
 													} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 													int iC = ((Container)user.curItem).Size;
-													if (yenu.Equals("Y") && iC > 0) {
+													if (yenu.Equals("Y", StringComparison.OrdinalIgnoreCase) && iC > 0) {
 														WriteColor(new string[] { "\nWhich ", "Item", ":\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 														int im = 0;
 														im = GetInput(0, iC);
 														WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
-													} else if (yenu.Equals("N") || ((Container)user.curItem).Size == 0)
+													} else if (yenu.Equals("N", StringComparison.OrdinalIgnoreCase) || ((Container)user.curItem).Size == 0)
 														WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem() });
 													else
 														WriteColor(new string[] { user.curItem.SubType, " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
