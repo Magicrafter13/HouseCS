@@ -2,7 +2,7 @@
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items {
-	internal class Printer : IItem {
+	public class Printer : IItem {
 		private static readonly string typeS = "Printer";
 
 		public bool CanFax { get; private set; }
