@@ -16,7 +16,7 @@ namespace HouseCS {
 		/// <summary>
 		/// Possible Item types
 		/// </summary>
-		public static readonly string[] types = { "*", "Bed", "Book", "Computer", "Console", "Display",
+		public static readonly string[] types = { "*", "Bed", "Book", "Computer", "Console", "Display", "Printer",
 			"Bookshelf", "Container", "Dresser", "Fridge", "Table",
 			"Clothing", "Pants", "Shirt" };
 

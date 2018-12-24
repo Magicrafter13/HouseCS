@@ -9,9 +9,9 @@ using HouseCS.Items.Containers;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 4, verFix = 1;
+		private static readonly int verMajor = 2, verMinor = 5, verFix = 0;
 
-		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container" };
+		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container", "Printer" };
 
 		public static readonly string[] floorInteracts = { "light (or lights)" };
 
@@ -905,6 +905,7 @@ namespace HouseCS {
 											case "Console":
 											case "Bed":
 											case "Clothing":
+											case "Printer":
 												WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem(), new ColorText("\n\n") });
 												break;
 										}
@@ -1130,6 +1131,25 @@ namespace HouseCS {
 										} else
 											WriteColor(new string[] { "\nNew ", tempCloth.SubType, " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempCloth);
+										break;
+									case "printer":
+										Printer tempPrint = new Printer();
+										if (cmds.Length > 2) {
+											if (cmds[2].Equals("arg", StringComparison.OrdinalIgnoreCase)) {
+												WriteColor(new string[] { "\nEnter the ", "Printer", " details.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												WriteColor(new string[] { "\nDoes the ", "Printer", " print in color?\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												bool hasColor = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).Equals("Y", StringComparison.OrdinalIgnoreCase);
+												WriteColor(new string[] { "\nCan the ", "Printer", " send and receive faxes?\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												bool canFax = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).Equals("Y", StringComparison.OrdinalIgnoreCase);
+												WriteColor(new string[] { "\nCan the ", "Printer", " scan things?\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+												bool canScan = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).Equals("Y", StringComparison.OrdinalIgnoreCase);
+												tempPrint = new Printer(canFax, canScan, hasColor, int.Parse(enviVar[4, 1]));
+												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Printer", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempPrint.ToText(), new ColorText("\n\n") });
+											} else
+												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										} else
+											WriteColor(new string[] { "\nNew ", "Printer", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										user.AddItem(tempPrint);
 										break;
 									default:
 										WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "Item", " type:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
