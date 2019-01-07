@@ -15,7 +15,7 @@ https://github.com/Magicrafter13/House</Description>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>C:\Users\Matthew\Source\Repos\HouseCS\HouseCS\HouseCS.xml</DocumentationFile>
+    <DocumentationFile>HouseCS.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
