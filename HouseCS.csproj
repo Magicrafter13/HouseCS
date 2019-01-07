@@ -38,7 +38,7 @@ https://github.com/Magicrafter13/House</Description>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet publish -c Release -r win10-x64&#xD;&#xA;dotnet publish -c Release -r ubuntu.18.04-x64" />
+    <!--<Exec Command="dotnet publish -c Release -r win10-x64&#xD;&#xA;dotnet publish -c Release -r ubuntu.18.04-x64" />-->
   </Target>
 
 </Project>
