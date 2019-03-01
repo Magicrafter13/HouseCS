@@ -406,6 +406,56 @@ namespace HouseCS {
 				cmds = temp_arr; //I don't really think it matters if it's a clone or not...*/
 				if (cmds.Length > 0) {
 					switch (cmds[0].ToLower()) {
+						case "search":
+						case "find":
+							string searchItem = "";
+							List<string> keywords = new List<string>();
+							int searchFloor = -1;
+							int searchRoom = -1;
+							for (int arg = 1; arg < cmds.Length - 1; arg += 2) {
+								if (EqualsIgnoreCaseOr(cmds[arg], new string[] { "-t", "--type" })) {
+									searchItem = cmds[arg + 1];
+									continue;
+								}
+								if (searchFloor == -1 && EqualsIgnoreCaseOr(cmds[arg], new string[] { "-f", "--floor" })) {
+									if (Regex.IsMatch(cmds[arg + 1], @"^\d+$"))
+										searchFloor = int.Parse(cmds[arg + 1]);
+									else
+										WriteColor(new string[] { "floor", " must be a positive ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+									continue;
+								}
+								if (searchRoom == -1 && EqualsIgnoreCaseOr(cmds[arg], new string[] { "-r", "--room" })) {
+									if (Regex.IsMatch(cmds[arg + 1], @"^\d+$"))
+										searchRoom = int.Parse(cmds[arg + 1]);
+									else
+										WriteColor(new string[] { "room", " must be a positive ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+									continue;
+								}
+							}
+							Console.WriteLine(searchFloor + " " + searchRoom);
+							Console.WriteLine("Please enter 1 - 3 keywords: (2 and 3 optional)");
+							string[] keys = { "", "", "" };
+							do {
+								Console.Write("Keyword 1 > ");
+								keys[0] = Console.ReadLine();
+							} while (keys[0].Equals(""));
+							Console.Write("Keyword 2 > ");
+							keys[1] = Console.ReadLine();
+							if (!keys[1].Equals("")) {
+								Console.Write("Keyword 3 > ");
+								keys[2] = Console.ReadLine();
+							}
+							keywords.Add(keys[0]);
+							if (!keys[1].Equals("")) keywords.Add(keys[1]);
+							if (!keys[2].Equals("")) keywords.Add(keys[2]);
+							Console.WriteLine("Searching for:");
+							Console.Write(keywords[0]);
+							for (int key = 1; key < keywords.Count; key++) Console.Write(", " + keywords[key]);
+							Console.WriteLine();
+							Console.WriteLine($"In: {(searchItem.Equals("") ? "All" : searchItem)} items.");
+							Console.WriteLine($"On floor: {(searchFloor == -1 ? "all" : searchFloor.ToString())}");
+							Console.WriteLine($"In room: {(searchRoom == -1 ? "all" : searchRoom.ToString())}");
+							break;
 						case "save":
 						case "export":
 							if (cmds.Length > 1) {
