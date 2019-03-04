@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 ﻿using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items {
@@ -19,6 +20,13 @@ namespace HouseCS.Items {
 		/// string of Item sub type
 		/// </summary>
 		string SubType { get; }
+
+		/// <summary>
+		/// Matches keyword against Item data
+		/// </summary>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output if keywords matched</returns>
+		string Search(List<string> keywords);
 
 		/// <summary>
 		/// Exports Item information

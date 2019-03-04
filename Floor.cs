@@ -24,6 +24,27 @@ namespace HouseCS {
 		public bool Lights { get; private set; }
 
 		/// <summary>
+		/// Searches floor for items matching certain keywords
+		/// </summary>
+		/// <param name="room">Room to search</param>
+		/// <param name="item">Item type to search for</param>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output of Items found</returns>
+		string Search(int room, string itemType, List<string> keywords) {
+			string output = string.Empty;
+			foreach (IItem item in Items) {
+				if (room == -1 || room == item.RoomID) {
+					if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
+						string temp = item.Search(keywords);
+						if (!temp.Equals(""))
+							output += "Room " + (room == -1 ? "any" : room.ToString()) + ": " + item.Search(keywords);
+					}
+				}
+			}
+			return output + "\n";
+		}
+
+		/// <summary>
 		/// Adds a room to the floor
 		/// </summary>
 		/// <param name="room">Room name</param>

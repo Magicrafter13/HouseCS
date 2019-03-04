@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items {
@@ -37,6 +38,20 @@ namespace HouseCS.Items {
 		/// string of Item sub-type
 		/// </summary>
 		public string SubType => typeS;
+
+		/// <summary>
+		/// Matches keyword against Item data
+		/// </summary>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output if keywords matched</returns>
+		public string Search(List<string> keywords) {
+			string output = string.Empty;
+			foreach (string key in keywords)
+				if (key.Equals(types[BedType], StringComparison.OrdinalIgnoreCase) ||
+				(key.ToLower().Equals("adjustable") && Adjustable))
+					output += ListInfo(true) + typeS + ListInfo(false);
+			return output;
+		}
 
 		/// <summary>
 		/// Exports Bed information

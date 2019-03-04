@@ -36,6 +36,27 @@ namespace HouseCS {
 		public Floor[] Floors { get; }
 
 		/// <summary>
+		/// Searches house for items matching certain keywords
+		/// </summary>
+		/// <param name="floor">Floor to search</param>
+		/// <param name="room">Room to search</param>
+		/// <param name="item">Item type to search for</param>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output of Items found</returns>
+		string Search(int floor, int room, string item, List<string> keywords) {
+			string output = string.Empty;
+			if (floor > -1)
+				output += Floors[floor];
+			else
+				for (int flr = 0; flr < Size; flr++) {
+					string tmp = Floors[flr].Search(room, item, keywords);
+					if (!tmp.Equals(""))
+						output += "Floor " + flr + "\n" + tmp;
+				}
+			return output;
+		}
+
+		/// <summary>
 		/// Exports Item information
 		/// </summary>
 		/// <param name="house">House number</param>

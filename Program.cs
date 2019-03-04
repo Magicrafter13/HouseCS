@@ -455,6 +455,7 @@ namespace HouseCS {
 							Console.WriteLine($"In: {(searchItem.Equals("") ? "All" : searchItem)} items.");
 							Console.WriteLine($"On floor: {(searchFloor == -1 ? "all" : searchFloor.ToString())}");
 							Console.WriteLine($"In room: {(searchRoom == -1 ? "all" : searchRoom.ToString())}");
+							Console.WriteLine(user.Search(searchFloor, searchRoom, searchItem, keywords));
 							break;
 						case "save":
 						case "export":

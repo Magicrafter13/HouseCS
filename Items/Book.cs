@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items {
@@ -49,6 +50,21 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Matches keyword against Item data
+		/// </summary>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output if keywords matched</returns>
+		public string Search(List<string> keywords) {
+			string output = string.Empty;
+			foreach (string key in keywords)
+				if (key.Equals(Title, StringComparison.OrdinalIgnoreCase) ||
+				key.Equals(Author, StringComparison.OrdinalIgnoreCase) ||
+				key.Equals(Year.ToString()))
+					output += ListInfo(true) + typeS + ListInfo(false);
+			return output;
+		}
+
+		/// <summary>
 		/// Exports Book information
 		/// </summary>
 		/// <returns>String of Book constructor</returns>
@@ -67,7 +83,7 @@ namespace HouseCS.Items {
 			Author = author;
 			Year = year >= 1600 ? year : 1600;
 		}
-		
+
 		/// <summary>
 		/// Don't use
 		/// </summary>

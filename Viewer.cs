@@ -40,6 +40,18 @@ namespace HouseCS {
 		public List<string> RoomNames => CurHouse.GetFloor(CurFloor).RoomNames;
 
 		/// <summary>
+		/// Searches house for items matching certain keywords
+		/// </summary>
+		/// <param name="floor">Floor to search</param>
+		/// <param name="room">Room to search</param>
+		/// <param name="item">Item type to search for</param>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output of Items found</returns>
+		public string Search(int floor, int room, string item, List<string> keywords) {
+			return CurHouse.Search(floor, room, item, keywords);
+		}
+
+		/// <summary>
 		/// Changes viewers current room
 		/// </summary>
 		/// <param name="room">Destination room</param>

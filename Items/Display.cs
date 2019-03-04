@@ -43,6 +43,19 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Matches keyword against Item data
+		/// </summary>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output if keywords matched</returns>
+		string Search(List<string> keywords) {
+			string output = string.Empty;
+			foreach (string key in keywords)
+				if (key.Equals((IsMonitor ? "Monitor" : "Display"), StringComparison,OrdinalIgnoreCase))
+					output += ListInfo(true) + typeS + ListInfo(false);
+			return output;
+		}
+
+		/// <summary>
 		/// Exports Display information
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>

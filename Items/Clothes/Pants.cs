@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items.Clothes {
@@ -12,6 +13,19 @@ namespace HouseCS.Items.Clothes {
 		/// string of Item sub-type
 		/// </summary>
 		public new string SubType => typeS;
+
+		/// <summary>
+		/// Matches keyword against Item data
+		/// </summary>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output if keywords matched</returns>
+		string Search(List<string> keywords) {
+			string output = string.Empty;
+			foreach (string key in keywords)
+				if (key.Equals(Color, StringComparison.OrdinalIgnoreCase))
+					output += ListInfo(true) + typeS + ListInfo(false);
+			return output;
+		}
 
 		/// <summary>
 		/// Exports Pants information

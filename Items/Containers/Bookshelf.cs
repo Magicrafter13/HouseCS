@@ -15,6 +15,19 @@ namespace HouseCS.Items.Containers {
 		public new string SubType => typeS;
 
 		/// <summary>
+		/// Matches keyword against Item data
+		/// </summary>
+		/// <param name="keywords">Keywords to search for</param>
+		/// <returns>String output if keywords matched</returns>
+		string Search(List<string> keywords) {
+			string output = string.Empty;
+			foreach (string key in keywords)
+				if (Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase))
+					output += ListInfo(true) + typeS + ListInfo(false);
+			return output;
+		}
+
+		/// <summary>
 		/// Exports Bookshelf information
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
