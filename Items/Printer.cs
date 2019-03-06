@@ -3,13 +3,25 @@ using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items {
+	/// <summary>
+	/// Printer, stores ability to fax, scan, and print in color
+	/// </summary>
 	public class Printer : IItem {
 		private static readonly string typeS = "Printer";
 
+		/// <summary>
+		/// Represents whether or not the printer can send faxes
+		/// </summary>
 		public bool CanFax { get; private set; }
 
+		/// <summary>
+		/// Represents whether or not the printer can scan documents
+		/// </summary>
 		public bool CanScan { get; private set; }
 
+		/// <summary>
+		/// Represents whether or not the printer prints in color
+		/// </summary>
 		public bool HasColor { get; private set; }
 
 		/// <summary>
@@ -32,13 +44,17 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		string Search(List<string> keywords) {
-			string output = string.Empty;
-			foreach (string key in keywords)
+		public List<ColorText> Search(List<string> keywords) {
+			List<ColorText> output = new List<ColorText>();
+			foreach (string key in keywords) {
 				if ((CanFax && key.Equals("Fax", StringComparison.OrdinalIgnoreCase)) ||
 				(CanScan && key.Equals("Scan", StringComparison.OrdinalIgnoreCase)) ||
-				(HasColor && key.Equals("Color", StringComparison.OrdinalIgnoreCase)))
-					output += ListInfo(true) + typeS + ListInfo(false);
+				(HasColor && key.Equals("Color", StringComparison.OrdinalIgnoreCase))) {
+					output.Add(ListInfo(true));
+					output.Add(new ColorText(typeS));
+					output.Add(ListInfo(false));
+				}
+			}
 			return output;
 		}
 
@@ -68,12 +84,22 @@ namespace HouseCS.Items {
 		/// <returns>ColorText object of important info</returns>
 		public ColorText ToText() => new ColorText(new string[] { "Printer:\n", $"\tHas Color: {(HasColor ? "Yes" : "No")}\n\tCan Fax: {(CanFax ? "Yes" : "No")}\n\tCan Scan: {(CanScan ? "Yes" : "No")}" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
 
+		/// <summary>
+		/// Creates a printer that can't fax, but it can scan and print in color, and puts it in room -1
+		/// </summary>
 		public Printer() {
 			CanFax = false;
 			CanScan = true;
 			HasColor = true;
 			RoomID = -1;
 		}
+		/// <summary>
+		/// Creates a printer, with the given parameters of faxing, scaning, color printing, and room location
+		/// </summary>
+		/// <param name="canFax"></param>
+		/// <param name="canScan"></param>
+		/// <param name="hasColor"></param>
+		/// <param name="room"></param>
 		public Printer(bool canFax, bool canScan, bool hasColor, int room) {
 			CanFax = canFax;
 			CanScan = canScan;

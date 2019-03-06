@@ -43,15 +43,19 @@ namespace HouseCS {
 		/// <param name="item">Item type to search for</param>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output of Items found</returns>
-		string Search(int floor, int room, string item, List<string> keywords) {
-			string output = string.Empty;
+		public List<ColorText> Search(int floor, int room, string item, List<string> keywords) {
+			List<ColorText> output = new List<ColorText>();
 			if (floor > -1)
-				output += Floors[floor];
+				output.AddRange(Floors[floor].Search(room, item, keywords));
+			//output.Add(new ColorText(Floors[floor].ToString()));
 			else
 				for (int flr = 0; flr < Size; flr++) {
-					string tmp = Floors[flr].Search(room, item, keywords);
-					if (!tmp.Equals(""))
-						output += "Floor " + flr + "\n" + tmp;
+					List<ColorText> tmp = Floors[flr].Search(room, item, keywords);
+					if (tmp.Count != 0) {
+						output.Add(new ColorText("Floor " + flr + "\n"));
+						output.AddRange(tmp);
+						output.Add(new ColorText("\n"));
+					}
 				}
 			return output;
 		}

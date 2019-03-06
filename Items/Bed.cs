@@ -44,12 +44,16 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public string Search(List<string> keywords) {
-			string output = string.Empty;
-			foreach (string key in keywords)
+		public List<ColorText> Search(List<string> keywords) {
+			List<ColorText> output = new List<ColorText>();
+			foreach (string key in keywords) {
 				if (key.Equals(types[BedType], StringComparison.OrdinalIgnoreCase) ||
-				(key.ToLower().Equals("adjustable") && Adjustable))
-					output += ListInfo(true) + typeS + ListInfo(false);
+				(key.ToLower().Equals("adjustable") && Adjustable)) {
+					output.Add(ListInfo(true));
+					output.Add(new ColorText(typeS));
+					output.Add(ListInfo(false));
+				}
+			}
 			return output;
 		}
 

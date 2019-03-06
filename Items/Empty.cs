@@ -31,8 +31,10 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		string Search(List<string> keywords) {
-			return "";
+		public List<ColorText> Search(List<string> keywords) {
+			List<ColorText> output = new List<ColorText>();
+			output.Add(ColorText.Empty);
+			return output;
 		}
 
 		/// <summary>

@@ -39,11 +39,15 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		string Search(List<string> keywords) {
-			string output = string.Empty;
-			foreach (string key in keywords)
-				if (Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase))
-					output += ListInfo(true) + typeS + ListInfo(false);
+		public List<ColorText> Search(List<string> keywords) {
+			List<ColorText> output = new List<ColorText>();
+			foreach (string key in keywords) {
+				if (Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) {
+					output.Add(ListInfo(true));
+					output.Add(new ColorText(typeS));
+					output.Add(ListInfo(false));
+				}
+			}
 			return output;
 		}
 

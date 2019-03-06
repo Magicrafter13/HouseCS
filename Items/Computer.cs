@@ -58,11 +58,18 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public string Search(List<string> keywords) {
-			string output = string.Empty;
-			foreach (string key in keywords)
-				if (EqualsIgnoreCaseOr(key, new string[] { ComputerType, Brand, Family, Model }))
-					output += ListInfo(true) + typeS + ListInfo(false);
+		public List<ColorText> Search(List<string> keywords) {
+			List<ColorText> output = new List<ColorText>();
+			foreach (string key in keywords) {
+				if (key.Equals(ComputerType, StringComparison.OrdinalIgnoreCase) ||
+					key.Equals(Brand, StringComparison.OrdinalIgnoreCase) ||
+					key.Equals(Family, StringComparison.OrdinalIgnoreCase) ||
+					key.Equals(Model, StringComparison.OrdinalIgnoreCase)) {
+					output.Add(ListInfo(true));
+					output.Add(new ColorText(typeS));
+					output.Add(ListInfo(false));
+				}
+			}
 			return output;
 		}
 

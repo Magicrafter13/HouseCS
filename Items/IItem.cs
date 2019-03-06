@@ -26,7 +26,7 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		string Search(List<string> keywords);
+		List<ColorText> Search(List<string> keywords);
 
 		/// <summary>
 		/// Exports Item information

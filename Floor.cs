@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HouseCS.ConsoleUtils;
 using HouseCS.Items;
 using HouseCS.Items.Containers;
@@ -27,21 +28,25 @@ namespace HouseCS {
 		/// Searches floor for items matching certain keywords
 		/// </summary>
 		/// <param name="room">Room to search</param>
-		/// <param name="item">Item type to search for</param>
+		/// <param name="itemType">Item type to search for</param>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output of Items found</returns>
-		string Search(int room, string itemType, List<string> keywords) {
-			string output = string.Empty;
+		public List<ColorText> Search(int room, string itemType, List<string> keywords) {
+			List<ColorText> output = new List<ColorText>();
 			foreach (IItem item in Items) {
 				if (room == -1 || room == item.RoomID) {
 					if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
-						string temp = item.Search(keywords);
-						if (!temp.Equals(""))
-							output += "Room " + (room == -1 ? "any" : room.ToString()) + ": " + item.Search(keywords);
+						List<ColorText> temp = item.Search(keywords);
+						if (temp.Count != 0) {
+							output.Add(new ColorText("Room " + (room == -1 ? "any" : room.ToString()) + ": "));
+							output.AddRange(temp);
+							output.Add(new ColorText("\n"));
+						}
 					}
 				}
 			}
-			return output + "\n";
+			output.Add(new ColorText("\n"));
+			return output;
 		}
 
 		/// <summary>
