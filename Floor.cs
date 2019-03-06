@@ -38,7 +38,7 @@ namespace HouseCS {
 					if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
 						List<ColorText> temp = item.Search(keywords);
 						if (temp.Count != 0) {
-							output.Add(new ColorText("Room " + (room == -1 ? "any" : room.ToString()) + ": "));
+							output.Add(new ColorText($"Room {(room == -1 ? "any" : room.ToString())}: "));
 							output.AddRange(temp);
 							output.Add(new ColorText("\n"));
 						}

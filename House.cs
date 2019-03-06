@@ -52,7 +52,7 @@ namespace HouseCS {
 				for (int flr = 0; flr < Size; flr++) {
 					List<ColorText> tmp = Floors[flr].Search(room, item, keywords);
 					if (tmp.Count != 0) {
-						output.Add(new ColorText("Floor " + flr + "\n"));
+						output.Add(new ColorText($"Floor {flr}\n"));
 						output.AddRange(tmp);
 						output.Add(new ColorText("\n"));
 					}

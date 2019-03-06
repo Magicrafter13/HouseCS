@@ -32,8 +32,9 @@ namespace HouseCS.Items {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords) {
-			List<ColorText> output = new List<ColorText>();
-			output.Add(ColorText.Empty);
+			List<ColorText> output = new List<ColorText> {
+				ColorText.Empty
+			};
 			return output;
 		}
 
@@ -50,7 +51,7 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="item">Index of sub item</param>
 		/// <returns>Book, telling you that this should be seen</returns>
-		public IItem GetSub(int item) => new Book("This item doesn't contain other items.", "(I don't think it should be possible to see this...)", 2018, -1);
+		public IItem GetSub(int item) => new Book("This item doesn't contain other items.", "(I don't think it should be possible to see this...)" + item, 2018, -1);
 
 		/// <summary>
 		/// Don't use

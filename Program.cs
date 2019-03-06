@@ -50,7 +50,7 @@ namespace HouseCS {
 		}
 
 		private static ColorText[] Help(string cmd) {
-			ColorText[] retCT = { ColorText.Empty };
+			ColorText[] retCT;
 			switch (cmd) {
 				case "add":
 					retCT = new ColorText[] {
@@ -246,12 +246,12 @@ namespace HouseCS {
 			return false;
 		}
 
-		private static bool MatchesAnd(string[] strs, string match) {
+		/*private static bool MatchesAnd(string[] strs, string match) { //Unused
 			for (int i = 0; i < strs.Length; i++)
 				if (!Regex.IsMatch(strs[i], match))
 					return false;
 			return true;
-		}
+		}*/
 
 		private static bool CanGoInside(string src, string dst) {
 			switch (dst.ToLower()) {
@@ -383,6 +383,8 @@ namespace HouseCS {
 		}
 
 		private static void Main(string[] args) {
+			if (args == null)
+				throw new ArgumentNullException(nameof(args));
 			string command;
 			string[] cmds;
 
@@ -394,7 +396,6 @@ namespace HouseCS {
 			foreach (House h in houseData)
 				viewers.Add(new Viewer(h));
 
-			House my_house = houseData[0];
 			Viewer user = viewers[0];
 			bool here = true;
 
@@ -456,7 +457,6 @@ namespace HouseCS {
 							Console.WriteLine($"On floor: {(searchFloor == -1 ? "all" : searchFloor.ToString())}");
 							Console.WriteLine($"In room: {(searchRoom == -1 ? "all" : searchRoom.ToString())}");
 							WriteColor(user.Search(searchFloor, searchRoom, searchItem, keywords).ToArray());
-							//Console.WriteLine(user.Search(searchFloor, searchRoom, searchItem, keywords));
 							break;
 						case "save":
 						case "export":
@@ -913,8 +913,7 @@ namespace HouseCS {
 													int iC = ((Container)user.curItem).Size;
 													if (yenu.Equals("Y", StringComparison.OrdinalIgnoreCase) && iC > 0) {
 														WriteColor(new string[] { "\nWhich ", "Item", ":\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-														int im = 0;
-														im = GetInput(0, iC);
+														int im = GetInput(0, iC);
 														WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
 													} else if (yenu.Equals("N", StringComparison.OrdinalIgnoreCase) || ((Container)user.curItem).Size == 0)
 														WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem() });
@@ -1076,7 +1075,6 @@ namespace HouseCS {
 												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 												WriteColor(new string[] { "\nType the number for each device connected to this ", "Display", " seperated by a space.\n(Optional)\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												string[] conDevs = Regex.Split(Console.ReadLine(), " +");
-												List<IItem> validDevs = new List<IItem>();
 												List<int> added = new List<int>();
 												List<int> notAdded = new List<int>();
 												List<string> notNumber = new List<string>();
@@ -1139,7 +1137,6 @@ namespace HouseCS {
 												WriteColor(new string[] { "\nType the number for each ", "Item", " to be put inside this ", tempCon.SubType, " seperated by a space.\n(Optional)\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												string[] objs = Regex.Split(Console.ReadLine(), " +");
 												Console.WriteLine();
-												List<IItem> validObjs = new List<IItem>();
 												List<int> added = new List<int>();
 												List<int> notAdded = new List<int>();
 												List<string> notNumber = new List<string>();
