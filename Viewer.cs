@@ -48,7 +48,7 @@ namespace HouseCS {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output of Items found</returns>
 		public List<ColorText> Search(int floor, int room, string item, List<string> keywords) {
-			return CurHouse.Search(floor, room, item, keywords);
+			return CurHouse.Search(room != -2 && floor == -1 ? CurFloor : floor, room, item, keywords);
 		}
 
 		/// <summary>

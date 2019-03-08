@@ -45,11 +45,17 @@ namespace HouseCS {
 		/// <returns>String output of Items found</returns>
 		public List<ColorText> Search(int floor, int room, string item, List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
-			if (floor > -1)
-				output.AddRange(Floors[floor].Search(room, item, keywords));
-			//output.Add(new ColorText(Floors[floor].ToString()));
-			else
+			if (floor > -1) {
+				List<ColorText> tmp = Floors[floor].Search(room, item, keywords);
+				if (tmp.Count != 0) {
+					output.Add(new ColorText($"Floor {floor}\n"));
+					output.AddRange(Floors[floor].Search(room, item, keywords));
+					output.Add(new ColorText("\n"));
+				}
+			}
+			else {
 				for (int flr = 0; flr < Size; flr++) {
+					if (floor != -1 && floor != flr) continue;
 					List<ColorText> tmp = Floors[flr].Search(room, item, keywords);
 					if (tmp.Count != 0) {
 						output.Add(new ColorText($"Floor {flr}\n"));
@@ -57,6 +63,7 @@ namespace HouseCS {
 						output.Add(new ColorText("\n"));
 					}
 				}
+			}
 			return output;
 		}
 

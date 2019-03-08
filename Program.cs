@@ -412,7 +412,7 @@ namespace HouseCS {
 							string searchItem = "";
 							List<string> keywords = new List<string>();
 							int searchFloor = -1;
-							int searchRoom = -1;
+							int searchRoom = -2;
 							for (int arg = 1; arg < cmds.Length - 1; arg += 2) {
 								if (EqualsIgnoreCaseOr(cmds[arg], new string[] { "-t", "--type" })) {
 									searchItem = cmds[arg + 1];
@@ -425,15 +425,15 @@ namespace HouseCS {
 										WriteColor(new string[] { "floor", " must be a positive ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 									continue;
 								}
-								if (searchRoom == -1 && EqualsIgnoreCaseOr(cmds[arg], new string[] { "-r", "--room" })) {
-									if (Regex.IsMatch(cmds[arg + 1], @"^\d+$"))
+								if (searchRoom == -2 && EqualsIgnoreCaseOr(cmds[arg], new string[] { "-r", "--room" })) {
+									if (Regex.IsMatch(cmds[arg + 1], @"^((-1)|\d+)$"))
 										searchRoom = int.Parse(cmds[arg + 1]);
 									else
-										WriteColor(new string[] { "room", " must be a positive ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										WriteColor(new string[] { "room", " must be a positive ", "integer", " or ", "-1", ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 									continue;
 								}
 							}
-							Console.WriteLine(searchFloor + " " + searchRoom);
+							Console.WriteLine($"{searchFloor} {searchRoom}");
 							Console.WriteLine("Please enter 1 - 3 keywords: (2 and 3 optional)");
 							string[] keys = { "", "", "" };
 							do {
@@ -449,14 +449,16 @@ namespace HouseCS {
 							keywords.Add(keys[0]);
 							if (!keys[1].Equals("")) keywords.Add(keys[1]);
 							if (!keys[2].Equals("")) keywords.Add(keys[2]);
-							Console.WriteLine("Searching for:");
-							Console.Write(keywords[0]);
-							for (int key = 1; key < keywords.Count; key++) Console.Write(", " + keywords[key]);
+							Console.WriteLine("\nSearching for:");
+							Console.Write($"\"{keywords[0]}\"");
+							for (int key = 1; key < keywords.Count; key++) Console.Write($", \"{keywords[key]}\"");
 							Console.WriteLine();
-							Console.WriteLine($"In: {(searchItem.Equals("") ? "All" : searchItem)} items.");
-							Console.WriteLine($"On floor: {(searchFloor == -1 ? "all" : searchFloor.ToString())}");
-							Console.WriteLine($"In room: {(searchRoom == -1 ? "all" : searchRoom.ToString())}");
-							WriteColor(user.Search(searchFloor, searchRoom, searchItem, keywords).ToArray());
+							WriteColor(new string[] { "In: ", (searchItem.Equals("") ? "All" : searchItem), " items", ". On floor: ", (searchFloor == -1 ? "all" : searchFloor.ToString()), ". In room: ", (searchRoom == -2 ? "all" : searchRoom == -1 ? "No room" : searchRoom.ToString()), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.DarkYellow, ConsoleColor.White, (searchFloor == -1 ? ConsoleColor.White : ConsoleColor.Cyan), ConsoleColor.White, (searchRoom == -2 || searchRoom == -1 ? ConsoleColor.White : ConsoleColor.Cyan), ConsoleColor.White });
+							List<ColorText> output = user.Search(searchFloor, searchRoom, searchItem, keywords);
+							if (output.Count > 0)
+								WriteColor(output.ToArray());
+							else
+								Console.WriteLine("No matches found.\n");
 							break;
 						case "save":
 						case "export":

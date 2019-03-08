@@ -33,19 +33,32 @@ namespace HouseCS {
 		/// <returns>String output of Items found</returns>
 		public List<ColorText> Search(int room, string itemType, List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
+			List<List<IItem>> sortedItems = new List<List<IItem>>(RoomNames.Count + 1);
+			for (int i = 0; i < RoomNames.Count + 1; i++) sortedItems.Add(new List<IItem>());
 			foreach (IItem item in Items) {
-				if (room == -1 || room == item.RoomID) {
-					if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
-						List<ColorText> temp = item.Search(keywords);
-						if (temp.Count != 0) {
-							output.Add(new ColorText($"Room {(room == -1 ? "any" : room.ToString())}: "));
-							output.AddRange(temp);
-							output.Add(new ColorText("\n"));
+				if (room != -2 && room != item.RoomID) continue;
+				sortedItems[item.RoomID + 1].Add(item);
+			}
+			foreach (List<IItem> roomItems in sortedItems) {
+				if (roomItems.Count > 0) {
+					int testRoom = roomItems[0].RoomID;
+					if (room != -2 && room != testRoom) continue;
+					List<ColorText> tempSearch = new List<ColorText>();
+					tempSearch.Add(new ColorText($"  Room {testRoom}:\n"));
+					foreach (IItem item in roomItems) {
+						if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
+							List<ColorText> temp = item.Search(keywords);
+							if (temp.Count != 0) {
+								tempSearch.Add(new ColorText(new string[] { $"    {Items.IndexOf(item)}", ": " }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.White }));
+								tempSearch.AddRange(temp);
+								tempSearch.Add(new ColorText("\n"));
+							}
 						}
 					}
+					if (tempSearch.Count > 1) output.AddRange(tempSearch);
 				}
 			}
-			output.Add(new ColorText("\n"));
+			if (output.Count != 0) output.Add(new ColorText("\n"));
 			return output;
 		}
 
