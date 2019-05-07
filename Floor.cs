@@ -211,7 +211,7 @@ namespace HouseCS {
 		/// <summary>
 		/// Creates a floor with an empty List of Items, and with the lights off
 		/// </summary>
-		public Floor() : this(new List<IItem>(), false, new List<string>()) { }
+		public Floor() : this(new List<IItem>(), false, new List<string>() {"Room"}) { }
 
 		/// <summary>
 		/// Creates a floor with a set List of Items
