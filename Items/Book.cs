@@ -57,7 +57,7 @@ namespace HouseCS.Items {
 		public List<ColorText> Search(List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
-				if (key.Equals(Title, StringComparison.OrdinalIgnoreCase) ||
+				if (Title.ToLower().Contains(key.ToLower()) ||
 				key.Equals(Author, StringComparison.OrdinalIgnoreCase) ||
 				key.Equals(Year.ToString())) {
 					output.Add(ListInfo(true));

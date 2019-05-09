@@ -42,6 +42,17 @@ namespace HouseCS.Items.Containers {
 					output.Add(ListInfo(false));
 				}
 			}
+			if (Size > 0) {
+				for (int i = 0; i < Items.Count; i++) {
+					List<ColorText> temp = Items[i].Search(keywords);
+					if (output.Count == 0 && temp.Count > 0) output.Add(new ColorText("Fridge:\n"));
+					if (temp.Count > 0) {
+						output.Add(new ColorText($"\t{i}: "));
+						output.AddRange(temp);
+						output.Add(new ColorText("\n"));
+					}
+				}
+			}
 			return output;
 		}
 
