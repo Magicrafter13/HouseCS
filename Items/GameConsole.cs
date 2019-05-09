@@ -55,9 +55,7 @@ namespace HouseCS.Items {
 				if (key.Equals(types[SysType], StringComparison.OrdinalIgnoreCase) ||
 					key.Equals(Company, StringComparison.OrdinalIgnoreCase) ||
 					key.Equals(System, StringComparison.OrdinalIgnoreCase)) {
-					output.Add(ListInfo(true));
-					output.Add(new ColorText(typeS));
-					output.Add(ListInfo(false));
+					output.Add(new ColorText($"{types[sys_type]} - {company} {system}"));
 				}
 			}
 			return output;
