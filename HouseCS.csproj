@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <Copyright>GNU Lesser GPL 2.1 License</Copyright>
     <PackageLicenseUrl>https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/Magicrafter13/HouseCS</PackageProjectUrl>
