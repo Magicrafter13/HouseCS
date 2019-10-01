@@ -401,8 +401,9 @@ namespace HouseCS {
 
 			while (here) {
 				Console.Write("> ");
-				command = Console.ReadLine();
-				cmds = Regex.Split(command, " +");
+                cmds = Regex.Split(Console.ReadLine(), " +");
+				//command = Console.ReadLine();
+				//cmds = Regex.Split(command, " +");
 				/*cmds = new string[temp_arr.Length];
 				cmds = temp_arr; //I don't really think it matters if it's a clone or not...*/
 				if (cmds.Length > 0) {
@@ -558,7 +559,7 @@ namespace HouseCS {
 											WriteColor(new string[] { "use", $" {cmds[1]}, does have extra arguments." }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 										break;
 									default:
-										WriteColor(new string[] { $"{cmds[1]} cannot be '", "used", "'." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White });
+										WriteColorLine(new string[] { $"{cmds[1]} cannot be '", "used", "'." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White });
 										break;
 								}
 							} else
@@ -1235,7 +1236,7 @@ namespace HouseCS {
 										} else
 											Console.WriteLine("\nYou are currently on the top floor, floor unchanged.\n");
 									} else
-										WriteColor(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										WriteColorLine(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 									break;
 								default:
 									Console.WriteLine($"{cmds[0]} only accepts 1 argument.");
@@ -1258,7 +1259,7 @@ namespace HouseCS {
 										} else
 											Console.WriteLine("\nYou are currently on the bottom floor, floor unchanged.\n");
 									} else
-										WriteColor(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										WriteColorLine(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 									break;
 								default:
 									Console.WriteLine($"{cmds[0]} only accepts 1 argument.");
