@@ -408,9 +408,13 @@ namespace HouseCS {
 				cmds = temp_arr; //I don't really think it matters if it's a clone or not...*/
 				if (cmds.Length > 0) {
 					switch (cmds[0].ToLower()) {
-						case "search":
+                        case "":
+                            break;
+                        // ^ Keep this on top, might not affect performance, but if it does, just keep it here ^
+                        case "search":
 						case "find":
-							string searchItem = "";
+                            #region
+                            string searchItem = "";
 							List<string> keywords = new List<string>();
 							int searchFloor = -1;
 							int searchRoom = -2;
@@ -461,9 +465,11 @@ namespace HouseCS {
 							else
 								Console.WriteLine("No matches found.\n");
 							break;
-						case "save":
+                        #endregion
+                        case "save":
 						case "export":
-							if (cmds.Length > 1) {
+                            #region
+                            if (cmds.Length > 1) {
 								if (cmds.Length > 2) {
 									switch (cmds[2].ToLower()) {
 										case "-h":
@@ -496,8 +502,10 @@ namespace HouseCS {
 								Console.Write($"\nAll House Data {cmds[0].ToUpper()[0]}{cmds[0].Substring(1).ToLower()}{(cmds[0].Equals("export", StringComparison.OrdinalIgnoreCase) ? "e" : "")}d\n\n");
 							}
 							break;
-						case "goto":
-							if (cmds.Length > 1) {
+                        #endregion
+                        case "goto":
+                            #region
+                            if (cmds.Length > 1) {
 								if (Regex.IsMatch(cmds[1], @"^((-1)|\d+)$")) {
 									int room = int.Parse(cmds[1]);
 									switch (user.GoRoom(room)) {
@@ -533,8 +541,10 @@ namespace HouseCS {
 								enviVar[4, 1] = newRoom.ToString();
 							}
 							break;
-						case "visit":
-							if (cmds.Length > 1) {
+                        #endregion
+                        case "visit":
+                            #region
+                            if (cmds.Length > 1) {
 								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									int dst = int.Parse(cmds[1]);
 									if (dst < houseData.Count) {
@@ -548,8 +558,10 @@ namespace HouseCS {
 							} else
 								Console.WriteLine($"Visit which house? (There are {houseData.Count})");
 							break;
-						case "use":
-							if (cmds.Length > 1) {
+                        #endregion
+                        case "use":
+                            #region
+                            if (cmds.Length > 1) {
 								switch (cmds[1]) {
 									case "light":
 									case "lights":
@@ -565,8 +577,10 @@ namespace HouseCS {
 							} else
 								WriteColor(new string[] { "Use", " what?\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 							break;
-						case "set":
-							bool validVar;
+                        #endregion
+                        case "set":
+                            #region
+                            bool validVar;
 							switch (cmds.Length) {
 								case 1:
 									Console.Write("\n\tEnvironment Variables:\n\n");
@@ -631,6 +645,7 @@ namespace HouseCS {
 									break;
 							}
 							break;
+                        #endregion
 						case "attach":
 							#region
 							if (cmds.Length > 1) {
@@ -1267,8 +1282,6 @@ namespace HouseCS {
 							}
 							break;
 						#endregion
-						case "":
-							break;
 						case "help":
 							#region
 							if (cmds.Length > 1) {
