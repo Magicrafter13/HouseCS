@@ -246,13 +246,6 @@ namespace HouseCS {
 			return false;
 		}
 
-		/*private static bool MatchesAnd(string[] strs, string match) { //Unused
-			for (int i = 0; i < strs.Length; i++)
-				if (!Regex.IsMatch(strs[i], match))
-					return false;
-			return true;
-		}*/
-
 		private static bool CanGoInside(string src, string dst) {
 			switch (dst.ToLower()) {
 				case "bookshelf":
@@ -385,7 +378,6 @@ namespace HouseCS {
 		private static void Main(string[] args) {
 			if (args == null)
 				throw new ArgumentNullException(nameof(args));
-			string command;
 			string[] cmds;
 
 			//This is to keep the contents of my actual house a little more private.
@@ -402,10 +394,6 @@ namespace HouseCS {
 			while (here) {
 				Console.Write("> ");
                 cmds = Regex.Split(Console.ReadLine(), " +");
-				//command = Console.ReadLine();
-				//cmds = Regex.Split(command, " +");
-				/*cmds = new string[temp_arr.Length];
-				cmds = temp_arr; //I don't really think it matters if it's a clone or not...*/
 				if (cmds.Length > 0) {
 					switch (cmds[0].ToLower()) {
                         case "":
