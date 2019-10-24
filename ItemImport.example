@@ -184,8 +184,8 @@ namespace HouseCS {
 		/// Item (house/floor) initializer
 		/// </summary>
 		public static void InitializeItems() { //this method is required, though it doesn't actually need to do anything if you define all the items in the variable from the start, however I will eventually use this method to add a "reset" functionality
-			House myHouse = new House(5, 2);
-			House fakeHouse = new House(6, 3);
+			House myHouse = new House(5, 2, false, 0, 28, 193, 1); //Would be at 19300 NW 28th St
+			House fakeHouse = new House(6, 3, true, 0, 80, 68, 2); //Would be at  6800 SW 80th Ave
 			houses.Add(myHouse);
 			houses.Add(fakeHouse);
 			for (int h = 0; h < houses.Count; h++) //this abomination adds the room names to the floors of the houses

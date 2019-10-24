@@ -35,6 +35,31 @@ namespace HouseCS {
 		/// </summary>
 		public Floor[] Floors { get; }
 
+        /// <summary>
+        /// Whether the house is on a Street, or an Avenue
+        /// </summary>
+        public bool Street { get; private set; }
+
+        /// <summary>
+        /// House number, 0-20
+        /// </summary>
+        public int HouseNumber { get; private set; }
+
+        /// <summary>
+        /// The connected road (street parallel to the house)
+        /// </summary>
+        public int ConRoad { get; private set; }
+
+        /// <summary>
+        /// The adjacent road (street geographically perpendicular before the house, relative to the main street)
+        /// </summary>
+        public int AdjRoad { get; private set; }
+
+        /// <summary>
+        /// Quadrant the house is located in, relative to the main street
+        /// </summary>
+        public int Quadrant { get; private set; }
+
 		/// <summary>
 		/// Searches house for items matching certain keywords
 		/// </summary>
@@ -242,26 +267,46 @@ namespace HouseCS {
 		/// <returns>Floor object from house</returns>
 		public Floor GetFloor(int floor) => Floors[floor];
 
+        /// <summary>
+        /// Reports the House's color
+        /// </summary>
+        public string GetColor => colors[Color];
+
+        /// <summary>
+        /// Deciphers the address of the House
+        /// </summary>
+        public string Address => $"{AdjRoad}{(HouseNumber < 10 ? $"0{HouseNumber}" : $"{HouseNumber}")} {(Quadrant < 2 ? Quadrant == 0 ? "NE" : "NW" : Quadrant == 2 ? "SW" : "SE")} {Program.OrdSuf(ConRoad)} {(Street ? "St" : "Ave")}";
+
 		/// <summary>
 		/// ToString override showing info about the house
 		/// </summary>
 		/// <returns>string containing the color of the house, and how many floors it has</returns>
-		public override string ToString() => $"Color: {colors[Color]}\nFloors: {Size}";
+		public override string ToString() => $"Color: {GetColor}\nFloors: {Size}\n{(Quadrant==-1?"House has no assigned address.":"hi")}";
 
 		/// <summary>
 		/// Creates a white house, with 1 floor
 		/// </summary>
-		public House() : this(0, 1) { }
+		public House() : this(0, 1, true, -1, -1, -1, -1) { }
 
 		/// <summary>
 		/// Creates a house with a set color, and floor count
 		/// </summary>
 		/// <param name="color">Index of color for house</param>
 		/// <param name="floor">floor count</param>
-		public House(int color, int floor) {
+        /// <param name="street">True = Street, False = Avenue</param>
+        /// <param name="houseNumber">This House's number on the street</param>
+        /// <param name="conRoad">Road parallel to House</param>
+        /// <param name="adjRoad">Road adjacent to House</param>
+        /// <param name="quad">Relative quadrant of House</param>
+		public House(int color, int floor, bool street, int houseNumber, int conRoad, int adjRoad, int quad) {
 			Color = color >= 0 && color <= 9 ? color : 0;
 			Floors = new Floor[floor];
 			InitializeFloors();
+            Street = street;
+            HouseNumber = houseNumber;
+            ConRoad = conRoad;
+            AdjRoad = adjRoad;
+            Quadrant = quad;
 		}
 
 		/// <summary>
@@ -269,7 +314,12 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="color">Index of color for house</param>
 		/// <param name="floors">Array of floor objects</param>
-		public House(int color, Floor[] floors) {
+        /// <param name="street">True = Street, False = Avenue</param>
+        /// <param name="houseNumber">This House's number of the street</param>
+        /// <param name="conRoad">Road parallel to House</param>
+        /// <param name="adjRoad">Road adjacent to House</param>
+        /// <param name="quad">Relative quadrant of House</param>
+		public House(int color, Floor[] floors, bool street, int houseNumber, int conRoad, int adjRoad, int quad) : this(color, 1, street, houseNumber, conRoad, adjRoad, quad) {
 			Color = color >= 0 && color <= 9 ? color : 0;
 			Floors = floors;
 		}

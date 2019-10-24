@@ -375,6 +375,27 @@ namespace HouseCS {
 			} catch (ArrayTooSmall e) { throw e; }
 		}
 
+        public static string OrdSuf(int num) {
+            switch (num % 10) {
+                case 1:
+                    return $"{num}st";
+                case 2:
+                    return $"{num}nd";
+                case 3:
+                    return $"{num}rd";
+                case 0:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return $"{num}th";
+                default:
+                    return $"{num}";
+            }
+        }
+
 		private static void Main(string[] args) {
 			if (args == null)
 				throw new ArgumentNullException(nameof(args));
@@ -387,11 +408,31 @@ namespace HouseCS {
 			List<Viewer> viewers = new List<Viewer>();
 			foreach (House h in houseData)
 				viewers.Add(new Viewer(h));
+            List<List<List<House>>>[] localMap = new List<List<List<House>>>[4];
+            for (int q = 0; q < localMap.Length; q++) {
+                localMap[q] = new List<List<List<House>>>(new List<List<House>>[300]); //add streets
+                for (int s = 0; s < localMap[q].Count; s++) {
+                    localMap[q][s] = new List<List<House>>(new List<House>[300]);
+                    for (int a = 0; a < localMap[q][s].Count; a++) {
+                        localMap[q][s][a] = new List<House>(20);
+                    }
+                }
+            }
 
 			Viewer user = viewers[0];
 			bool here = true;
 
+            for (int h = 0; h < houseData.Count; h++)
+                localMap[houseData[h].Quadrant][(houseData[h].Street ? houseData[h].ConRoad : houseData[h].AdjRoad) - 1][(houseData[h].Street ? houseData[h].AdjRoad : houseData[h].ConRoad) - 1].Add(houseData[h]);
+
 			while (here) {
+                /*for (int i = 0; i < 4; i++) {
+                    for (int r = 0; r < localMap[i].Count; r++) {
+                        for (int h = 0; h < localMap[i][r].Count; h++) {
+                            Console.Write($"{localMap[i][r][h].AdjRoad}{(localMap[i][r][h].HouseNumber < 10 ? "0" : "")}{localMap[i][r][h].HouseNumber} {(i < 2 ? (i == 0 ? "NE" : "NW") : (i == 2 ? "SW" : "SE"))} {OrdSuf(localMap[i][r][h].ConRoad)} {(localMap[i][r][h].Street ? "St" : "Ave")}\n");
+                        }
+                    }
+                }*/
 				Console.Write("> ");
                 cmds = Regex.Split(Console.ReadLine(), " +");
 				if (cmds.Length > 0) {
@@ -399,6 +440,11 @@ namespace HouseCS {
                         case "":
                             break;
                         // ^ Keep this on top, might not affect performance, but if it does, just keep it here ^
+                        case "map":
+                            #region
+                            Console.WriteLine("Soon...");
+                            break;
+                        #endregion
                         case "search":
 						case "find":
                             #region
@@ -836,7 +882,51 @@ namespace HouseCS {
 						case "look":
 							#region
 							if (cmds.Length > 1) {
-								if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--hand", "--focus", "-h", "-f" }))
+                                if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--house", "-h" })) {
+                                    House infoHouse = user.CurHouse;
+                                    if (cmds.Length > 2) {
+                                        if (EqualsIgnoreCaseOr(cmds[2], new string[] { "--address", "-a" })) {
+                                            Console.Write("What quadrant is the House in? (0:NE, 1:NW, 2:SW, 3:SE)");
+                                            int quad = GetInput(0, 4);
+                                            bool street = GetInput(new ColorText("Is this house on a Street, or Avenue [st/ave] "), new string[] { "st", "ave" }, true).Equals("st", StringComparison.OrdinalIgnoreCase);
+                                            Console.Write($"What {(street ? "street" : "avenue")} is it on?\n");
+                                            int conRoad = GetInput(1, 301) - 1;
+                                            Console.Write("Enter the 3-5 digit House number:\n");
+                                            int rawAdd = GetInput(100, 29920);
+                                            int adjRoad = rawAdd / 100 - 1;
+                                            bool found = false;
+                                            for (int h = 0; h < localMap[quad][street ? conRoad : adjRoad][street ? adjRoad : conRoad].Count; h++) {
+                                                infoHouse = localMap[quad][(street ? conRoad : adjRoad) - 1][(street ? adjRoad : conRoad) - 1][h];
+                                                if (infoHouse.HouseNumber == rawAdd % 100) {
+                                                    found = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!found) {
+                                                Console.Write("House not found at specified address.\n");
+                                                break;
+                                            }
+                                        } else {
+                                            if (Regex.IsMatch(cmds[2], @"^-?\d+$")) {
+                                                int h = int.Parse(cmds[2]);
+                                                if (h < 0) {
+                                                    WriteColor(new string[] { $"House number must be a positive ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
+                                                    break;
+                                                }
+                                                if (h >= houseData.Count) {
+                                                    Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
+                                                    break;
+                                                }
+                                                infoHouse = houseData[int.Parse(cmds[2])];
+                                            } else {
+                                                Console.Write($"{cmds[2]} is not a valid argument.\n");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    WriteColor(new string[] { "House ", $"{houseData.IndexOf(infoHouse)}", $":\n\tColor: {infoHouse.GetColor}\n\tSize: ", (infoHouse.Floors.Length).ToString(), $" floors\n\tAddress: {infoHouse.Address}\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+                                }
+								else if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--hand", "--focus", "-h", "-f" }))
 									WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem(), new ColorText("\n\n") });
 								else if (cmds.Length > 2 || EqualsIgnoreCaseOr(cmds[1], new string[] { "-p", "--page" })) {
 									bool page = false;
@@ -993,7 +1083,7 @@ namespace HouseCS {
 												int floors;
 												Console.Write("\nHow many floors will this house have?\n");
 												floors = GetInput(1, 101); //Kinda just had to pick an arbitrary number here
-												House newHouse = new House(color, floors);
+												House newHouse = new House(color, floors, true, -1, -1, -1, -1);
 												houseData.Add(newHouse);
 												viewers.Add(new Viewer(newHouse));
 												Console.WriteLine($"\n{floors} story, {House.colors[color]} House, number {(houseData.Count - 1).ToString()} added.\n");
