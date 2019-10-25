@@ -92,13 +92,13 @@ namespace HouseCS {
 			return output;
 		}
 
-		/// <summary>
-		/// Exports Item information
-		/// </summary>
-		/// <param name="house">House number</param>
-		/// <returns>String with all Items in the house</returns>
-		public string Export(int house) {
-			string retStr = $"House {house}\n";
+        /// <summary>
+        /// Exports Item information
+        /// </summary>
+        /// <param name="house">House number</param>
+        /// <returns>String with all Items in the house</returns>
+        public string Export(int house) {
+			string retStr = $"House {house}\nHouse house{house} = new House({Color}, {Floors.Length}, {Street.ToString().ToLower()}, {HouseNumber}, {ConRoad}, {AdjRoad}, {Quadrant});\n";
 			for (int i = 0; i < Floors.Length; i++)
 				retStr += Floors[i].Export(i);
 			return $"{retStr}End House {house}\n";

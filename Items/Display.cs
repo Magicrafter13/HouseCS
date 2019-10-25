@@ -68,39 +68,15 @@ namespace HouseCS.Items {
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
-			retStr += $"new Container({(IsMonitor ? "true" : "false")}, new List<IItem>() {{\n";
+			retStr += $"new Display({IsMonitor.ToString().ToLower()}, new List<IItem>() {{\n";
 			for (int i = 0; i < connectedTo.Count; i++) {
-				if (connectedTo[i] is Container) {
-					switch (connectedTo[i].SubType) {
-						case "Bookshelf":
-							retStr += ((Bookshelf)connectedTo[i]).Export(space + 2);
-							break;
-						case "Dresser":
-							retStr += ((Dresser)connectedTo[i]).Export(space + 2);
-							break;
-						case "Fridge":
-							retStr += ((Fridge)connectedTo[i]).Export(space + 2);
-							break;
-						case "Table":
-							retStr += ((Table)connectedTo[i]).Export(space + 2);
-							break;
-						default:
-							retStr += ((Container)connectedTo[i]).Export(space + 2);
-							break;
-					}
-					continue;
-				}
-				if (connectedTo[i] is Display) {
-					retStr += ((Display)connectedTo[i]).Export(space + 2);
-					continue;
-				}
 				for (int s = 0; s < space + 2; s++)
 					retStr += " ";
-				retStr += connectedTo[i].Export();
+				retStr += $"{connectedTo[i].Export()}\n";
 			}
 			for (int i = 0; i < space; i++)
 				retStr += " ";
-			return $"{retStr}}}, {SizeInch}, {RoomID}),";
+			return $"{retStr}}}, {SizeInch}, {RoomID}),\n";
 		}
 
 		/// <summary>

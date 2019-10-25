@@ -9,7 +9,7 @@ using HouseCS.Items.Containers;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 7, verFix = 0;
+		private static readonly int verMajor = 2, verMinor = 7, verFix = 1;
 
 		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container", "Printer" };
 
@@ -24,6 +24,8 @@ namespace HouseCS {
 		};
 
 		public static int house = 0;
+
+        private static readonly int maxStreets = 300, maxAvenues = 300, maxHouses = 20; // 300 st x 300 ave, up to 20 houses per road
 
 		private static string CurVer => $"{verMajor}.{verMinor}.{verFix}";
 
@@ -409,13 +411,13 @@ namespace HouseCS {
 			List<Viewer> viewers = new List<Viewer>();
 			foreach (House h in houseData)
 				viewers.Add(new Viewer(h));
-            List<List<List<House>>>[] localMap = new List<List<List<House>>>[4];
+            List<List<List<House>>>[] localMap = new List<List<List<House>>>[4]; //add quadrants
             for (int q = 0; q < localMap.Length; q++) {
-                localMap[q] = new List<List<List<House>>>(new List<List<House>>[300]); //add streets
+                localMap[q] = new List<List<List<House>>>(new List<List<House>>[maxStreets]); //add streets
                 for (int s = 0; s < localMap[q].Count; s++) {
-                    localMap[q][s] = new List<List<House>>(new List<House>[300]);
+                    localMap[q][s] = new List<List<House>>(new List<House>[maxAvenues]); //add avenues
                     for (int a = 0; a < localMap[q][s].Count; a++) {
-                        localMap[q][s][a] = new List<House>(20);
+                        localMap[q][s][a] = new List<House>(maxHouses); //add roads
                     }
                 }
             }
