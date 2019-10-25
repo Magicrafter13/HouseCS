@@ -9,7 +9,7 @@ using HouseCS.Items.Containers;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 6, verFix = 3;
+		private static readonly int verMajor = 2, verMinor = 7, verFix = 0;
 
 		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container", "Printer" };
 
@@ -376,6 +376,7 @@ namespace HouseCS {
 		}
 
         public static string OrdSuf(int num) {
+            if (num / 10 == 1) return $"{num}th";
             switch (num % 10) {
                 case 1:
                     return $"{num}st";
