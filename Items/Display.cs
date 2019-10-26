@@ -1,7 +1,6 @@
-﻿using System;
+﻿using HouseCS.ConsoleUtils;
+using System;
 using System.Collections.Generic;
-using HouseCS.ConsoleUtils;
-using HouseCS.Items.Containers;
 
 namespace HouseCS.Items {
 	/// <summary>

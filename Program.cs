@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using HouseCS.ConsoleUtils;
+﻿using HouseCS.ConsoleUtils;
 using HouseCS.Exceptions;
 using HouseCS.Items;
 using HouseCS.Items.Clothes;
 using HouseCS.Items.Containers;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace HouseCS {
 	internal class Program {
@@ -25,7 +25,7 @@ namespace HouseCS {
 
 		public static int house = 0;
 
-        private static readonly int maxStreets = 300, maxAvenues = 300, maxHouses = 20; // 300 st x 300 ave, up to 20 houses per road
+		private static readonly int maxStreets = 300, maxAvenues = 300, maxHouses = 20; // 300 st x 300 ave, up to 20 houses per road
 
 		private static string CurVer => $"{verMajor}.{verMinor}.{verFix}";
 
@@ -92,6 +92,12 @@ namespace HouseCS {
 					retCT = new ColorText[] {
 						new ColorText(new string[] { "\nSyntax", " is: ", $"{cmd.ToLower()}\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue }),
 						new ColorText(new string[] { "Stops the program, and returns to your command line/operating environment\n\n" }, new ConsoleColor[] { ConsoleColor.White })
+					};
+					break;
+				case "export":
+				case "save":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", $"{cmd.ToLower()}\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue }),
 					};
 					break;
 				case "grab":
@@ -279,12 +285,7 @@ namespace HouseCS {
 							return true;
 					}
 				case "dresser":
-					switch (src.ToLower()) {
-						case "clothing":
-							return true;
-						default:
-							return false;
-					}
+					return src.ToLower().Equals("clothing");
 				case "table":
 					switch (src.ToLower()) {
 						case "fridge":
@@ -299,31 +300,21 @@ namespace HouseCS {
 			}
 		}
 
-		public static IItem CreateContainer(string type) {
-			switch (type.ToLower()) {
-				case "fridge":
-					return new Fridge();
-				case "bookshelf":
-					return new Bookshelf();
-				case "dresser":
-					return new Dresser();
-				case "table":
-					return new Table();
-				default:
-					return new Container();
-			}
-		}
+		public static IItem CreateContainer(string type) => (type.ToLower()) switch
+		{
+			"fridge" => new Fridge(),
+			"bookshelf" => new Bookshelf(),
+			"dresser" => new Dresser(),
+			"table" => new Table(),
+			_ => new Container(),
+		};
 
-		public static IItem CreateClothing(string type) {
-			switch (type.ToLower()) {
-				case "shirt":
-					return new Shirt();
-				case "pants":
-					return new Pants();
-				default:
-					return new Clothing();
-			}
-		}
+		public static IItem CreateClothing(string type) => (type.ToLower()) switch
+		{
+			"shirt" => new Shirt(),
+			"pants" => new Pants(),
+			_ => new Clothing(),
+		};
 
 		public static int GetInput(int min, int max) {
 			if (min >= max)
@@ -362,42 +353,45 @@ namespace HouseCS {
 		public static string GetInput(ColorText message, string[] values, bool ignoreCase) {
 			try {
 				return GetInput(message, new List<string>(values), ignoreCase);
-			} catch (ArrayTooSmall e) { throw e; }
+			}
+			catch (ArrayTooSmall e) { throw e; }
 		}
 
 		public static string GetInput(List<string> values, bool ignoreCase) {
 			try {
 				return GetInput(ColorText.Empty, values, ignoreCase);
-			} catch (ArrayTooSmall e) { throw e; }
+			}
+			catch (ArrayTooSmall e) { throw e; }
 		}
 
 		public static string GetInput(string[] values, bool ignoreCase) {
 			try {
 				return GetInput(ColorText.Empty, values, ignoreCase);
-			} catch (ArrayTooSmall e) { throw e; }
+			}
+			catch (ArrayTooSmall e) { throw e; }
 		}
 
-        public static string OrdSuf(int num) {
-            if (num / 10 == 1) return $"{num}th";
-            switch (num % 10) {
-                case 1:
-                    return $"{num}st";
-                case 2:
-                    return $"{num}nd";
-                case 3:
-                    return $"{num}rd";
-                case 0:
-                case 4:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                    return $"{num}th";
-                default:
-                    return $"{num}";
-            }
-        }
+		public static string OrdSuf(int num) {
+			if (num / 10 == 1) return $"{num}th";
+			switch (num % 10) {
+				case 1:
+					return $"{num}st";
+				case 2:
+					return $"{num}nd";
+				case 3:
+					return $"{num}rd";
+				case 0:
+				case 4:
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+				case 9:
+					return $"{num}th";
+				default:
+					return $"{num}";
+			}
+		}
 
 		private static void Main(string[] args) {
 			if (args == null)
@@ -411,47 +405,47 @@ namespace HouseCS {
 			List<Viewer> viewers = new List<Viewer>();
 			foreach (House h in houseData)
 				viewers.Add(new Viewer(h));
-            List<List<List<House>>>[] localMap = new List<List<List<House>>>[4]; //add quadrants
-            for (int q = 0; q < localMap.Length; q++) {
-                localMap[q] = new List<List<List<House>>>(new List<List<House>>[maxStreets]); //add streets
-                for (int s = 0; s < localMap[q].Count; s++) {
-                    localMap[q][s] = new List<List<House>>(new List<House>[maxAvenues]); //add avenues
-                    for (int a = 0; a < localMap[q][s].Count; a++) {
-                        localMap[q][s][a] = new List<House>(maxHouses); //add roads
-                    }
-                }
-            }
+			List<List<List<House>>>[] localMap = new List<List<List<House>>>[4]; //add quadrants
+			for (int q = 0; q < localMap.Length; q++) {
+				localMap[q] = new List<List<List<House>>>(new List<List<House>>[maxStreets]); //add streets
+				for (int s = 0; s < localMap[q].Count; s++) {
+					localMap[q][s] = new List<List<House>>(new List<House>[maxAvenues]); //add avenues
+					for (int a = 0; a < localMap[q][s].Count; a++) {
+						localMap[q][s][a] = new List<House>(maxHouses); //add roads
+					}
+				}
+			}
 
 			Viewer user = viewers[0];
 			bool here = true;
 
-            for (int h = 0; h < houseData.Count; h++)
-                localMap[houseData[h].Quadrant][(houseData[h].Street ? houseData[h].ConRoad : houseData[h].AdjRoad) - 1][(houseData[h].Street ? houseData[h].AdjRoad : houseData[h].ConRoad) - 1].Add(houseData[h]);
+			for (int h = 0; h < houseData.Count; h++)
+				localMap[houseData[h].Quadrant][(houseData[h].Street ? houseData[h].ConRoad : houseData[h].AdjRoad) - 1][(houseData[h].Street ? houseData[h].AdjRoad : houseData[h].ConRoad) - 1].Add(houseData[h]);
 
 			while (here) {
-                /*for (int i = 0; i < 4; i++) {
-                    for (int r = 0; r < localMap[i].Count; r++) {
-                        for (int h = 0; h < localMap[i][r].Count; h++) {
-                            Console.Write($"{localMap[i][r][h].AdjRoad}{(localMap[i][r][h].HouseNumber < 10 ? "0" : "")}{localMap[i][r][h].HouseNumber} {(i < 2 ? (i == 0 ? "NE" : "NW") : (i == 2 ? "SW" : "SE"))} {OrdSuf(localMap[i][r][h].ConRoad)} {(localMap[i][r][h].Street ? "St" : "Ave")}\n");
-                        }
-                    }
-                }*/
+				/*for (int i = 0; i < 4; i++) {
+					for (int r = 0; r < localMap[i].Count; r++) {
+						for (int h = 0; h < localMap[i][r].Count; h++) {
+							Console.Write($"{localMap[i][r][h].AdjRoad}{(localMap[i][r][h].HouseNumber < 10 ? "0" : "")}{localMap[i][r][h].HouseNumber} {(i < 2 ? (i == 0 ? "NE" : "NW") : (i == 2 ? "SW" : "SE"))} {OrdSuf(localMap[i][r][h].ConRoad)} {(localMap[i][r][h].Street ? "St" : "Ave")}\n");
+						}
+					}
+				}*/
 				Console.Write("> ");
-                cmds = Regex.Split(Console.ReadLine(), " +");
+				cmds = Regex.Split(Console.ReadLine(), " +");
 				if (cmds.Length > 0) {
 					switch (cmds[0].ToLower()) {
-                        case "":
-                            break;
-                        // ^ Keep this on top, might not affect performance, but if it does, just keep it here ^
-                        case "map":
-                            #region
-                            Console.WriteLine("Soon...");
-                            break;
-                        #endregion
-                        case "search":
+						case "":
+							break;
+						// ^ Keep this on top, might not affect performance, but if it does, just keep it here ^
+						case "map":
+							#region
+							Console.WriteLine("Soon...");
+							break;
+						#endregion
+						case "search":
 						case "find":
-                            #region
-                            string searchItem = "";
+							#region
+							string searchItem = "";
 							List<string> keywords = new List<string>();
 							int searchFloor = -1;
 							int searchRoom = -2;
@@ -502,11 +496,11 @@ namespace HouseCS {
 							else
 								Console.WriteLine("No matches found.\n");
 							break;
-                        #endregion
-                        case "save":
+						#endregion
+						case "save":
 						case "export":
-                            #region
-                            if (cmds.Length > 1) {
+							#region
+							if (cmds.Length > 1) {
 								if (cmds.Length > 2) {
 									switch (cmds[2].ToLower()) {
 										case "-h":
@@ -514,8 +508,10 @@ namespace HouseCS {
 												if (int.Parse(cmds[1]) >= 0 && int.Parse(cmds[1]) < houseData.Count) {
 													System.IO.File.WriteAllText("exportedHouse.txt", $"{houseData[int.Parse(cmds[1])].Export(int.Parse(cmds[1]))}\n");
 													Console.WriteLine($"\nHouse {cmds[1]} exported.\n");
-												} else WriteColor(new string[] { "house", " must be greater than or equal to ", "0", " and less than ", houseData.Count.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-											 } else WriteColor(new string[] { $"{cmds[1]} is not a valid ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+												}
+												else WriteColor(new string[] { "house", " must be greater than or equal to ", "0", " and less than ", houseData.Count.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { $"{cmds[1]} is not a valid ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 											break;
 										case "-f":
 											if (Regex.IsMatch(cmds[1], @"^\d+$")) {
@@ -529,9 +525,10 @@ namespace HouseCS {
 											Console.WriteLine($"{cmds[2]} is not a valid argument.");
 											break;
 									}
-								} else
-								Console.WriteLine($"{cmds[0].ToLower()} accepts 0 or 2 arguments.");
-							} else {
+								}
+								else Console.WriteLine($"{cmds[0].ToLower()} accepts 0 or 2 arguments.");
+							}
+							else {
 								string exportData = string.Empty;
 								for (int i = 0; i < houseData.Count; i++)
 									exportData += $"{houseData[i].Export(i)}\n";
@@ -539,10 +536,10 @@ namespace HouseCS {
 								Console.Write($"\nAll House Data {cmds[0].ToUpper()[0]}{cmds[0].Substring(1).ToLower()}{(cmds[0].Equals("export", StringComparison.OrdinalIgnoreCase) ? "e" : "")}d\n\n");
 							}
 							break;
-                        #endregion
-                        case "goto":
-                            #region
-                            if (cmds.Length > 1) {
+						#endregion
+						case "goto":
+							#region
+							if (cmds.Length > 1) {
 								if (Regex.IsMatch(cmds[1], @"^((-1)|\d+)$")) {
 									int room = int.Parse(cmds[1]);
 									switch (user.GoRoom(room)) {
@@ -560,9 +557,10 @@ namespace HouseCS {
 											break;
 									}
 									enviVar[4, 1] = cmds[1];
-								} else
-									WriteColorLine(new string[] { "room", " must be a positive ", "integer", ", or ", "-1", "." }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Cyan });
-							} else {
+								}
+								else WriteColorLine(new string[] { "room", " must be a positive ", "integer", ", or ", "-1", "." }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Cyan });
+							}
+							else {
 								Console.WriteLine("\nRooms on this floor:\n");
 								for (int i = 0; i < user.RoomNames.Count; i++)
 									Console.WriteLine($"{i.ToString()}: {user.RoomNames[i]}");
@@ -578,27 +576,27 @@ namespace HouseCS {
 								enviVar[4, 1] = newRoom.ToString();
 							}
 							break;
-                        #endregion
-                        case "visit":
-                            #region
-                            if (cmds.Length > 1) {
+						#endregion
+						case "visit":
+							#region
+							if (cmds.Length > 1) {
 								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									int dst = int.Parse(cmds[1]);
 									if (dst < houseData.Count) {
 										user = viewers[dst];
 										house = dst;
 										Console.WriteLine($"\nWelcome to House {dst}.\n");
-									} else
-										Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
-								} else
-									WriteColor(new string[] { "House number must be a positive ", "Integer", $", that is less than {houseData.Count.ToString()}.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-							} else
-								Console.WriteLine($"Visit which house? (There are {houseData.Count})");
+									}
+									else Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
+								}
+								else WriteColor(new string[] { "House number must be a positive ", "Integer", $", that is less than {houseData.Count.ToString()}.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+							}
+							else Console.WriteLine($"Visit which house? (There are {houseData.Count})");
 							break;
-                        #endregion
-                        case "use":
-                            #region
-                            if (cmds.Length > 1) {
+						#endregion
+						case "use":
+							#region
+							if (cmds.Length > 1) {
 								switch (cmds[1]) {
 									case "light":
 									case "lights":
@@ -611,13 +609,13 @@ namespace HouseCS {
 										WriteColorLine(new string[] { $"{cmds[1]} cannot be '", "used", "'." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White });
 										break;
 								}
-							} else
-								WriteColor(new string[] { "Use", " what?\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+							}
+							else WriteColor(new string[] { "Use", " what?\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 							break;
-                        #endregion
-                        case "set":
-                            #region
-                            bool validVar;
+						#endregion
+						case "set":
+							#region
+							bool validVar;
 							switch (cmds.Length) {
 								case 1:
 									Console.Write("\n\tEnvironment Variables:\n\n");
@@ -651,17 +649,16 @@ namespace HouseCS {
 												case "bool":
 													if (EqualsIgnoreCaseOr(cmds[2], new string[] { "false", "true", "0", "1" })) {
 														enviVar[i, 1] = EqualsIgnoreCaseOr(cmds[2], new string[] { "true", "1" }) ? "true" : "false";
-													} else
-
-														Console.Write($"\n{enviVar[i, 0]} stores a boolean value, must be true or false. (0 and 1 are acceptible)\n");
+													}
+													else Console.Write($"\n{enviVar[i, 0]} stores a boolean value, must be true or false. (0 and 1 are acceptible)\n");
 													break;
 												case "int":
 												case "double":
 													if (Regex.IsMatch(cmds[2], @"^-?\d+([.]{1}\d+)?$")) {
 														double newVal = double.Parse(cmds[2]);
 														enviVar[i, 1] = enviVar[i, 2].Equals("int") ? newVal.ToString() : newVal.ToString();
-													} else
-														Console.Write($"\n{enviVar[i, 0]} stores a numeric value, must only contain a number, - is optional, if variable stores a double, you may provide a decimal value\n");
+													}
+													else Console.Write($"\n{enviVar[i, 0]} stores a numeric value, must only contain a number, - is optional, if variable stores a double, you may provide a decimal value\n");
 													break;
 												default:
 													Console.Write($"\n{enviVar[i, 0]} did not have a recognized value type, be cautious, and report this bug.\n");
@@ -672,17 +669,17 @@ namespace HouseCS {
 											}
 											//enviVar[i][1] = cmds[2];
 											Console.Write($"\n{enviVar[i, 0]} = {enviVar[i, 1]}\n\n");
-										} else
-											Console.Write($"{enviVar[i, 0]} is a system variable, and cannot be changed by the user.\n");
-									} else
-										Console.Write($"{cmds[1]} is not a valid variable.\n");
+										}
+										else Console.Write($"{enviVar[i, 0]} is a system variable, and cannot be changed by the user.\n");
+									}
+									else Console.Write($"{cmds[1]} is not a valid variable.\n");
 									break;
 								default:
 									Console.Write("Invalid amount of arguments.\n");
 									break;
 							}
 							break;
-                        #endregion
+						#endregion
 						case "attach":
 							#region
 							if (cmds.Length > 1) {
@@ -700,8 +697,8 @@ namespace HouseCS {
 															if (!(tempItem is Empty)) {
 																user.AddItem(tempItem);
 																WriteColor(((Container)dst_i).RemoveItem(src));
-															} else
-																WriteColor(new string[] { "The ", dst_i.SubType, " doesn't have that many ", "Items", " in it.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
+															}
+															else WriteColor(new string[] { "The ", dst_i.SubType, " doesn't have that many ", "Items", " in it.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
 															break;
 														case "Display":
 															Console.WriteLine(((Display)dst_i).Disconnect(src));
@@ -710,9 +707,10 @@ namespace HouseCS {
 															WriteColor(new string[] { "That ", "Item", " cannot have things ", "detached", " from it.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.White });
 															break;
 													}
-												} else
-													WriteColor(new string[] { "Invalid argument, did you mean ", "-d", "?\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-											} else if (user.IsItem(src) && user.IsItem(dst)) {
+												}
+												else WriteColor(new string[] { "Invalid argument, did you mean ", "-d", "?\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+											}
+											else if (user.IsItem(src) && user.IsItem(dst)) {
 												IItem src_i = user.GetItem(src);
 												IItem dst_i = user.GetItem(dst);
 												switch (dst_i.Type) {
@@ -720,8 +718,8 @@ namespace HouseCS {
 														if (CanGoInside(src_i is Clothing ? "Clothing" : src_i.SubType, dst_i.SubType)) {
 															user.RemoveItem(src);
 															WriteColor(new ColorText[] { ((Container)dst_i).AddItem(src_i), new ColorText("\n") });
-														} else
-															Console.WriteLine($"A {src_i.SubType}, cannot be put-in/attached-to a {dst_i.SubType}");
+														}
+														else Console.WriteLine($"A {src_i.SubType}, cannot be put-in/attached-to a {dst_i.SubType}");
 														break;
 													case "Display":
 														if (src_i is Computer || src_i is GameConsole)
@@ -733,16 +731,16 @@ namespace HouseCS {
 														Console.Write("Item cannot have things attached to it.\n");
 														break;
 												}
-											} else
-												WriteColor(new string[] { "The floor only has ", user.FloorSize.ToString(), " items.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "Item", " must be an ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.DarkRed, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-									} else
-										WriteColor(new string[] { "\nAttach", " it to what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
-								} else
-									WriteColor(new string[] { "Item", " must be an ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.DarkRed, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-							} else
-								WriteColor(new string[] { "\nAttach", " what to what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "The floor only has ", user.FloorSize.ToString(), " items.\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "Item", " must be an ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.DarkRed, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+									}
+									else WriteColor(new string[] { "\nAttach", " it to what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+								}
+								else WriteColor(new string[] { "Item", " must be an ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.DarkRed, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+							}
+							else WriteColor(new string[] { "\nAttach", " what to what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 							break;
 						#endregion
 						case "move":
@@ -763,19 +761,19 @@ namespace HouseCS {
 													user.RemoveItem(item);
 													user.curItem = tempItem;
 													WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Item ", "moved ", $"to floor {destination}\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.DarkBlue, ConsoleColor.White }), user.curItem.ToText(), new ColorText("\n\n") });
-												} else
-													Console.Write("Floor does not exist.\n");
-											} else
-												WriteColor(new string[] { "Item", " does not exist.\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
+												}
+												else Console.Write("Floor does not exist.\n");
+											}
+											else WriteColor(new string[] { "Item", " does not exist.\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
 											user.curItem = old_item;
-										} else
-											WriteColor(new string[] { "Floor must be an ", "integer", ", or: ", "<", " or ", ">", ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-									} else
-										WriteColor(new string[] { "\nMove", " it where?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
-								} else
-									WriteColor(new string[] { "Item", " must be an ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-							} else
-								WriteColor(new string[] { "\nMove", " what, and where?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "Floor must be an ", "integer", ", or: ", "<", " or ", ">", ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+									}
+									else WriteColor(new string[] { "\nMove", " it where?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+								}
+								else WriteColor(new string[] { "Item", " must be an ", "integer", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+							}
+							else WriteColor(new string[] { "\nMove", " what, and where?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 							break;
 						#endregion
 						case "grab":
@@ -799,16 +797,17 @@ namespace HouseCS {
 													WriteColor(new string[] { "ERROR: get sub-item did not return 0, 1, or 2. Please report this!\n" }, new ConsoleColor[] { ConsoleColor.Red });
 													break;
 											}
-										} else
-											WriteColor(new string[] { $"\"{cmds[2]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-									} else if (user.ChangeItemFocus(int.Parse(cmds[1])))
+										}
+										else WriteColor(new string[] { $"\"{cmds[2]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
+									}
+									else if (user.ChangeItemFocus(int.Parse(cmds[1])))
 										WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Item", " selected: (of type ", user.curItem.Type, ")\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), user.curItem.ToText(), new ColorText("\n\n") });
 									else
 										WriteColor(new string[] { $"\"{cmds[1]}\" is invalid, must be less than the floor ", "Item", " size of: ", $"{user.FloorSize.ToString()}\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan });
-								} else
-									WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-							} else
-								WriteColor(new string[] { "\nGrab", " what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+								}
+								else WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
+							}
+							else WriteColor(new string[] { "\nGrab", " what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 							break;
 						#endregion
 						case "remove":
@@ -833,10 +832,10 @@ namespace HouseCS {
 													int newHouse = GetInput(0, houseData.Count);
 													user = viewers[newHouse];
 												}
-											} else
-												Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
-										} else
-											if (Regex.IsMatch(cmds[2], @"^\d+$")) {
+											}
+											else Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
+										}
+										else if (Regex.IsMatch(cmds[2], @"^\d+$")) {
 											switch (user.ChangeItemFocus(int.Parse(cmds[1]), int.Parse(cmds[2]))) {
 												case 0:
 													validItem = true;
@@ -848,10 +847,10 @@ namespace HouseCS {
 													WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " items on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 													break;
 											}
-										} else
-											WriteColor(new string[] { $"\"{cmds[2]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-									} else
-										validItem = user.ChangeItemFocus(int.Parse(cmds[1]));
+										}
+										else WriteColor(new string[] { $"\"{cmds[2]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
+									}
+									else validItem = user.ChangeItemFocus(int.Parse(cmds[1]));
 									if (validItem) {
 										while (!validAnswer) {
 											WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Item", " is:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), user.curItem.ToText() });
@@ -859,7 +858,8 @@ namespace HouseCS {
 											string yenu = string.Empty;
 											try {
 												yenu = GetInput(new ColorText("Are you sure you want to delete this? [Y/N] ", ConsoleColor.Red), new string[] { "y", "n" }, true);
-											} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
+											}
+											catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 											Console.WriteLine();
 											switch (yenu.ToUpper()) {
 												case "Y":
@@ -873,62 +873,65 @@ namespace HouseCS {
 													break;
 											}
 										}
-									} else if (!subItem)
+									}
+									else if (!subItem)
 										WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " items on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-								} else
-									WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-							} else
-								WriteColor(new string[] { "\nRemove", " what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+								}
+								else WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
+							}
+							else WriteColor(new string[] { "\nRemove", " what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 							break;
 						#endregion
 						case "list":
 						case "look":
 							#region
 							if (cmds.Length > 1) {
-                                if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--house", "-h" })) {
-                                    House infoHouse = user.CurHouse;
-                                    if (cmds.Length > 2) {
-                                        if (EqualsIgnoreCaseOr(cmds[2], new string[] { "--address", "-a" })) {
-                                            Console.Write("What quadrant is the House in? (0:NE, 1:NW, 2:SW, 3:SE)");
-                                            int quad = GetInput(0, 4);
-                                            bool street = GetInput(new ColorText("Is this house on a Street, or Avenue [st/ave] "), new string[] { "st", "ave" }, true).Equals("st", StringComparison.OrdinalIgnoreCase);
-                                            Console.Write($"What {(street ? "street" : "avenue")} is it on?\n");
-                                            int conRoad = GetInput(1, 301) - 1;
-                                            Console.Write("Enter the 3-5 digit House number:\n");
-                                            int rawAdd = GetInput(100, 29920);
-                                            int adjRoad = rawAdd / 100 - 1;
-                                            bool found = false;
-                                            for (int h = 0; h < localMap[quad][street ? conRoad : adjRoad][street ? adjRoad : conRoad].Count; h++) {
-                                                infoHouse = localMap[quad][(street ? conRoad : adjRoad) - 1][(street ? adjRoad : conRoad) - 1][h];
-                                                if (infoHouse.HouseNumber == rawAdd % 100) {
-                                                    found = true;
-                                                    break;
-                                                }
-                                            }
-                                            if (!found) {
-                                                Console.Write("House not found at specified address.\n");
-                                                break;
-                                            }
-                                        } else {
-                                            if (Regex.IsMatch(cmds[2], @"^-?\d+$")) {
-                                                int h = int.Parse(cmds[2]);
-                                                if (h < 0) {
-                                                    WriteColor(new string[] { $"House number must be a positive ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-                                                    break;
-                                                }
-                                                if (h >= houseData.Count) {
-                                                    Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
-                                                    break;
-                                                }
-                                                infoHouse = houseData[int.Parse(cmds[2])];
-                                            } else {
-                                                Console.Write($"{cmds[2]} is not a valid argument.\n");
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    WriteColor(new string[] { "House ", $"{houseData.IndexOf(infoHouse)}", $":\n\tColor: {infoHouse.GetColor}\n\tSize: ", (infoHouse.Floors.Length).ToString(), $" floors\n\tAddress: {infoHouse.Address}\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
-                                }
+								if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--house", "-h" })) {
+									House infoHouse = user.CurHouse;
+									if (cmds.Length > 2) {
+										if (EqualsIgnoreCaseOr(cmds[2], new string[] { "--address", "-a" })) {
+											Console.Write("What quadrant is the House in? (0:NE, 1:NW, 2:SW, 3:SE)");
+											int quad = GetInput(0, 4);
+											bool street = GetInput(new ColorText("Is this house on a Street, or Avenue [st/ave] "), new string[] { "st", "ave" }, true).Equals("st", StringComparison.OrdinalIgnoreCase);
+											Console.Write($"What {(street ? "street" : "avenue")} is it on?\n");
+											int conRoad = GetInput(1, 301) - 1;
+											Console.Write("Enter the 3-5 digit House number:\n");
+											int rawAdd = GetInput(100, 29920);
+											int adjRoad = rawAdd / 100 - 1;
+											bool found = false;
+											for (int h = 0; h < localMap[quad][street ? conRoad : adjRoad][street ? adjRoad : conRoad].Count; h++) {
+												infoHouse = localMap[quad][(street ? conRoad : adjRoad) - 1][(street ? adjRoad : conRoad) - 1][h];
+												if (infoHouse.HouseNumber == rawAdd % 100) {
+													found = true;
+													break;
+												}
+											}
+											if (!found) {
+												Console.Write("House not found at specified address.\n");
+												break;
+											}
+										}
+										else {
+											if (Regex.IsMatch(cmds[2], @"^-?\d+$")) {
+												int h = int.Parse(cmds[2]);
+												if (h < 0) {
+													WriteColor(new string[] { $"House number must be a positive ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
+													break;
+												}
+												if (h >= houseData.Count) {
+													Console.WriteLine("There aren't that many Houses! (Remember: the first House is #0)");
+													break;
+												}
+												infoHouse = houseData[int.Parse(cmds[2])];
+											}
+											else {
+												Console.Write($"{cmds[2]} is not a valid argument.\n");
+												break;
+											}
+										}
+									}
+									WriteColor(new string[] { "House ", $"{houseData.IndexOf(infoHouse)}", $":\n\tColor: {infoHouse.GetColor}\n\tSize: ", (infoHouse.Floors.Length).ToString(), $" floors\n\tAddress: {infoHouse.Address}\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+								}
 								else if (EqualsIgnoreCaseOr(cmds[1], new string[] { "--hand", "--focus", "-h", "-f" }))
 									WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem(), new ColorText("\n\n") });
 								else if (cmds.Length > 2 || EqualsIgnoreCaseOr(cmds[1], new string[] { "-p", "--page" })) {
@@ -985,18 +988,19 @@ namespace HouseCS {
 															if (endTest) {
 																Console.Write("Press enter to continue > ");
 																Console.ReadLine();
-															} else
-																Console.WriteLine();
+															}
+															else Console.WriteLine();
 														}
 														break;
 												}
-											} else
-												WriteColor(new ColorText[] { user.List(rangeStart, rangeEnd, searchType, user.FloorSize, 0, enviVar[3, 1].Equals("true") ? int.Parse(enviVar[4, 1]) : -2), new ColorText("\n") });
-										} else
-											Console.Write("\nYou can't see anything, the floor is completely dark!\n\n");
-									} else
-										Console.Write($"{cmds[invalidArg]} is not a valid argument.\n");
-								} else if (Regex.IsMatch(cmds[1], @"^\d+$")) {
+											}
+											else WriteColor(new ColorText[] { user.List(rangeStart, rangeEnd, searchType, user.FloorSize, 0, enviVar[3, 1].Equals("true") ? int.Parse(enviVar[4, 1]) : -2), new ColorText("\n") });
+										}
+										else Console.Write("\nYou can't see anything, the floor is completely dark!\n\n");
+									}
+									else Console.Write($"{cmds[invalidArg]} is not a valid argument.\n");
+								}
+								else if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									if (int.Parse(cmds[1]) < user.FloorSize) {
 										IItem tempItem = user.curItem;
 										user.ChangeItemFocus(int.Parse(cmds[1]));
@@ -1008,13 +1012,15 @@ namespace HouseCS {
 													string yenu = string.Empty;
 													try {
 														yenu = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true);
-													} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
+													}
+													catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 													int iC = ((Container)user.curItem).Size;
 													if (yenu.Equals("Y", StringComparison.OrdinalIgnoreCase) && iC > 0) {
 														WriteColor(new string[] { "\nWhich ", "Item", ":\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 														int im = GetInput(0, iC);
 														WriteColor(new ColorText[] { new ColorText("\n"), ((Container)user.curItem).GetItem(im).ToText() });
-													} else if (yenu.Equals("N", StringComparison.OrdinalIgnoreCase) || ((Container)user.curItem).Size == 0)
+													}
+													else if (yenu.Equals("N", StringComparison.OrdinalIgnoreCase) || ((Container)user.curItem).Size == 0)
 														WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem() });
 													else
 														WriteColor(new string[] { user.curItem.SubType, " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
@@ -1031,7 +1037,8 @@ namespace HouseCS {
 													string temp = string.Empty;
 													try {
 														temp = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).ToUpper();
-													} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
+													}
+													catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 													if (temp.Equals("Y") && ((Display)user.curItem).DeviceCount > 0) {
 														Console.Write("\nWhich device:\n\n");
 														while (true) {
@@ -1039,10 +1046,11 @@ namespace HouseCS {
 															if (dv < ((Display)user.curItem).DeviceCount) {
 																WriteColor(new ColorText[] { new ColorText("\n"), ((Display)user.curItem).GetDevice(dv).ToText() });
 																break;
-															} else
-																WriteColor(new string[] { user.curItem.SubType, " doesn't have that many ", "Items" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Yellow, ConsoleColor.Yellow });
+															}
+															else WriteColor(new string[] { user.curItem.SubType, " doesn't have that many ", "Items" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Yellow, ConsoleColor.Yellow });
 														}
-													} else if (temp.Equals("N") || ((Display)user.curItem).DeviceCount == 0)
+													}
+													else if (temp.Equals("N") || ((Display)user.curItem).DeviceCount == 0)
 														WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem() });
 													Console.WriteLine();
 													if (EqualsIgnoreCaseOr(temp, new string[] { "Y", "N" }))
@@ -1060,11 +1068,12 @@ namespace HouseCS {
 												break;
 										}
 										user.curItem = tempItem;
-									} else
-										WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " Items", " on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White });
-								} else
-									WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
-							} else if (enviVar[0, 1].Equals("false") || user.CurHouse.GetFloor(user.CurFloor).Lights)
+									}
+									else WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " Items", " on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White });
+								}
+								else WriteColor(new string[] { $"\"{cmds[1]}\" is not a valid ", "integer\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan });
+							}
+							else if (enviVar[0, 1].Equals("false") || user.CurHouse.GetFloor(user.CurFloor).Lights)
 								WriteColor(new ColorText[] { user.List(0, user.FloorSize, "*", user.FloorSize, 0, enviVar[3, 1].Equals("true") ? int.Parse(enviVar[4, 1]) : -2), new ColorText("\n") });
 							else
 								Console.Write("\nYou can't see anything, the floor is completely dark!\n\n");
@@ -1090,9 +1099,10 @@ namespace HouseCS {
 												houseData.Add(newHouse);
 												viewers.Add(new Viewer(newHouse));
 												Console.WriteLine($"\n{floors} story, {House.colors[color]} House, number {(houseData.Count - 1).ToString()} added.\n");
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else {
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else {
 											House newHouse = new House();
 											houseData.Add(newHouse);
 											viewers.Add(new Viewer(newHouse));
@@ -1111,10 +1121,10 @@ namespace HouseCS {
 												string year = Console.ReadLine();
 												tempBook.Reset(title, author, Regex.IsMatch(year, @"^\d{4,}$") ? int.Parse(year) : 0);
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Book", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempBook.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", "Book", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", "Book", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempBook);
 										break;
 									case "computer":
@@ -1133,13 +1143,14 @@ namespace HouseCS {
 												string isOn = string.Empty;
 												try {
 													isOn = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).ToUpper();
-												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
+												}
+												catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 												tempComp.Reset(brand, family, model, isOn.Equals("Y"), computer, int.Parse(enviVar[4, 1]));
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Computer", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempComp.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", "Computer", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", "Computer", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempComp);
 										break;
 									case "console":
@@ -1157,10 +1168,10 @@ namespace HouseCS {
 												string sys = Console.ReadLine();
 												tempConsole = new GameConsole(tempType, com, sys, int.Parse(enviVar[4, 1]));
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Console", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempConsole.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", "Console", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", "Console", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempConsole);
 										break;
 									case "display":
@@ -1171,7 +1182,8 @@ namespace HouseCS {
 												string isMon = string.Empty;
 												try {
 													isMon = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).ToUpper();
-												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
+												}
+												catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 												WriteColor(new string[] { "\nType the number for each device connected to this ", "Display", " seperated by a space.\n(Optional)\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 												string[] conDevs = Regex.Split(Console.ReadLine(), " +");
 												List<int> added = new List<int>();
@@ -1184,8 +1196,8 @@ namespace HouseCS {
 															added.Add(devID);
 														else
 															notAdded.Add(devID);
-													} else
-														notNumber.Add(dev);
+													}
+													else notNumber.Add(dev);
 												}
 												Console.Write("\nAdded: ");
 												foreach (int num in added)
@@ -1202,10 +1214,10 @@ namespace HouseCS {
 												foreach (int id in added)
 													tempDisp.Connect(user.GetItem(id));
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Display", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempDisp.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", "Display", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", "Display", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempDisp);
 										break;
 									case "bed":
@@ -1216,15 +1228,16 @@ namespace HouseCS {
 												bool canMove = false;
 												try {
 													canMove = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).Equals("Y", StringComparison.OrdinalIgnoreCase);
-												} catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
+												}
+												catch (ArrayTooSmall e) { Console.Write(e.StackTrace); }
 												Console.WriteLine();
 												int bedType = GetInput(0, Bed.types.Length);
 												tempBed = new Bed(canMove, bedType, int.Parse(enviVar[4, 1]));
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Bed", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempBed.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", "Bed", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", "Bed", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempBed);
 										break;
 									case "container":
@@ -1246,8 +1259,8 @@ namespace HouseCS {
 															added.Add(itmID);
 														else
 															notAdded.Add(itmID);
-													} else
-														notNumber.Add(itm);
+													}
+													else notNumber.Add(itm);
 												}
 												List<IItem> toAdd = new List<IItem>();
 												foreach (int num in added)
@@ -1259,10 +1272,10 @@ namespace HouseCS {
 													}
 												}
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", tempCon.SubType, " created:\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Yellow, ConsoleColor.White }), tempCon.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", tempCon.SubType, " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", tempCon.SubType, " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempCon);
 										break;
 									case "clothing":
@@ -1274,10 +1287,10 @@ namespace HouseCS {
 												Console.Write("\nEnter Clothing color > ");
 												((Clothing)tempCloth).Color = Console.ReadLine();
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", tempCloth.SubType, " created:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.Yellow }), tempCloth.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", tempCloth.SubType, " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", tempCloth.SubType, " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempCloth);
 										break;
 									case "printer":
@@ -1293,10 +1306,10 @@ namespace HouseCS {
 												bool canScan = GetInput(new ColorText("[Y/N] "), new string[] { "y", "n" }, true).Equals("Y", StringComparison.OrdinalIgnoreCase);
 												tempPrint = new Printer(canFax, canScan, hasColor, int.Parse(enviVar[4, 1]));
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Printer", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempPrint.ToText(), new ColorText("\n\n") });
-											} else
-												WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
-										} else
-											WriteColor(new string[] { "\nNew ", "Printer", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+											}
+											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
+										}
+										else WriteColor(new string[] { "\nNew ", "Printer", " added to floor ", user.CurFloor.ToString(), ".\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 										user.AddItem(tempPrint);
 										break;
 									default:
@@ -1307,8 +1320,8 @@ namespace HouseCS {
 										Help("add");
 										break;
 								}
-							} else
-								Console.Write("\nInvalid syntax, requires at least one argument\n\n");
+							}
+							else Console.Write("\nInvalid syntax, requires at least one argument\n\n");
 							break;
 						#endregion
 						case "status":
@@ -1329,10 +1342,10 @@ namespace HouseCS {
 										if (user.GoFloor(user.CurFloor + int.Parse(cmds[1]))) {
 											WriteColor(new string[] { "\nWelcome to floor ", user.CurFloor.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 											enviVar[4, 1] = "-1";
-										} else
-											Console.WriteLine("\nYou are currently on the top floor, floor unchanged.\n");
-									} else
-										WriteColorLine(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										}
+										else Console.WriteLine("\nYou are currently on the top floor, floor unchanged.\n");
+									}
+									else WriteColorLine(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 									break;
 								default:
 									Console.WriteLine($"{cmds[0]} only accepts 1 argument.");
@@ -1352,10 +1365,10 @@ namespace HouseCS {
 										if (user.GoFloor(user.CurFloor - int.Parse(cmds[1]))) {
 											WriteColor(new string[] { "\nWelcome to floor ", user.CurFloor.ToString(), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 											enviVar[4, 1] = "-1";
-										} else
-											Console.WriteLine("\nYou are currently on the bottom floor, floor unchanged.\n");
-									} else
-										WriteColorLine(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+										}
+										else Console.WriteLine("\nYou are currently on the bottom floor, floor unchanged.\n");
+									}
+									else WriteColorLine(new string[] { "Argument must be a positive ", "integer", "." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
 									break;
 								default:
 									Console.WriteLine($"{cmds[0]} only accepts 1 argument.");
@@ -1385,9 +1398,10 @@ namespace HouseCS {
 											WriteColor(Help("."));
 											break;
 									}
-								} else
-									WriteColor(Help(cmds[1].ToLower()));
-							} else {
+								}
+								else WriteColor(Help(cmds[1].ToLower()));
+							}
+							else {
 								Console.WriteLine();
 								WriteColor(new string[] { "          add", " - adds an ", "Item", " to the current floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 								WriteColor(new string[] { "       attach", " - attaches (or detaches) one ", "Item", " to (from) another\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });

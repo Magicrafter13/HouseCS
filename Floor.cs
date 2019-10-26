@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using HouseCS.ConsoleUtils;
+﻿using HouseCS.ConsoleUtils;
 using HouseCS.Items;
 using HouseCS.Items.Containers;
+using System;
+using System.Collections.Generic;
 
 namespace HouseCS {
 	/// <summary>
@@ -43,8 +43,10 @@ namespace HouseCS {
 				if (roomItems.Count > 0) {
 					int testRoom = roomItems[0].RoomID;
 					if (room != -2 && room != testRoom) continue;
-					List<ColorText> tempSearch = new List<ColorText>();
-					tempSearch.Add(new ColorText($"  Room {testRoom}:\n"));
+					List<ColorText> tempSearch = new List<ColorText>
+					{
+						new ColorText($"  Room {testRoom}:\n")
+					};
 					foreach (IItem item in roomItems) {
 						if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
 							List<ColorText> temp = item.Search(keywords);
@@ -80,23 +82,14 @@ namespace HouseCS {
 			retStr += " }\n";
 			for (int i = 0; i < Items.Count; i++) {
 				if (Items[i] is Container) {
-					switch (Items[i].SubType) {
-						case "Bookshelf":
-							retStr += ((Bookshelf)Items[i]).Export(4);
-							break;
-						case "Dresser":
-							retStr += ((Dresser)Items[i]).Export(4);
-							break;
-						case "Fridge":
-							retStr += ((Fridge)Items[i]).Export(4);
-							break;
-						case "Table":
-							retStr += ((Table)Items[i]).Export(4);
-							break;
-						default:
-							retStr += ((Container)Items[i]).Export(4);
-							break;
-					}
+					retStr += Items[i].SubType switch
+					{
+						"Bookshelf" => ((Bookshelf)Items[i]).Export(4),
+						"Dresser" => ((Dresser)Items[i]).Export(4),
+						"Fridge" => ((Fridge)Items[i]).Export(4),
+						"Table" => ((Table)Items[i]).Export(4),
+						_ => ((Container)Items[i]).Export(4),
+					};
 					continue;
 				}
 				if (Items[i] is Display) {

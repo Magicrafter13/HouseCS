@@ -1,6 +1,6 @@
+using HouseCS.ConsoleUtils;
 using System;
 using System.Collections.Generic;
-using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items.Containers {
 	/// <summary>
@@ -68,23 +68,14 @@ namespace HouseCS.Items.Containers {
 			retStr += $"new Fridge(new List<IItem>() {{{(Items.Count > 0 ? "\n" : " ")}";
 			for (int i = 0; i < Items.Count; i++) {
 				if (Items[i] is Container) {
-					switch (Items[i].SubType) {
-						case "Bookshelf":
-							retStr += ((Bookshelf)Items[i]).Export(space + 2);
-							break;
-						case "Dresser":
-							retStr += ((Dresser)Items[i]).Export(space + 2);
-							break;
-						case "Fridge":
-							retStr += ((Fridge)Items[i]).Export(space + 2);
-							break;
-						case "Table":
-							retStr += ((Table)Items[i]).Export(space + 2);
-							break;
-						default:
-							retStr += ((Container)Items[i]).Export(space + 2);
-							break;
-					}
+					retStr += Items[i].SubType switch
+					{
+						"Bookshelf" => ((Bookshelf)Items[i]).Export(space + 2),
+						"Dresser" => ((Dresser)Items[i]).Export(space + 2),
+						"Fridge" => ((Fridge)Items[i]).Export(space + 2),
+						"Table" => ((Table)Items[i]).Export(space + 2),
+						_ => ((Container)Items[i]).Export(space + 2),
+					};
 					continue;
 				}
 				if (Items[i] is Display) {
@@ -111,7 +102,8 @@ namespace HouseCS.Items.Containers {
 					freezerCelsius = true;
 					freezerTemp = (freezerTemp - 32.0) * 5.0 / 9.0;
 				}
-			} else {
+			}
+			else {
 				if (!celsius) {
 					celsius = true;
 					temperature = (temperature - 32.0) * 5.0 / 9.0;
@@ -129,7 +121,8 @@ namespace HouseCS.Items.Containers {
 					freezerCelsius = false;
 					freezerTemp = freezerTemp * 9.0 / 5.0 + 32.0;
 				}
-			} else {
+			}
+			else {
 				if (celsius) {
 					celsius = false;
 					temperature = temperature * 9.0 / 5.0 + 32.0;

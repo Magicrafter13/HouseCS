@@ -1,6 +1,6 @@
+using HouseCS.ConsoleUtils;
 using System;
 using System.Collections.Generic;
-using HouseCS.ConsoleUtils;
 
 namespace HouseCS.Items.Containers {
 	/// <summary>
@@ -74,23 +74,14 @@ namespace HouseCS.Items.Containers {
 			retStr += $"new {SubType}(new List<IItem>() {{{(Items.Count > 0 ? "\n" : " ")}";
 			for (int i = 0; i < Items.Count; i++) {
 				if (Items[i] is Container) {
-					switch (Items[i].SubType) {
-						case "Bookshelf":
-							retStr += ((Bookshelf)Items[i]).Export(space + 2);
-							break;
-						case "Dresser":
-							retStr += ((Dresser)Items[i]).Export(space + 2);
-							break;
-						case "Fridge":
-							retStr += ((Fridge)Items[i]).Export(space + 2);
-							break;
-						case "Table":
-							retStr += ((Table)Items[i]).Export(space + 2);
-							break;
-						default:
-							retStr += ((Container)Items[i]).Export(space + 2);
-							break;
-					}
+					retStr += Items[i].SubType switch
+					{
+						"Bookshelf" => ((Bookshelf)Items[i]).Export(space + 2),
+						"Dresser" => ((Dresser)Items[i]).Export(space + 2),
+						"Fridge" => ((Fridge)Items[i]).Export(space + 2),
+						"Table" => ((Table)Items[i]).Export(space + 2),
+						_ => ((Container)Items[i]).Export(space + 2),
+					};
 					continue;
 				}
 				if (Items[i] is Display) {
@@ -154,7 +145,8 @@ namespace HouseCS.Items.Containers {
 					retClr.Add(ConsoleColor.Cyan);
 					retStr.Add(" items in it.");
 					retClr.Add(ConsoleColor.White);
-				} else {
+				}
+				else {
 					retStr.Add(" is ");
 					retClr.Add(ConsoleColor.White);
 					retStr.Add("Empty");
