@@ -86,7 +86,7 @@ namespace HouseCS.Items.Containers {
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
 			? new ColorText(new string[] { $"{(Size < 9 ? "Clean" : "Dirty")} " }, new ConsoleColor[] { ConsoleColor.White })
 			: Size > 0
-				? new ColorText(new string[] { " -", Size.ToString(), " Items" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow })
+				? new ColorText(new string[] { " - ", Size.ToString(), " Items" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow })
 				: new ColorText(" - Empty", ConsoleColor.White);
 
 		/// <summary>
