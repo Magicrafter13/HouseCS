@@ -12,7 +12,7 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Room the book is in
 		/// </summary>
-		public new int RoomID { get; private set; }
+		public new int RoomID { get; set; }
 
 		/// <summary>
 		/// string of Item sub-type

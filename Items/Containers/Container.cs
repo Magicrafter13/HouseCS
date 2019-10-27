@@ -12,7 +12,7 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Room the container is in
 		/// </summary>
-		public int RoomID { get; private set; }
+		public int RoomID { get; set; }
 
 		/// <summary>
 		/// Items in container
@@ -122,6 +122,7 @@ namespace HouseCS.Items.Containers {
 			if (HasItem(item))
 				return new ColorText(new string[] { "That ", "Item", $" is already in this {typeS}! (I don't think this message should be able to be seen.)" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 			Items.Add(item);
+			item.RoomID = RoomID;
 			return new ColorText(new string[] { "\nItem", " added ", "to this ", typeS, ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 		}
 

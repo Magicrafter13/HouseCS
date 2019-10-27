@@ -9,7 +9,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Room the Item is in
 		/// </summary>
-		int RoomID { get; }
+		int RoomID { get; set; }
 
 		/// <summary>
 		/// string of Item parent type

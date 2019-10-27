@@ -17,7 +17,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Room the console is in
 		/// </summary>
-		public int RoomID { get; private set; }
+		public int RoomID { get; set; }
 
 		/// <summary>
 		/// Console type

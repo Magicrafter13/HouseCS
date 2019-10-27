@@ -14,7 +14,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Room the display is in
 		/// </summary>
-		public int RoomID { get; private set; }
+		public int RoomID { get; set; }
 
 		/// <summary>
 		/// Displays size in inches

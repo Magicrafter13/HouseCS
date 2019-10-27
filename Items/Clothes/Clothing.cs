@@ -12,7 +12,7 @@ namespace HouseCS.Items.Clothes {
 		/// <summary>
 		/// Room the clothes are in
 		/// </summary>
-		public int RoomID { get; private set; }
+		public int RoomID { get; set; }
 
 		/// <summary>
 		/// Clothes color

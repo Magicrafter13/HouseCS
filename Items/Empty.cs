@@ -14,7 +14,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Room the 'empty' is in
 		/// </summary>
-		public int RoomID { get; private set; }
+		public int RoomID { get; set; }
 
 		/// <summary>
 		/// string of Item type

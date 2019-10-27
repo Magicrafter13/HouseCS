@@ -17,7 +17,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Room the bed is in
 		/// </summary>
-		public int RoomID { get; private set; }
+		public int RoomID { get; set; }
 
 		/// <summary>
 		/// Boolean for whether or not the bed moves
