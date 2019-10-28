@@ -25,11 +25,6 @@ namespace HouseCS.Items {
 		public bool HasColor { get; private set; }
 
 		/// <summary>
-		/// Room the Item is in
-		/// </summary>
-		public int RoomID { get; set; }
-
-		/// <summary>
 		/// string of Item parent type
 		/// </summary>
 		public string Type => typeS;
@@ -62,7 +57,7 @@ namespace HouseCS.Items {
 		/// Exports Item information
 		/// </summary>
 		/// <returns>String containing a constructor for the Item</returns>
-		public string Export() => $"new Printer({(CanFax ? "true" : "false")}, {(CanScan ? "true" : "false")}, {(HasColor ? "true" : "false")}, {RoomID}),";
+		public string Export() => $"new Printer({(CanFax ? "true" : "false")}, {(CanScan ? "true" : "false")}, {(HasColor ? "true" : "false")}),";
 
 		/// <summary>
 		/// Don't use
@@ -87,24 +82,18 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Creates a printer that can't fax, but it can scan and print in color, and puts it in room -1
 		/// </summary>
-		public Printer() {
-			CanFax = false;
-			CanScan = true;
-			HasColor = true;
-			RoomID = -1;
-		}
+		public Printer() : this(false, true, true) { }
+
 		/// <summary>
 		/// Creates a printer, with the given parameters of faxing, scaning, color printing, and room location
 		/// </summary>
 		/// <param name="canFax"></param>
 		/// <param name="canScan"></param>
 		/// <param name="hasColor"></param>
-		/// <param name="room"></param>
-		public Printer(bool canFax, bool canScan, bool hasColor, int room) {
+		public Printer(bool canFax, bool canScan, bool hasColor) {
 			CanFax = canFax;
 			CanScan = canScan;
 			HasColor = hasColor;
-			RoomID = room;
 		}
 	}
 }

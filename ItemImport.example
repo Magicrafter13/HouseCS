@@ -14,193 +14,219 @@ namespace HouseCS {
 		public static readonly List<List<List<string>>> roomNames = new List<List<List<string>>>() {
 			new List<List<string>>() {
 				new List<string>() {"Kitchen", "Dining Room", "Family Room", "Laundry Room", "Garage"},
-				new List<string>() {"Master Bedroom", "Office", "Game Room", "Master Bathroom"}
+				new List<string>() {"Master Bedroom", "Office", "Game Room", "Master Bathroom"},
 			}, //Floor 0 and 1 of House 0
 			new List<List<string>>() {
 				new List<string>() {"Room"},
 				new List<string>() {"Room"},
-				new List<string>() {"Room"}
+				new List<string>() {"Room"},
 			} //3 Floors of House 1
 		};
+
 		/// <summary>
 		/// Bookshelfs in the program
 		/// </summary>
 		public static readonly Bookshelf[] bookshelfs = {
 			new Bookshelf(new List<Book>() {
-				new Book("The Hobbit", "J.R.R. Tolkien", 1937, 0) //A book in a bookshelf, in the "Master Bedroom"
-			}, 0) //0 indicating that the bookshelf is also in the Master Bedroom
+				new Book("The Hobbit", "J.R.R. Tolkien", 1937) //Classic story, "The Hobbit"
+			})
 		};
+
 		/// <summary>
-		/// Index of floors where bookshelfs are located
+		/// Index of where bookshelfs are located
 		/// </summary>
-		public static readonly int[] bookshelfsF = { 1 }; //the bookshelf is on floor 1...
-		/// <summary>
-		/// Index of houses where bookshelfs are located
-		/// </summary>
-		public static readonly int[] bookshelfsH = { 0 }; //...of house 0
+		public static readonly int[,] bookshelfsHFR =
+		{
+			{ 0 }, //The bookshelf is in House 0
+			{ 1 }, //On floor 1
+			{ 0 }, //and in room 0 (Master Bedroom)
+		};
+
 		/// <summary>
 		/// Computers in the program
 		/// </summary>
 		public static readonly Computer[] computers = {
-			new Computer("Tandy", "1000", "TL/2", false, "Desktop", -1) //An old computer in the hallway (Room -1)
+			new Computer("Tandy", "1000", "TL/2", false, "Desktop") //Nice vintage PC running on an Intel 80286
 		};
+		
 		/// <summary>
-		/// Index of floors where computers are located
+		/// Index of where computers are located
 		/// </summary>
-		public static readonly int[] computersF = { 1 }; //the PC is on floor 1...
-		/// <summary>
-		/// Index of houses where computers are located
-		/// </summary>
-		public static readonly int[] computersH = { 0 }; //...of house 0
+		public static readonly int[,] computersHFR =
+		{
+			{ 0 }, //The old PC is in House 0
+			{ 1 }, //On floor 1
+			{-1 }, //In the hall
+		};
+
 		/// <summary>
 		/// Consoles in the program
 		/// </summary>
 		public static readonly GameConsole[] consoles = {
-			new GameConsole(0, "Nintendo", "Wii U", 2), //console 0
-			new GameConsole(0, "Microsoft", "Xbox 360", 2), //console 1
-			new GameConsole(1, "Nintendo", "New 3DS XL", 2) //console 2
+			new GameConsole(0, "Nintendo", "Wii U"), //console 0
+			new GameConsole(0, "Microsoft", "Xbox 360"), //console 1
+			new GameConsole(1, "Nintendo", "New 3DS XL") //console 2
 		}; //3 consoles in room 2 (Game Room)
+
 		/// <summary>
-		/// Index of floors where consoles are located
+		/// Index of where consoles are located
 		/// </summary>
-		public static readonly int[] consolesF = { 1, 1, 1 }; //all of them on floor 1...
-		/// <summary>
-		/// Index of houses where consoles are located
-		/// </summary>
-		public static readonly int[] consolesH = { 0, 0, 0 }; //...of house 0
+		public static readonly int[,] consolesHFR =
+		{
+			{ 0, 0, 0 }, //All consoles in House 0
+			{ 1, 1, 1 }, //On floor 1
+			{ 2, 2, 2 }, //And in room 2 (game room)
+		};
+
 		/// <summary>
 		/// Displays in the program
 		/// </summary>
 		public static readonly Display[] displays = {
 			new Display(true, new List<IItem>() { //a 24" monitor...
 				computers[0] //...with the old PC attached to it
-			}, 24, 2)
+			}, 24)
 		};
+
 		/// <summary>
-		/// Index of floors where displays are located
+		/// Index of where displays are located
 		/// </summary>
-		public static readonly int[] displaysF = { 1 }; //on floor 1...
-		/// <summary>
-		/// Index of houses where displays are located
-		/// </summary>
-		public static readonly int[] displaysH = { 0 }; //...of house 0
+		public static readonly int[,] displaysHFR =
+		{
+			{ 0 }, //The monitor is in House 0
+			{ 1 }, //On floor 1
+			{ 2 }, //And in the game room once again
+		};
+
 		/// <summary>
 		/// Beds in the program
 		/// </summary>
 		public static readonly Bed[] beds = {
-			new Bed(false, 2, 0) //standard bed
+			new Bed(false, 2) //standard bed
 		};
+
 		/// <summary>
-		/// Index of floors where beds are located
+		/// Index of where beds are located
 		/// </summary>
-		public static readonly int[] bedsF = { 1 }; //on floor 1...
-		/// <summary>
-		/// Index of houses where beds are located
-		/// </summary>
-		public static readonly int[] bedsH = { 0 }; //...of house 0
+		public static readonly int[,] bedsHFR =
+		{
+			{ 0 }, //House 0
+			{ 1 }, //Floor 1
+			{ 0 }, //Room 0 (I hope you're starting to get it now)
+		};
+
 		/// <summary>
 		/// Containers in the program
 		/// </summary>
 		public static readonly Container[] containers = {
 			new Container(),
-			new Container() //2 generic empty containers
+			new Container(), //2 generic empty containers
 		};
+
 		/// <summary>
-		/// Index of floors where containers are located
+		/// Index of where containers are located
 		/// </summary>
-		public static readonly int[] containersF = { 0, 0 }; //all on floor 0...
-		/// <summary>
-		/// Index of houses where containers are located
-		/// </summary>
-		public static readonly int[] containersH = { 0, 0 }; //...of house 0
+		public static readonly int[,] containersHFR =
+		{
+			{ 0,  0 }, //House 0
+			{ 0,  0 }, //Floor 0
+			{-1, -1 }, //Room -1 (hall)
+		};
+
 		/// <summary>
 		/// Fridges in the program
 		/// </summary>
 	    public static readonly Fridge[] fridges = {
 			new Fridge(new List<IItem>() {//fridges with books (ya know, a normal fridge)
-				new Book("One", "Two", 3, 0),
-				new Book("Four", "Five", 6, 0)
-			}, false, 0), //a fridge in the kitchen... where it belongs
+				new Book("One", "Two", 3),
+				new Book("Four", "Five", 6),
+			}, false), //a fridge in the kitchen... where it belongs
 			new Fridge(new List<IItem>() {
-				new Book("Seven", "Eight", 9, 0)
-			}, false, 4) //room 4 = garage
+				new Book("Seven", "Eight", 9),
+			}, false),
 		};
+
 		/// <summary>
-		/// Index of floors where fridges are located
+		/// Index of where fridges are located
 		/// </summary>
-		public static readonly int[] fridgesF = { 0, 0 }; //all on floor 0...
-		/// <summary>
-		/// Index of houses where fridges are located
-		/// </summary>
-		public static readonly int[] fridgesH = { 0, 0 }; //...of house 0
+		public static readonly int[,] fridgesHFR =
+		{
+			{ 0, 0 }, //House 0
+			{ 0, 0 }, //Floor 0
+			{ 0, 4 }, //Room 0 (Kitchen), and Room 4 (Garage)
+		};
+
 		/// <summary>
 		/// Dressers in the program
 		/// </summary>
 		public static readonly Dresser[] dressers = {
 			new Dresser(new List<IItem>() { //clothes dressers
-				new Shirt("Red", 0),
-				new Pants("Blue", 0),
-				new Pants("Black", 0)
-			}, 0),
+				new Shirt("Red"),
+				new Pants("Blue"),
+				new Pants("Black")
+			}),
 			new Dresser(new List<IItem>() {
-				new Pants("Black", 0)
-			}, 0)
+				new Pants("Black")
+			}),
 		};
+
 		/// <summary>
-		/// Index of floors where dressers are located
+		/// Index of where dressers are located
 		/// </summary>
-		public static readonly int[] dressersF = { 1, 1 }; //floor 1
-		/// <summary>
-		/// Index of houses where dressers are located
-		/// </summary>
-		public static readonly int[] dressersH = { 0, 0 }; //house 0 (I think we get it by now)
+		public static readonly int[,] dressersHFR =
+		{
+			{ 0, 0 }, //House 0
+			{ 1, 1 }, //Floor 1
+			{ 0, 0 }, //Room 0
+		};
+
 		/// <summary>
 		/// Tables in the program
 		/// </summary>
 		public static readonly Table[] tables = {
 			new Table(new List<IItem>() { //a table full of retro goodness
-				new GameConsole(0, "Atari", "VCS 2600",2),
-				new GameConsole(0, "Nintendo", "NES", 2),
-				new GameConsole(0, "Sega", "Genesis", 2)
-			}, 2)
+				new GameConsole(0, "Atari", "VCS 2600"),
+				new GameConsole(0, "Nintendo", "NES"),
+				new GameConsole(0, "Sega", "Genesis")
+			})
 		};
+
 		/// <summary>
-		/// Index of floors where tables are located
+		/// Index of where tables are located
 		/// </summary>
-		public static readonly int[] tablesF = { 1 }; //floor 1...
-		/// <summary>
-		/// Index of houses where tables are located
-		/// </summary>
-		public static readonly int[] tablesH = { 0 }; //house 0...
+		public static readonly int[,] tablesHFR =
+		{
+			{ 0 }, //House 0
+			{ 1 }, //Floor 1
+			{ 2 }, //Room 2
+		};
 
 		//the above doesn't actually matter, because you don't have to do it that way, that's just the weird way I do it
 
 		/// <summary>
 		/// Houses in the program
 		/// </summary>
-		public static List<House> houses = new List<House>(); //this is required (though it doesn't have to be an empty constructor if you wish)
+		public static List<House> houses = new List<House>()
+		{
+			new House(5, roomNames[0].Count, false, 0, 28, 193, 1), //Would be at 19300 NW 28th St
+			new House(6, roomNames[1].Count, true, 0, 80, 68, 2), //Would be at  6800 SW 80th Ave
+		}; //this is required (though it can be an empty constructor if you wish)
 
 		/// <summary>
 		/// Item (house/floor) initializer
 		/// </summary>
 		public static void InitializeItems() { //this method is required, though it doesn't actually need to do anything if you define all the items in the variable from the start, however I will eventually use this method to add a "reset" functionality
-			House myHouse = new House(5, 2, false, 0, 28, 193, 1); //Would be at 19300 NW 28th St
-			House fakeHouse = new House(6, 3, true, 0, 80, 68, 2); //Would be at  6800 SW 80th Ave
-			houses.Add(myHouse);
-			houses.Add(fakeHouse);
 			for (int h = 0; h < houses.Count; h++) //this abomination adds the room names to the floors of the houses
-				for (int f = 0; f < houses[h].Floors.Length; f++)
-					foreach (string room in roomNames[h][f])
-						houses[h].Floors[f].AddRoom(room);
-			for (int i = 0; i < bookshelfs.Length; i++) houses[bookshelfsH[i]].AddItem(bookshelfsF[i], bookshelfs[i]);
-			for (int i = 0; i < computers.Length; i++) houses[computersH[i]].AddItem(computersF[i], computers[i]);
-			for (int i = 0; i < consoles.Length; i++) houses[consolesH[i]].AddItem(consolesF[i], consoles[i]);
-			for (int i = 0; i < displays.Length; i++) houses[displaysH[i]].AddItem(displaysF[i], displays[i]);
-			for (int i = 0; i < beds.Length; i++) houses[bedsH[i]].AddItem(bedsF[i], beds[i]);
-			for (int i = 0; i < containers.Length; i++) houses[containersH[i]].AddItem(containersF[i], containers[i]);
-			for (int i = 0; i < fridges.Length; i++) houses[fridgesH[i]].AddItem(fridgesF[i], fridges[i]);
-			for (int i = 0; i < dressers.Length; i++) houses[dressersH[i]].AddItem(dressersF[i], dressers[i]);
-			for (int i = 0; i < tables.Length; i++) houses[tablesH[i]].AddItem(tablesF[i], tables[i]);
+				for (int f = 0; f < houses[h].Floors.Count; f++)
+					houses[h].Floors[f] = new Floor(roomNames[h][f]);
+			for (int i = 0; i < bookshelfs.Length; i++) houses[bookshelfsHFR[0, i]].AddItem(bookshelfsHFR[1, i], bookshelfs[i], bookshelfsHFR[2, i]);
+			for (int i = 0; i < computers.Length; i++) houses[computersHFR[0, i]].AddItem(computersHFR[1, i], computers[i], computersHFR[2, i]);
+			for (int i = 0; i < consoles.Length; i++) houses[consolesHFR[0, i]].AddItem(consolesHFR[1, i], consoles[i], consolesHFR[2, i]);
+			for (int i = 0; i < displays.Length; i++) houses[displaysHFR[0, i]].AddItem(displaysHFR[1, i], displays[i], displaysHFR[2, i]);
+			for (int i = 0; i < beds.Length; i++) houses[bedsHFR[0, i]].AddItem(bedsHFR[1, i], beds[i], bedsHFR[2, i]);
+			for (int i = 0; i < containers.Length; i++) houses[containersHFR[0, i]].AddItem(containersHFR[1, i], containers[i], containersHFR[2, i]);
+			for (int i = 0; i < fridges.Length; i++) houses[fridgesHFR[0, i]].AddItem(fridgesHFR[1, i], fridges[i], fridgesHFR[2, i]);
+			for (int i = 0; i < dressers.Length; i++) houses[dressersHFR[0, i]].AddItem(dressersHFR[1, i], dressers[i], dressersHFR[2, i]);
+			for (int i = 0; i < tables.Length; i++) houses[tablesHFR[0, i]].AddItem(tablesHFR[1, i], tables[i], tablesHFR[2, i]);
 		}
 	}
 }

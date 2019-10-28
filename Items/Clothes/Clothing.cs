@@ -10,11 +10,6 @@ namespace HouseCS.Items.Clothes {
 		private const string typeS = "Clothing";
 
 		/// <summary>
-		/// Room the clothes are in
-		/// </summary>
-		public int RoomID { get; set; }
-
-		/// <summary>
 		/// Clothes color
 		/// </summary>
 		public string Color { get; set; }
@@ -50,9 +45,7 @@ namespace HouseCS.Items.Clothes {
 		/// Exports Clothing information
 		/// </summary>
 		/// <returns>String of clothing constructor</returns>
-		public string Export() {
-			return $"new Clothing(\"{Color}\", {RoomID}),";
-		}
+		public string Export() => $"new Clothing(\"{Color}\"),";
 
 		/// <summary>
 		/// Don't use
@@ -77,16 +70,12 @@ namespace HouseCS.Items.Clothes {
 		/// <summary>
 		/// Creates a black piece of clothing
 		/// </summary>
-		public Clothing() : this("Black", -1) { }
+		public Clothing() : this("Black") { }
 
 		/// <summary>
 		/// Creates a colored piece of clothing
 		/// </summary>
 		/// <param name="color">Color for clothes</param>
-		/// <param name="room">Room for clothing</param>
-		public Clothing(string color, int room) {
-			Color = color;
-			RoomID = room;
-		}
+		public Clothing(string color) => Color = color;
 	}
 }

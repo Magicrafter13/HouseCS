@@ -20,6 +20,11 @@ namespace HouseCS {
 		public List<IItem> Items { get; set; }
 
 		/// <summary>
+		/// List of Room numbers for all Items on the floor
+		/// </summary>
+		public List<int> Room { get; set; }
+
+		/// <summary>
 		/// Boolean representation of whether or not the lights are turned on, on this floor.
 		/// </summary>
 		public bool Lights { get; private set; }
@@ -34,20 +39,21 @@ namespace HouseCS {
 		public List<ColorText> Search(int room, string itemType, List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
 			List<List<IItem>> sortedItems = new List<List<IItem>>(RoomNames.Count + 1);
+			List<List<int>> sortedRooms = new List<List<int>>(RoomNames.Count + 1);
 			for (int i = 0; i < RoomNames.Count + 1; i++) sortedItems.Add(new List<IItem>());
-			foreach (IItem item in Items) {
-				if (room != -2 && room != item.RoomID) continue;
-				sortedItems[item.RoomID + 1].Add(item);
+			for (int i = 0; i < Items.Count; i++) {
+				if (room != -2 && room != Room[i]) continue;
+				sortedItems[Room[i] + 1].Add(Items[i]);
 			}
-			foreach (List<IItem> roomItems in sortedItems) {
-				if (roomItems.Count > 0) {
-					int testRoom = roomItems[0].RoomID;
+			for (int i = 0; i < sortedItems.Count; i++) {
+				if (sortedItems[i].Count > 0) {
+					int testRoom = sortedRooms[i][0];
 					if (room != -2 && room != testRoom) continue;
 					List<ColorText> tempSearch = new List<ColorText>
 					{
 						new ColorText($"  Room {testRoom}:\n")
 					};
-					foreach (IItem item in roomItems) {
+					foreach (IItem item in sortedItems[i]) {
 						if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
 							List<ColorText> temp = item.Search(keywords);
 							if (temp.Count != 0) {
@@ -71,34 +77,71 @@ namespace HouseCS {
 		public void AddRoom(string room) => RoomNames.Add(room);
 
 		/// <summary>
+		/// Removes a room from the Floor
+		/// </summary>
+		/// <param name="room">Room to remove</param>
+		/// <param name="deleteItems">False moves items from this room to the hall</param>
+		/// <returns>Output of command</returns>
+		public string RemoveRoom(int room, bool deleteItems) {
+			string output = $"Room {room}, {RoomNames[room]} removed.\n";
+			RoomNames.RemoveAt(room);
+			for (int i = 0; i < Items.Count; i++) {
+				if (Room[i] == room) {
+					if (deleteItems) {
+						output += $"{Items[i].ListInfo(true).Lines[0]}{Items[i].SubType}{Items[i].ListInfo(false).Lines[0]} removed.\n";
+						Items.RemoveAt(i);
+						Room.RemoveAt(i);
+						i--;
+					}
+					else if (Room[i] == room)
+						Room[i] = -1;
+				}
+				else if (Room[i] > room)
+					Room[i]--;
+			}
+			return $"{output}\n";
+		}
+
+		/// <summary>
 		/// Exports Item information
 		/// </summary>
 		/// <param name="floor">Floor number</param>
 		/// <returns>String with all Items on the floor</returns>
-		public string Export(int floor) {
-			string retStr = $"  Floor {floor}\n    Room Names = {{ \"{RoomNames[0]}\"";
-			for (int i = 1; i < RoomNames.Count; i++)
-				retStr += $", \"{RoomNames[i]}\"";
+		public string Export(int floor) => Export(floor, -2);
+
+		/// <summary>
+		/// Exports Item information
+		/// </summary>
+		/// <param name="floor">Floor number</param>
+		/// <param name="roomID">Room number</param>
+		/// <returns>String with all Items on the floor</returns>
+		public string Export(int floor, int roomID) {
+			string retStr = $"  Floor {floor}\n    {(roomID == -2 ? $"Room Names = {{ \"{RoomNames[0]}\"" : $"Room = {{ {RoomNames[roomID]}")}";
+			if (roomID == -2)
+				for (int i = 1; i < RoomNames.Count; i++)
+					retStr += $", \"{RoomNames[i]}\"";
 			retStr += " }\n";
 			for (int i = 0; i < Items.Count; i++) {
-				if (Items[i] is Container) {
-					retStr += Items[i].SubType switch
-					{
-						"Bookshelf" => ((Bookshelf)Items[i]).Export(4),
-						"Dresser" => ((Dresser)Items[i]).Export(4),
-						"Fridge" => ((Fridge)Items[i]).Export(4),
-						"Table" => ((Table)Items[i]).Export(4),
-						_ => ((Container)Items[i]).Export(4),
-					};
-					continue;
+				if (roomID == -2 || Room[i] == roomID) {
+					if (Items[i] is Container) {
+						retStr += Items[i].SubType switch
+						{
+							"Bookshelf" => ((Bookshelf)Items[i]).Export(4),
+							"Dresser" => ((Dresser)Items[i]).Export(4),
+							"Fridge" => ((Fridge)Items[i]).Export(4),
+							"Table" => ((Table)Items[i]).Export(4),
+							_ => ((Container)Items[i]).Export(4),
+						};
+						continue;
+					}
+					if (Items[i] is Display) {
+						retStr += ((Display)Items[i]).Export(4);
+						continue;
+					}
+					retStr += $"    {Items[i].Export()}\n";
 				}
-				if (Items[i] is Display) {
-					retStr += ((Display)Items[i]).Export(4);
-					continue;
-				}
-				retStr += $"    {Items[i].Export()}\n";
 			}
-			return $"{retStr}  End Floor {floor}\n";
+			return $"{retStr}  End Floor {floor}{(roomID > -2 ? $", Room {roomID}" : "")}\n";
 		}
 
 		/// <summary>
@@ -114,19 +157,29 @@ namespace HouseCS {
 		/// Adds an Item to this floors Item List
 		/// </summary>
 		/// <param name="i">Item to add</param>
-		public void AddItem(IItem i) => Items.Add(i);
+		/// <param name="roomID">Room number the item will be in</param>
+		public void AddItem(IItem i, int roomID) {
+			Items.Add(i);
+			Room.Add((roomID >= RoomNames.Count ? -1 : roomID));
+		}
 
 		/// <summary>
 		/// Removes Item i from the floors List of Items (RemoveAt)
 		/// </summary>
 		/// <param name="i">Index of Item in List</param>
-		public void RemoveItem(int i) => Items.RemoveAt(i);
+		public void RemoveItem(int i) {
+			Items.RemoveAt(i);
+			Room.RemoveAt(i);
+		}
 
 		/// <summary>
 		/// Removes Item i from the floors List of Items
 		/// </summary>
 		/// <param name="i">Item object</param>
-		public void RemoveItem(IItem i) => Items.Remove(i);
+		public void RemoveItem(IItem i) {
+			Room.RemoveAt(Items.IndexOf(i));
+			Items.Remove(i);
+		}
 
 		/// <summary>
 		/// Removes Item sIN from Item iN (Only works with Items that contain Items)
@@ -204,16 +257,24 @@ namespace HouseCS {
 		/// <summary>
 		/// Creates a floor with an empty List of Items, and with the lights off
 		/// </summary>
-		public Floor() : this(new List<IItem>(), false, new List<string>() { "Room" }) { }
+		public Floor() : this(new List<IItem>(), new List<int>(), false, new List<string>() { "Room" }) { }
 
 		/// <summary>
 		/// Creates a floor with a set List of Items
 		/// </summary>
 		/// <param name="i">List of Items for the floor</param>
+		/// <param name="r">List of Room ID's for the Items</param>
 		/// <param name="l">Sets state of lights, true = on, false = off</param>
 		/// <param name="roomNames">Names of each room on the floor</param>
-		public Floor(List<IItem> i, bool l, List<string> roomNames) {
+		public Floor(List<IItem> i, List<int> r, bool l, List<string> roomNames) {
 			Items = i;
+			if (i.Count == r.Count)
+				Room = r;
+			else {
+				Room = new List<int>(new int[Items.Count]);
+				for (int i1 = 0; i1 < Room.Count; i1++)
+					Room[i1] = -1;
+			}
 			Lights = l;
 			RoomNames = roomNames;
 		}
@@ -222,39 +283,39 @@ namespace HouseCS {
 		/// Creates a floor with a set List of Items, and the lights off
 		/// </summary>
 		/// <param name="i">List of Items for the floor</param>
-		public Floor(List<IItem> i) : this(i, false) { }
+		public Floor(List<IItem> i) : this(i, new List<int>(new int[i.Count + 1]), false, new List<string>()) { }
 
 		/// <summary>
 		/// Creates a floor with the lights on or off
 		/// </summary>
 		/// <param name="l">Lights, true = on, false = off</param>
-		public Floor(bool l) : this(new List<IItem>(), l, new List<string>()) { }
+		public Floor(bool l) : this(new List<IItem>(), new List<int>(new int[] { -1 }), l, new List<string>()) { }
 
 		/// <summary>
 		/// Creates a floor with set rooms, and no Items, with lights off
 		/// </summary>
 		/// <param name="rooms">Room names</param>
-		public Floor(List<string> rooms) : this(new List<IItem>(), false, rooms) { }
+		public Floor(List<string> rooms) : this(new List<IItem>(), new List<int>(new int[] { -1 }), false, rooms) { }
 
 		/// <summary>
 		/// Creates a floor with Items, set lights, and no rooms
 		/// </summary>
 		/// <param name="items">Items on floor</param>
 		/// <param name="lights">Whether lights are on or off</param>
-		public Floor(List<IItem> items, bool lights) : this(items, lights, new List<string>()) { }
+		public Floor(List<IItem> items, bool lights) : this(items, new List<int>(new int[items.Count + 1]), lights, new List<string>()) { }
 
 		/// <summary>
 		/// Creates a floor with Items, rooms, and lights off
 		/// </summary>
 		/// <param name="items">Items on floor</param>
 		/// <param name="rooms">Rooms on floor</param>
-		public Floor(List<IItem> items, List<string> rooms) : this(items, false, rooms) { }
+		public Floor(List<IItem> items, List<string> rooms) : this(items, new List<int>(new int[items.Count + 1]), false, rooms) { }
 
 		/// <summary>
 		/// Creates a floor with no Items, rooms, and set lights
 		/// </summary>
 		/// <param name="lights">Lights, true = on, false = off</param>
 		/// <param name="rooms">Rooms on floor</param>
-		public Floor(bool lights, List<string> rooms) : this(new List<IItem>(), lights, rooms) { }
+		public Floor(bool lights, List<string> rooms) : this(new List<IItem>(), new List<int>(new int[] { -1 }), lights, rooms) { }
 	}
 }

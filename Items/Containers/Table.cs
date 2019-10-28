@@ -75,7 +75,7 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}, {RoomID}),\n";
+			return $"{retStr}}}),\n";
 		}
 
 		/// <summary>
@@ -134,7 +134,6 @@ namespace HouseCS.Items.Containers {
 		/// Creates table with Items
 		/// </summary>
 		/// <param name="items">Items on table</param>
-		/// <param name="room">Room for table</param>
-		public Table(List<IItem> items, int room) : base(items, room) { }
+		public Table(List<IItem> items) : base(items) { }
 	}
 }

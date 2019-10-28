@@ -10,11 +10,6 @@ namespace HouseCS.Items.Containers {
 		private const string typeS = "Container";
 
 		/// <summary>
-		/// Room the container is in
-		/// </summary>
-		public int RoomID { get; set; }
-
-		/// <summary>
 		/// Items in container
 		/// </summary>
 		public List<IItem> Items { get; private set; }
@@ -95,14 +90,14 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}, {RoomID}),\n";
+			return $"{retStr}}}),\n";
 		}
 
 		/// <summary>
 		/// Exports Container information
 		/// </summary>
 		/// <returns>String of container constructor</returns>
-		public string Export() => $"new Container(new List<IItem>() {{ /*Items in Container*/ }}, {RoomID}),";
+		public string Export() => $"new Container(new List<IItem>() {{ /*Items in Container*/ }}),";
 
 		/// <summary>
 		/// Gets an Item from the container
@@ -122,7 +117,6 @@ namespace HouseCS.Items.Containers {
 			if (HasItem(item))
 				return new ColorText(new string[] { "That ", "Item", $" is already in this {typeS}! (I don't think this message should be able to be seen.)" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 			Items.Add(item);
-			item.RoomID = RoomID;
 			return new ColorText(new string[] { "\nItem", " added ", "to this ", typeS, ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 		}
 
@@ -222,16 +216,14 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Creates an empty container
 		/// </summary>
-		public Container() : this(new List<IItem>(), -1) { }
+		public Container() : this(new List<IItem>()) { }
 
 		/// <summary>
 		/// Creates a container with a List of Items
 		/// </summary>
 		/// <param name="items">Items in the container</param>
-		/// <param name="room">Room for container</param>
-		public Container(List<IItem> items, int room) {
+		public Container(List<IItem> items) {
 			Items = items;
-			RoomID = room;
 		}
 	}
 }

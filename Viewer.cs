@@ -59,8 +59,7 @@ namespace HouseCS {
 		public int GoRoom(int room) {
 			if (room < -1)
 				return 1;
-			List<string> rooms = RoomNames;
-			if (room >= rooms.Count)
+			if (room >= RoomNames.Count)
 				return 2;
 			CurRoom = room;
 			if (room == -1)
@@ -81,6 +80,19 @@ namespace HouseCS {
 		/// <param name="item">Index of Item on current floor of current house</param>
 		/// <returns>Item object from current floor of current house</returns>
 		public IItem GetItem(int item) => CurHouse.GetItem(CurFloor, item);
+
+		/// <summary>
+		/// Gets the current floor of the current house
+		/// </summary>
+		/// <returns>Current Floor</returns>
+		public Floor GetFloor() => GetFloor(CurFloor);
+
+		/// <summary>
+		/// Gets one of the current house's floors
+		/// </summary>
+		/// <param name="floor">Floor number of current House</param>
+		/// <returns>Requested Floor</returns>
+		public Floor GetFloor(int floor) => CurHouse.GetFloor(floor);
 
 		/// <summary>
 		/// Changes current floor
@@ -116,8 +128,9 @@ namespace HouseCS {
 		/// <param name="end">Index of end Item</param>
 		/// <param name="type">string of Item type to find</param>
 		/// <param name="length">Length of list pages</param>
+		/// <param name="room">Room of Items</param>
 		/// <returns>int count of how many pages the list will use</returns>
-		public int PageCount(int start, int end, string type, int length) => CurHouse.PageCount(CurFloor, start, end, type, length);
+		public int PageCount(int start, int end, string type, int length, int room) => CurHouse.PageCount(CurFloor, start, end, type, length, room);
 
 		/// <summary>
 		/// Lists Items on the current floor of the current house
@@ -156,7 +169,7 @@ namespace HouseCS {
 		/// Adds Item to current floor of current house
 		/// </summary>
 		/// <param name="item">Item object to add</param>
-		public void AddItem(IItem item) => CurHouse.AddItem(CurFloor, item);
+		public void AddItem(IItem item) => CurHouse.AddItem(CurFloor, item, CurRoom);
 
 		/// <summary>
 		/// Removes sub Item from Item on current floor of current house
@@ -287,7 +300,7 @@ namespace HouseCS {
 		/// ToString override showing status of Viewer
 		/// </summary>
 		/// <returns>string containing current house index, current floor index, and type of current Item</returns>
-		public override string ToString() => $"\tCurrent House: {Program.house}\n\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
+		public override string ToString() => $"\tCurrent House: {Program.enviVar[2, 1]}\n\tCurrent Floor: {CurFloor}\n\tCurrent Room: {CurRoom}, {(CurRoom > -1 ? GetFloor().RoomNames[CurRoom] : "hall")}\n\tCurrent Item Type: {curItem.Type}";
 
 		/// <summary>
 		/// Creates a Viewer with a new default House

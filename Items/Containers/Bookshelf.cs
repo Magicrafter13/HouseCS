@@ -10,11 +10,6 @@ namespace HouseCS.Items.Containers {
 		private static readonly string typeS = "Bookshelf";
 
 		/// <summary>
-		/// Room the book is in
-		/// </summary>
-		public new int RoomID { get; set; }
-
-		/// <summary>
 		/// string of Item sub-type
 		/// </summary>
 		public new string SubType => typeS;
@@ -80,7 +75,7 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}, {RoomID}),\n";
+			return $"{retStr}}}),\n";
 		}
 
 		/// <summary>
@@ -164,11 +159,9 @@ namespace HouseCS.Items.Containers {
 		/// Creates a bookshelf with books on it
 		/// </summary>
 		/// <param name="books">List of books</param>
-		/// <param name="room">Room for bookshelf</param>
-		public Bookshelf(List<Book> books, int room) : base() {
+		public Bookshelf(List<Book> books) : base() {
 			foreach (Book a in books)
 				base.AddItem(a);
-			RoomID = room;
 		}
 	}
 }

@@ -28,12 +28,12 @@ namespace HouseCS {
 		/// <summary>
 		/// How many floors the house has
 		/// </summary>
-		public int Size => Floors.Length;
+		public int Size => Floors.Count;
 
 		/// <summary>
 		/// The floors of this house
 		/// </summary>
-		public Floor[] Floors { get; }
+		public List<Floor> Floors { get; private set; }
 
 		/// <summary>
 		/// Whether the house is on a Street, or an Avenue
@@ -98,8 +98,8 @@ namespace HouseCS {
 		/// <param name="house">House number</param>
 		/// <returns>String with all Items in the house</returns>
 		public string Export(int house) {
-			string retStr = $"House {house}\nHouse house{house} = new House({Color}, {Floors.Length}, {Street.ToString().ToLower()}, {HouseNumber}, {ConRoad}, {AdjRoad}, {Quadrant});\n";
-			for (int i = 0; i < Floors.Length; i++)
+			string retStr = $"House {house}\nHouse house{house} = new House({Color}, {Floors.Count}, {Street.ToString().ToLower()}, {HouseNumber}, {ConRoad}, {AdjRoad}, {Quadrant});\n";
+			for (int i = 0; i < Floors.Count; i++)
 				retStr += Floors[i].Export(i);
 			return $"{retStr}End House {house}\n";
 		}
@@ -108,8 +108,8 @@ namespace HouseCS {
 		/// Makes sure none of the floors are null, by using the default constructor
 		/// </summary>
 		private void InitializeFloors() {
-			for (int i = 0; i < Floors.Length; i++)
-				Floors[i] = new Floor();
+			for (int i = 0; i < Floors.Count; i++)
+				Floors.Add(new Floor());
 		}
 
 		/// <summary>
@@ -120,8 +120,9 @@ namespace HouseCS {
 		/// <param name="rangeEnd">Index of last Item on floor</param>
 		/// <param name="searchType">string of Item type being searched for</param>
 		/// <param name="pageLength">int of how many Items are to be shown per page</param>
+		/// <param name="room">Room of Items</param>
 		/// <returns>How many pages a listing will take, based on Item type, range, and page length</returns>
-		public int PageCount(int floor, int rangeStart, int rangeEnd, string searchType, int pageLength) {
+		public int PageCount(int floor, int rangeStart, int rangeEnd, string searchType, int pageLength, int room) {
 			bool validType = false;
 			foreach (string t in types)
 				if (searchType.Equals(t, StringComparison.OrdinalIgnoreCase))
@@ -134,13 +135,17 @@ namespace HouseCS {
 				return -3;
 			if (rangeStart < 0)
 				return -4;
+			if (room < -2 || room > Floors[floor].RoomNames.Count)
+				return -5;
 			int items = 0;
 			for (int i = rangeStart; i < rangeEnd; i++) {
 				if (i > Floors[floor].Size)
 					continue;
-				if (searchType.Equals("*") ||
+				if ((searchType.Equals("*") ||
 					searchType.Equals(Floors[floor].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase) ||
-					searchType.Equals(Floors[floor].GetItem(i).Type)) {
+					searchType.Equals(Floors[floor].GetItem(i).Type)) &&
+					(room == -2 ||
+					room == Floors[floor].Room[i])) {
 					items++;
 				}
 			}
@@ -183,7 +188,7 @@ namespace HouseCS {
 						type.Equals("*") ||
 						type.Equals(Floors[floor].GetItem(i).Type, StringComparison.OrdinalIgnoreCase) ||
 						type.Equals(Floors[floor].GetItem(i).SubType, StringComparison.OrdinalIgnoreCase)
-					) && (room == -2 || Floors[floor].GetItem(i).RoomID == room)) {
+					) && (room == -2 || Floors[floor].Room[i] == room)) {
 					items.Add(Floors[floor].GetItem(i));
 					itemIds.Add(i);
 				}
@@ -235,11 +240,12 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="floor">Index of floor in house</param>
 		/// <param name="item">Item object</param>
+		/// <param name="roomID">Room number that the item will be in</param>
 		/// <returns>True if Item was added to the floor, False if Item was already on the floor</returns>
-		public bool AddItem(int floor, IItem item) {
-			bool check = floor >= 0 && floor < Size;
+		public bool AddItem(int floor, IItem item, int roomID) {
+			bool check = floor >= 0 && floor < Size && roomID >= -1 && roomID < Floors[floor].RoomNames.Count;
 			if (check)
-				Floors[floor].AddItem(item);
+				Floors[floor].AddItem(item, roomID);
 			return check;
 		}
 
@@ -259,6 +265,23 @@ namespace HouseCS {
 		/// <param name="subItem">Index of sub Item in Item on floor in house</param>
 		/// <returns>Item object from Item from floor in house</returns>
 		public IItem GetItem(int floor, int item, int subItem) => Floors[floor].GetItem(item, subItem);
+
+		/// <summary>
+		/// Creates a new Floor in the House
+		/// </summary>
+		public void AddFloor() => AddFloor(new Floor());
+
+		/// <summary>
+		/// Adds a supplied Floor to House
+		/// </summary>
+		/// <param name="f"></param>
+		public void AddFloor(Floor f) => Floors.Add(f);
+
+		/// <summary>
+		/// Removes a Floor from the House
+		/// </summary>
+		/// <param name="floor">Floor to remove</param>
+		public void RemoveFloor(int floor) => Floors.RemoveAt(floor);
 
 		/// <summary>
 		/// Gets a floor from the house
@@ -300,8 +323,7 @@ namespace HouseCS {
 		/// <param name="quad">Relative quadrant of House</param>
 		public House(int color, int floor, bool street, int houseNumber, int conRoad, int adjRoad, int quad) {
 			Color = color >= 0 && color <= 9 ? color : 0;
-			Floors = new Floor[floor];
-			InitializeFloors();
+			Floors = new List<Floor>(new Floor[floor]);
 			Street = street;
 			HouseNumber = houseNumber;
 			ConRoad = conRoad;
@@ -319,9 +341,6 @@ namespace HouseCS {
 		/// <param name="conRoad">Road parallel to House</param>
 		/// <param name="adjRoad">Road adjacent to House</param>
 		/// <param name="quad">Relative quadrant of House</param>
-		public House(int color, Floor[] floors, bool street, int houseNumber, int conRoad, int adjRoad, int quad) : this(color, 1, street, houseNumber, conRoad, adjRoad, quad) {
-			Color = color >= 0 && color <= 9 ? color : 0;
-			Floors = floors;
-		}
+		public House(int color, List<Floor> floors, bool street, int houseNumber, int conRoad, int adjRoad, int quad) : this(color, 1, street, houseNumber, conRoad, adjRoad, quad) => Floors = floors;
 	}
 }

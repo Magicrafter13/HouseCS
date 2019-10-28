@@ -12,11 +12,6 @@ namespace HouseCS.Items {
 		private readonly List<IItem> connectedTo;
 
 		/// <summary>
-		/// Room the display is in
-		/// </summary>
-		public int RoomID { get; set; }
-
-		/// <summary>
 		/// Displays size in inches
 		/// </summary>
 		public double SizeInch { get; private set; }
@@ -75,14 +70,14 @@ namespace HouseCS.Items {
 			}
 			for (int i = 0; i < space; i++)
 				retStr += " ";
-			return $"{retStr}}}, {SizeInch}, {RoomID}),\n";
+			return $"{retStr}}}, {SizeInch}),\n";
 		}
 
 		/// <summary>
 		/// Exports Display information
 		/// </summary>
 		/// <returns>String of display constructor</returns>
-		public string Export() => $"new Display({(IsMonitor ? "true" : "false")}, new List<IItem>() {{ /*Connected Items*/ }}, {SizeInch}, {RoomID}),";
+		public string Export() => $"new Display({(IsMonitor ? "true" : "false")}, new List<IItem>() {{ /*Connected Items*/ }}, {SizeInch}),";
 
 		/// <summary>
 		/// Checks if Item is connected
@@ -192,7 +187,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Creates a TV, with no connected devices, that is 20 inches
 		/// </summary>
-		public Display() : this(false, new List<IItem>(), 20.0, -1) { }
+		public Display() : this(false, new List<IItem>(), 20.0) { }
 
 		/// <summary>
 		/// Creates a set sized display, with a set type, and a list of connected devices
@@ -200,12 +195,10 @@ namespace HouseCS.Items {
 		/// <param name="isMonitor">Whether or not it's a monitor</param>
 		/// <param name="connectedDevs">List of connected devices</param>
 		/// <param name="inchSize">Display size in inches</param>
-		/// <param name="room">Room for display</param>
-		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize, int room) {
+		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize) {
 			IsMonitor = isMonitor;
 			connectedTo = connectedDevs;
 			SizeInch = inchSize > 0 ? inchSize : 20.0;
-			RoomID = room;
 		}
 	}
 }

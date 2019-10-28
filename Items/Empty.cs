@@ -12,11 +12,6 @@ namespace HouseCS.Items {
 		private const string typeS = "No Item";
 
 		/// <summary>
-		/// Room the 'empty' is in
-		/// </summary>
-		public int RoomID { get; set; }
-
-		/// <summary>
 		/// string of Item type
 		/// </summary>
 		public string Type => typeS;
@@ -51,7 +46,7 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="item">Index of sub item</param>
 		/// <returns>Book, telling you that this should be seen</returns>
-		public IItem GetSub(int item) => new Book("This item doesn't contain other items.", "(I don't think it should be possible to see this...)" + item, 2018, -1);
+		public IItem GetSub(int item) => new Book("This item doesn't contain other items.", "(I don't think it should be possible to see this...)" + item, 2018);
 
 		/// <summary>
 		/// Don't use

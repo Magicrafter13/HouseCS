@@ -89,7 +89,7 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}, {(HasFreezer ? "true" : "false")}, {RoomID}),\n";
+			return $"{retStr}}}, {(HasFreezer ? "true" : "false")}),\n";
 		}
 
 		/// <summary>
@@ -202,27 +202,13 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Creates empty fridge, without freezer
 		/// </summary>
-		public Fridge() : this(new List<IItem>(), false, -1) { }
+		public Fridge() : this(new List<IItem>(), false) { }
 
 		/// <summary>
 		/// Creates fridge with Items, without freezer
 		/// </summary>
 		/// <param name="items">Items in fridge</param>
 		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
-		/// <param name="room">Room for fridge</param>
-		public Fridge(List<IItem> items, bool hasFreezer, int room) : base(items, room) => HasFreezer = hasFreezer;
-
-		/*/// <summary>
-		/// Creates empty fridge, with or without a freezer
-		/// </summary>
-		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
-		public Fridge(bool hasFreezer) : base() => HasFreezer = hasFreezer;
-
-		/// <summary>
-		/// Creates empty fridge with Items, with or without a freezer
-		/// </summary>
-		/// <param name="items">Items in fridge</param>
-		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
-		public Fridge(List<IItem> items, bool hasFreezer) : base(items) => HasFreezer = hasFreezer;*/
+		public Fridge(List<IItem> items, bool hasFreezer) : base(items) => HasFreezer = hasFreezer;
 	}
 }

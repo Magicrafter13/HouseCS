@@ -35,9 +35,7 @@ namespace HouseCS.Items.Clothes {
 		/// Exports Pants information
 		/// </summary>
 		/// <returns>String of pants constructor</returns>
-		public new string Export() {
-			return $"new Pants(\"{Color}\", {RoomID}),";
-		}
+		public new string Export() => $"new Pants(\"{Color}\"),";
 
 		/// <summary>
 		/// Minor details for list
@@ -61,7 +59,6 @@ namespace HouseCS.Items.Clothes {
 		/// Creates colored pants
 		/// </summary>
 		/// <param name="color">Color for clothes</param>
-		/// <param name="room">Room for pants</param>
-		public Pants(string color, int room) : base(color, room) { }
+		public Pants(string color) : base(color) { }
 	}
 }

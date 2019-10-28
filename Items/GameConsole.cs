@@ -15,11 +15,6 @@ namespace HouseCS.Items {
 		public static readonly string[] types = { "Console", "Handheld", "Hybrid System" };
 
 		/// <summary>
-		/// Room the console is in
-		/// </summary>
-		public int RoomID { get; set; }
-
-		/// <summary>
 		/// Console type
 		/// </summary>
 		public int SysType { get; private set; }
@@ -66,7 +61,7 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <returns>String of gameconsole constructor</returns>
 		public string Export() {
-			return $"new GameConsole({SysType}, \"{Company}\", \"{System}\", {RoomID}),";
+			return $"new GameConsole({SysType}, \"{Company}\", \"{System}\"),";
 		}
 
 		/// <summary>
@@ -92,7 +87,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Creates a console, Generic System 1000 from Generi-sys
 		/// </summary>
-		public GameConsole() : this(0, "Generi-sys", "Generic System 1000", -1) { }
+		public GameConsole() : this(0, "Generi-sys", "Generic System 1000") { }
 
 		/// <summary>
 		/// Creates a type, system from company
@@ -100,12 +95,10 @@ namespace HouseCS.Items {
 		/// <param name="type">Console type</param>
 		/// <param name="company">Console company</param>
 		/// <param name="system">Console system</param>
-		/// <param name="room">Room for console</param>
-		public GameConsole(int type, string company, string system, int room) {
+		public GameConsole(int type, string company, string system) {
 			SysType = type >= 0 && type < types.Length ? type : 0;
 			Company = company;
 			System = system;
-			RoomID = room;
 		}
 	}
 }

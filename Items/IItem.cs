@@ -6,10 +6,6 @@ namespace HouseCS.Items {
 	/// Interface for all floor Items (the basis of this software)
 	/// </summary>
 	public interface IItem {
-		/// <summary>
-		/// Room the Item is in
-		/// </summary>
-		int RoomID { get; set; }
 
 		/// <summary>
 		/// string of Item parent type
