@@ -176,6 +176,8 @@ namespace HouseCS {
 				return new ColorText(new string[] { "Start", " must be less than ", "End" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red });
 			if (start < 0)
 				return new ColorText(new string[] { "Start", " must be greater than or equal to ", "0" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan });
+			if (room < -2)
+				return new ColorText(new string[] { "Room", " must be greater than or equal to ", "-2" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan });
 			List<string> retStr = new List<string>() { "\n" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White };
 			List<IItem> items = new List<IItem>();
