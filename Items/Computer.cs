@@ -39,6 +39,11 @@ namespace HouseCS.Items {
 		public string Model { get; private set; }
 
 		/// <summary>
+		/// Name of computer
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
 		/// string of Item type
 		/// </summary>
 		public string Type => typeS;
@@ -136,6 +141,7 @@ namespace HouseCS.Items {
 		/// <param name="state">Computer power state</param>
 		/// <param name="type">Computer type</param>
 		public Computer(string brand, string family, string model, bool state, string type) {
+			Name = string.Empty;
 			Reset(brand, family, model, state, type);
 			id = totalComps;
 			totalComps++;

@@ -30,6 +30,11 @@ namespace HouseCS.Items {
 		public string System { get; private set; }
 
 		/// <summary>
+		/// Name of console
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
 		/// string of Item type
 		/// </summary>
 		public string Type => typeS;
@@ -96,6 +101,7 @@ namespace HouseCS.Items {
 		/// <param name="company">Console company</param>
 		/// <param name="system">Console system</param>
 		public GameConsole(int type, string company, string system) {
+			Name = string.Empty;
 			SysType = type >= 0 && type < types.Length ? type : 0;
 			Company = company;
 			System = system;

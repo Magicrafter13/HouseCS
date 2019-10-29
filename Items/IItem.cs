@@ -18,6 +18,11 @@ namespace HouseCS.Items {
 		string SubType { get; }
 
 		/// <summary>
+		/// string of Item's assigned name
+		/// </summary>
+		string Name { get; }
+
+		/// <summary>
 		/// Matches keyword against Item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>

@@ -15,6 +15,11 @@ namespace HouseCS.Items.Clothes {
 		public string Color { get; set; }
 
 		/// <summary>
+		/// Name of clothing
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
 		/// string of Item type
 		/// </summary>
 		public string Type => typeS;
@@ -76,6 +81,9 @@ namespace HouseCS.Items.Clothes {
 		/// Creates a colored piece of clothing
 		/// </summary>
 		/// <param name="color">Color for clothes</param>
-		public Clothing(string color) => Color = color;
+		public Clothing(string color) {
+			Name = string.Empty;
+			Color = color;
+		}
 	}
 }

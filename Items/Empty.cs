@@ -12,6 +12,11 @@ namespace HouseCS.Items {
 		private const string typeS = "No Item";
 
 		/// <summary>
+		/// Name of empty
+		/// </summary>
+		public string Name => "If you see this in the program, something went wrong.";
+
+		/// <summary>
 		/// string of Item type
 		/// </summary>
 		public string Type => typeS;

@@ -35,6 +35,11 @@ namespace HouseCS.Items {
 		public int ID { get; }
 
 		/// <summary>
+		/// Name of book
+		/// </summary>
+		public string Name => Title;
+
+		/// <summary>
 		/// string of Item type
 		/// </summary>
 		public string Type => typeS;

@@ -25,6 +25,11 @@ namespace HouseCS.Items {
 		public bool HasColor { get; private set; }
 
 		/// <summary>
+		/// Name of printer
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
 		/// string of Item parent type
 		/// </summary>
 		public string Type => typeS;
@@ -91,6 +96,7 @@ namespace HouseCS.Items {
 		/// <param name="canScan"></param>
 		/// <param name="hasColor"></param>
 		public Printer(bool canFax, bool canScan, bool hasColor) {
+			Name = string.Empty;
 			CanFax = canFax;
 			CanScan = canScan;
 			HasColor = hasColor;

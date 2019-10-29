@@ -25,6 +25,11 @@ namespace HouseCS.Items {
 		private int BedType { get; set; }
 
 		/// <summary>
+		/// Name of bed
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
 		/// string of Item type
 		/// </summary>
 		public string Type => typeS;
@@ -91,6 +96,7 @@ namespace HouseCS.Items {
 		/// <param name="adjustable">True if bed moves, False if not</param>
 		/// <param name="type">Index of bed type</param>
 		public Bed(bool adjustable, int type) {
+			Name = string.Empty;
 			Adjustable = adjustable;
 			BedType = type >= 0 && type < types.Length ? type : 2;
 		}

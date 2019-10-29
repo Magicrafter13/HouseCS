@@ -22,6 +22,11 @@ namespace HouseCS.Items {
 		public bool IsMonitor { get; private set; }
 
 		/// <summary>
+		/// Name of display
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
 		/// How many devices are connected to the display
 		/// </summary>
 		public int DeviceCount => connectedTo.Count;
@@ -196,6 +201,7 @@ namespace HouseCS.Items {
 		/// <param name="connectedDevs">List of connected devices</param>
 		/// <param name="inchSize">Display size in inches</param>
 		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize) {
+			Name = string.Empty;
 			IsMonitor = isMonitor;
 			connectedTo = connectedDevs;
 			SizeInch = inchSize > 0 ? inchSize : 20.0;

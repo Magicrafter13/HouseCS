@@ -15,6 +15,11 @@ namespace HouseCS.Items.Containers {
 		public List<IItem> Items { get; private set; }
 
 		/// <summary>
+		/// Name of container
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
 		/// How many Items are in the container
 		/// </summary>
 		public int Size => Items.Count;
@@ -223,6 +228,7 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="items">Items in the container</param>
 		public Container(List<IItem> items) {
+			Name = string.Empty;
 			Items = items;
 		}
 	}
