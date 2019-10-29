@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 8, verFix = 2;
+		private static readonly int verMajor = 2, verMinor = 8, verFix = 3;
 
 		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container", "Printer" };
 

@@ -163,7 +163,7 @@ namespace HouseCS.Items.Containers {
 			? new ColorText($"{temperature}° ", ConsoleColor.White)
 			: Size > 0
 				? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
-				: new ColorText(new string[] { " - ", "Empty", $"]{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
+				: new ColorText(new string[] { " - ", "Empty", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
 
 		/// <summary>
 		/// Information about fridge
