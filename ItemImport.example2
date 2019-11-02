@@ -1,0 +1,282 @@
+﻿using HouseCS.Items;
+using HouseCS.Items.Clothes;
+using HouseCS.Items.Containers;
+using System.Collections.Generic;
+
+namespace HouseCS {
+	/// <summary>
+	/// ItemImport, stores all items, floors, and houses
+	/// </summary>
+	public class ItemImport {
+		/// <summary>
+		/// List of room names on floors in houses
+		/// </summary>
+		public static readonly List<List<List<string>>> roomNames = new List<List<List<string>>>() {
+			new List<List<string>>() {
+				new List<string>() {"Kitchen", "Dining Room", "Family Room", "Laundry Room", "Garage" },
+				new List<string>() {"Master Bedroom", "Office", "Game Room", "Master Bathroom", "Bedroom" }
+			}, //Floor 0 and 1 of House 0
+			new List<List<string>>() {
+				new List<string>() {"Game Room", "Office", "Bathroom", "Laundry Room" },
+				new List<string>() {"Kitchen", "Dining Room", "Family Room", "Garage" },
+				new List<string>() {"Master Bedroom", "Bedroom 1", "Bedroom 2", "Bathroom" }
+			}, //3 Floors of House 1
+            new List<List<string>>()
+			{
+				new List<string>() {"Kitchen", "Living Room", "Family Room", "Garage" },
+				new List<string>() {"Bedroom 1", "Master Bedroom", "Bedroom 2", "Office", "Bathroom" }
+			}, //Floors of House 2
+		};
+
+		private static readonly List<GameConsole> myConsoles = new List<GameConsole>()
+		{
+			new GameConsole(0, "Nintendo", "NES"),
+			new GameConsole(0, "Nintendo", "GameCube"),
+			new GameConsole(1, "Nintendo", "GameBoy Advance SP"),
+			new GameConsole(2, "Nintendo", "Switch"),
+			new GameConsole(0, "Atari", "VCS 2600"),
+			new GameConsole(0, "Microsoft", "Xbox 360"),
+		};
+
+		private static readonly List<Computer> myComputers = new List<Computer>()
+		{
+			new Computer("Tandy", "1000", "TL/2", false, "Desktop"),
+			new Computer("Gateway", "510", "xl", false, "Desktop"),
+			new Computer("Lenovo", "Legion", "Y540 15\"", true, "Laptop"),
+		};
+
+		private static readonly List<Display> myDisplays = new List<Display>()
+		{
+			new Display(false, new List<IItem>() //CRT TV
+			{
+				myConsoles[0],
+				myConsoles[1],
+				myConsoles[4],
+			}, 30),
+			new Display(true, new List<IItem>() //Widescreen monitor
+			{
+				myComputers[1],
+			}, 24),
+			new Display(true, new List<IItem>() //Old 5:4 monitor
+			{
+				myComputers[1],
+			}, 18),
+			new Display(false, new List<IItem>() //40" LED TV
+			{
+				myConsoles[3],
+				myConsoles[5],
+			}, 40),
+		};
+
+		/// <summary>
+		/// Tables in the program
+		/// </summary>
+		public static readonly Table[] tables = {
+			new Table(new List<IItem>()
+			{
+				myConsoles[0],
+				myConsoles[4],
+			}),
+			new Table(new List<IItem>()
+			{
+				myComputers[2]
+			}),
+			new Table(new List<IItem>()
+			{
+				myConsoles[1],
+			}),
+			new Table(new List<IItem>() //desk
+			{
+				myComputers[1],
+			}),
+			new Table(),
+		};
+
+		/// <summary>
+		/// Index of House and Floor of each table
+		/// </summary>
+		public static readonly int[,] tablesHFR =
+		{
+			{ 0, 0, 0, 0, 1 },
+			{ 1, 0, 1, 1, 1 },
+			{ 2, 1, 2, 2, 1 },
+		};
+
+		/// <summary>
+		/// Containers in the program
+		/// </summary>
+		public static readonly Container[] containers = {
+			new Container(new List<IItem>() //Entertainment Center
+			{
+				myDisplays[0],
+				myComputers[0],
+			})
+		};
+
+		/// <summary>
+		/// Index of the Floor and House of each container
+		/// </summary>
+		public static readonly int[,] containersHFR =
+		{
+			{ 0 },
+			{ 1 },
+			{ 2 },
+		};
+
+		/// <summary>
+		/// Bookshelfs in the program
+		/// </summary>
+		public static readonly Bookshelf[] bookshelfs = {
+			new Bookshelf(new List<Book>() {
+				new Book("The Hobbit", "J.R.R. Tolkien", 1937),
+				new Book("The Complete: Calvin & Hobbes", "Bill Watterson", 2005),
+			})
+		};
+
+		/// <summary>
+		/// Index of the House and Floor of each bookshelf
+		/// </summary>
+		public static readonly int[,] bookshelfsHFR =
+		{
+			{ 0 },
+			{ 1 },
+			{ 4 },
+		};
+
+		/// <summary>
+		/// Consoles in the program
+		/// </summary>
+		public static readonly GameConsole[] consoles = {
+			myConsoles[2],
+			myConsoles[3],
+			myConsoles[5],
+		};
+
+		/// <summary>
+		/// Index of House and Floor of each consoles
+		/// </summary>
+		public static readonly int[,] consolesHFR =
+		{
+			{ 0, 0, 0 },
+			{ 1, 1, 1 },
+			{ 2, 2, 2 },
+		};
+
+		/// <summary>
+		/// Displays in the program
+		/// </summary>
+		public static readonly Display[] displays = {
+			myDisplays[0],
+			myDisplays[1],
+			myDisplays[2],
+			myDisplays[3],
+		};
+
+		/// <summary>
+		/// Index of House and Floor of each display
+		/// </summary>
+		public static readonly int[,] displaysHFR =
+		{
+			{ 0, 0, 0, 0 },
+			{ 1, 1, 1, 1 },
+			{ 2, 2, 2, 2 },
+		};
+
+		/// <summary>
+		/// Beds in the program
+		/// </summary>
+		public static readonly Bed[] beds = {
+			new Bed(false, 0),
+			new Bed(false, 1),
+		};
+
+		/// <summary>
+		/// Index of House and Floor of each bed
+		/// </summary>
+		public static readonly int[,] bedsHFR =
+		{
+			{ 0, 0 },
+			{ 1, 1 },
+			{ 0, 4 },
+		};
+
+		/// <summary>
+		/// Fridges in the program
+		/// </summary>
+		public static readonly Fridge[] fridges = {
+			new Fridge(new List<IItem>() {//fridges with books (ya know, a normal fridge)
+				new Book("One", "Two", 3),
+				new Book("Four", "Five", 6)
+			}, true), //a fridge in the kitchen... where it belongs
+			new Fridge(new List<IItem>() {
+				new Book("Seven", "Eight", 9)
+			}, true), //room 4 = garage
+			new Fridge(new List<IItem>(), true),
+		};
+
+		/// <summary>
+		/// Index of House and Floor of each fridge
+		/// </summary>
+		public static readonly int[,] fridgesHFR =
+		{
+			{ 0, 0, 2 },
+			{ 0, 0, 0 },
+			{ 0, 4, 0 },
+		};
+
+		/// <summary>
+		/// Dressers in the program
+		/// </summary>
+		public static readonly Dresser[] dressers = {
+			new Dresser(new List<IItem>() { //clothes dressers
+				new Shirt("Red"),
+				new Pants("Blue"),
+				new Pants("Black"),
+			}),
+			new Dresser(new List<IItem>() {
+				new Pants("Black"),
+				new Pants("Gray"),
+				new Pants("Blue"),
+			}),
+		};
+
+		/// <summary>
+		/// Index of House and Floor of each dresser
+		/// </summary>
+		public static readonly int[,] dressersHFR =
+		{
+			{ 0, 0 },
+			{ 1, 1 },
+			{-1, 4 },
+		};
+
+		//the above doesn't actually matter, because you don't have to do it that way, that's just the weird way I do it
+
+		/// <summary>
+		/// Houses in the program
+		/// </summary>
+		public static List<House> houses = new List<House>()
+		{
+			new House(0, roomNames[0].Count, true, 3, 74, 121, 1), // My House
+			new House(6, roomNames[1].Count, false, 0, 98, 43, 2), // Jim's House
+			new House(0, roomNames[2].Count, false, 1, 98, 43, 2), // Becca's House
+		};
+
+		/// <summary>
+		/// Item (house/floor) initializer
+		/// </summary>
+		public static void InitializeItems() { //this method is required, though it doesn't actually need to do anything if you define all the items in the variable from the start, however I will eventually use this method to add a "reset" functionality
+			for (int h = 0; h < houses.Count; h++) //this abomination adds the room names to the floors of the houses
+				for (int f = 0; f < houses[h].Size; f++)
+					houses[h].Floors[f] = new Floor(roomNames[h][f]);
+			for (int i = 0; i < bookshelfs.Length; i++) houses[bookshelfsHFR[0, i]].AddItem(bookshelfsHFR[1, i], bookshelfs[i], bookshelfsHFR[2, i]);
+			for (int i = 0; i < consoles.Length; i++) houses[consolesHFR[0, i]].AddItem(consolesHFR[1, i], consoles[i], consolesHFR[2, i]);
+			for (int i = 0; i < displays.Length; i++) houses[displaysHFR[0, i]].AddItem(displaysHFR[1, i], displays[i], displaysHFR[2, i]);
+			for (int i = 0; i < beds.Length; i++) houses[bedsHFR[0, i]].AddItem(bedsHFR[1, i], beds[i], bedsHFR[2, i]);
+			for (int i = 0; i < containers.Length; i++) houses[containersHFR[0, i]].AddItem(containersHFR[1, i], containers[i], containersHFR[2, i]);
+			for (int i = 0; i < fridges.Length; i++) houses[fridgesHFR[0, i]].AddItem(fridgesHFR[1, i], fridges[i], fridgesHFR[2, i]);
+			for (int i = 0; i < dressers.Length; i++) houses[dressersHFR[0, i]].AddItem(dressersHFR[1, i], dressers[i], dressersHFR[2, i]);
+			for (int i = 0; i < tables.Length; i++) houses[tablesHFR[0, i]].AddItem(tablesHFR[1, i], tables[i], tablesHFR[2, i]);
+		}
+	}
+}
