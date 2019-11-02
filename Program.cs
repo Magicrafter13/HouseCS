@@ -425,13 +425,11 @@ namespace HouseCS {
 			List<Viewer> viewers = new List<Viewer>();
 			foreach (House h in houseData)
 				viewers.Add(new Viewer(h));
-			List<List<List<House>>>[] localMap = new List<List<List<House>>>[4]; //add quadrants
-			for (int q = 0; q < localMap.Length; q++) {
-				localMap[q] = new List<List<List<House>>>(new List<List<House>>[maxStreets]); //add streets
-				for (int s = 0; s < localMap[q].Count; s++) {
-					localMap[q][s] = new List<List<House>>(new List<House>[maxAvenues]); //add avenues
-					for (int a = 0; a < localMap[q][s].Count; a++) {
-						localMap[q][s][a] = new List<House>(maxHouses); //add roads
+			List<House>[,,] localMap = new List<House>[4, maxStreets, maxAvenues];
+			for (int q = 0; q < 4; q++) {
+				for (int s = 0; s < maxStreets; s++) {
+					for (int a = 0; a < maxAvenues; a++) {
+						localMap[q,s,a] = new List<House>(maxHouses); //add roads
 					}
 				}
 			}
@@ -440,7 +438,11 @@ namespace HouseCS {
 			bool here = true;
 
 			for (int h = 0; h < houseData.Count; h++)
-				localMap[houseData[h].Quadrant][(houseData[h].Street ? houseData[h].ConRoad : houseData[h].AdjRoad) - 1][(houseData[h].Street ? houseData[h].AdjRoad : houseData[h].ConRoad) - 1].Add(houseData[h]);
+				localMap[
+					houseData[h].Quadrant,
+					(houseData[h].Street ? houseData[h].ConRoad : houseData[h].AdjRoad) - 1,
+					(houseData[h].Street ? houseData[h].AdjRoad : houseData[h].ConRoad) - 1
+				].Add(houseData[h]);
 
 			while (here) {
 				/*for (int i = 0; i < 4; i++) {
@@ -978,8 +980,8 @@ namespace HouseCS {
 											int rawAdd = GetInput(100, 29920);
 											int adjRoad = rawAdd / 100 - 1;
 											bool found = false;
-											for (int h = 0; h < localMap[quad][street ? conRoad : adjRoad][street ? adjRoad : conRoad].Count; h++) {
-												infoHouse = localMap[quad][(street ? conRoad : adjRoad) - 1][(street ? adjRoad : conRoad) - 1][h];
+											for (int h = 0; h < maxHouses; h++) {
+												infoHouse = localMap[quad, (street ? conRoad : adjRoad), (street ? adjRoad : conRoad)][h];
 												if (infoHouse.HouseNumber == rawAdd % 100) {
 													found = true;
 													break;
