@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 8, verFix = 3;
+		private static readonly int verMajor = 2, verMinor = 8, verFix = 4;
 
 		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container", "Printer" };
 
@@ -482,7 +482,7 @@ namespace HouseCS {
 									continue;
 								}
 								if (searchRoom == -2 && EqualsIgnoreCaseOr(cmds[arg], new string[] { "-r", "--room" })) {
-									if (Regex.IsMatch(cmds[arg + 1], @"^((-1)|\d+)$"))
+									if (Regex.IsMatch(cmds[arg + 1], @"^(-1|\d+)$"))
 										searchRoom = int.Parse(cmds[arg + 1]);
 									else
 										WriteColor(new string[] { "room", " must be a positive ", "integer", " or ", "-1", ".\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
@@ -541,7 +541,7 @@ namespace HouseCS {
 											}
 											break;
 										case "-r":
-											if (Regex.IsMatch(cmds[1], @"^-?\d+$")) {
+											if (Regex.IsMatch(cmds[1], @"^(-1|\d+)$")) {
 												if (int.Parse(cmds[1]) >= -1 && int.Parse(cmds[1]) < user.CurHouse.Floors[user.CurFloor].RoomNames.Count) {
 													System.IO.File.WriteAllText("exportedRoom.txt", $"{user.CurHouse.GetFloor(user.CurFloor).Export(user.CurFloor, user.CurRoom)}\n");
 													Console.WriteLine($"\nRoom {cmds[1]} exported.\n");
@@ -566,7 +566,7 @@ namespace HouseCS {
 						}
 						case "goto": {
 							if (cmds.Length > 1) {
-								if (Regex.IsMatch(cmds[1], @"^((-1)|\d+)|>|<$")) {
+								if (Regex.IsMatch(cmds[1], @"^(-(1|2)|\d+|>|<)$")) {
 									int room = cmds[1].Contains('<') ? user.CurRoom - 1 : cmds[1].Contains('>') ? user.CurRoom + 1 : int.Parse(cmds[1]);
 									switch (user.GoRoom(room)) {
 										case 1:
@@ -679,7 +679,7 @@ namespace HouseCS {
 													break;
 												case "int":
 												case "double":
-													if (Regex.IsMatch(cmds[2], @"^-?\d+([.]{1}\d+)?$")) { //I think I could safely replace [.]{1} with .?
+													if (Regex.IsMatch(cmds[2], @"^-?\d+(.\d+)?$")) {
 														double newVal = double.Parse(cmds[2]);
 														enviVar[i, 1] = (enviVar[i, 2].Equals("int") ? (int)newVal : newVal).ToString();
 													}
@@ -770,7 +770,7 @@ namespace HouseCS {
 							if (cmds.Length > 1) {
 								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
 									if (cmds.Length > 2) {
-										if (Regex.IsMatch(cmds[2], @"^((\d+)|<|>)(:-?\d+)$")) {
+										if (Regex.IsMatch(cmds[2], @"^(\d+|<|>)(:(-(1|2)|\d+))?$")) {
 											IItem old_item = user.curItem;
 											int item = int.Parse(cmds[1]);
 											int destinationFloor = cmds[2].Contains('<') ? user.CurFloor - 1 : cmds[2].Contains('>') ? user.CurFloor + 1 : cmds[2].Contains(':') ? int.Parse(cmds[2].Substring(0, cmds[2].IndexOf(':'))) : int.Parse(cmds[2]);
@@ -1019,8 +1019,12 @@ namespace HouseCS {
 									int invalidArg = 0;
 									for (int i = 1; i < cmds.Length; i++) {
 										if (EqualsIgnoreCaseOr(cmds[i], new string[] { "-x", "--room" }) && (i + 1 < cmds.Length)) {
-											searchRoom = int.Parse(cmds[i + 1]);
-											i++;
+											if (Regex.IsMatch(cmds[i + 1], @"^(-(1|2)|\d+)$")) {
+												searchRoom = int.Parse(cmds[i + 1]);
+												i++;
+												continue;
+											}
+											invalidArg = i + 1;
 											continue;
 										}
 										if (EqualsIgnoreCaseOr(cmds[i], new string[] { "-i", "--item" }) && (i + 1 < cmds.Length)) {
@@ -1029,12 +1033,18 @@ namespace HouseCS {
 											continue;
 										}
 										if (EqualsIgnoreCaseOr(cmds[i], new string[] { "-r", "--range" }) && (i + 2 < cmds.Length)) {
-											if (Regex.IsMatch(cmds[i + 1], @"^\d+$") && Regex.IsMatch(cmds[i + 2], @"^\d+$")) {
-												rangeStart = int.Parse(cmds[i + 1]);
-												rangeEnd = int.Parse(cmds[i + 2]);
-												i += 2;
+											if (Regex.IsMatch(cmds[i + 1], @"^\d+$")) {
+												if (Regex.IsMatch(cmds[i + 2], @"^\d+$")) {
+													rangeStart = int.Parse(cmds[i + 1]);
+													rangeEnd = int.Parse(cmds[i + 2]);
+													i += 2;
+													continue;
+												}
+												invalidArg = i + 2;
 												continue;
 											}
+											invalidArg = i + 1;
+											continue;
 										}
 										if (EqualsIgnoreCaseOr(cmds[i], new string[] { "-p", "--page" })) {
 											page = true;
@@ -1232,7 +1242,7 @@ namespace HouseCS {
 												string author = Console.ReadLine();
 												Console.Write("\nEnter Publishing Year > ");
 												string year = Console.ReadLine();
-												tempBook.Reset(title, author, Regex.IsMatch(year, @"^\d{4,}$") ? int.Parse(year) : 0);
+												tempBook.Reset(title, author, Regex.IsMatch(year, @"^\d+") ? int.Parse(year) : 0); // I could use ^(1([6-9]|\d{2,})|[2-9]\d{1,})\d{2,}$ but I'll just let the Reset method take care of it...
 												WriteColor(new ColorText[] { new ColorText(new string[] { "\nThis ", "Book", " added:\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }), tempBook.ToText(), new ColorText("\n\n") });
 											}
 											else WriteColor(new string[] { "\nInvalid 2nd argument, did you mean ", "arg", "?\n\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
