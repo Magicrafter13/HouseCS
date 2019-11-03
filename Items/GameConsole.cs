@@ -32,7 +32,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Name of console
 		/// </summary>
-		public string Name { get; }
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// string of Item type
@@ -54,8 +54,9 @@ namespace HouseCS.Items {
 			foreach (string key in keywords) {
 				if (key.Equals(types[SysType], StringComparison.OrdinalIgnoreCase) ||
 					key.Equals(Company, StringComparison.OrdinalIgnoreCase) ||
-					key.Equals(System, StringComparison.OrdinalIgnoreCase)) {
-					output.Add(new ColorText($"{types[SysType]} - {Company} {System}"));
+					key.Equals(System, StringComparison.OrdinalIgnoreCase) ||
+					key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
+					output.Add(new ColorText($"{types[SysType]} - {Company} {System}{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}"));
 				}
 			}
 			return output;
@@ -66,7 +67,7 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <returns>String of gameconsole constructor</returns>
 		public string Export() {
-			return $"new GameConsole({SysType}, \"{Company}\", \"{System}\"),";
+			return $"new GameConsole({SysType}, \"{Company}\", \"{System}\", \"{Name}\"),";
 		}
 
 		/// <summary>
@@ -77,34 +78,50 @@ namespace HouseCS.Items {
 		public bool HasItem(IItem item) => false;
 
 		/// <summary>
+		/// Sets the name of the Console
+		/// </summary>
+		/// <param name="name">New name</param>
+		public void Rename(string name) => Name = name;
+
+		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor console details</returns>
-		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? string.Empty : $" - {types[SysType]}" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? string.Empty : $" - {types[SysType]}{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White });
 
 		/// <summary>
 		/// Information about console
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public ColorText ToText() => new ColorText(new string[] { $"This Video Game {types[SysType]}, is a {Company}\n{System}" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ToText() => new ColorText(new string[] { $"This Video Game {types[SysType]}, is a {Company}\n{System}\nAnd is called \"{Name}\"" }, new ConsoleColor[] { ConsoleColor.White });
 
 		/// <summary>
 		/// Creates a console, Generic System 1000 from Generi-sys
 		/// </summary>
-		public GameConsole() : this(0, "Generi-sys", "Generic System 1000") { }
+		public GameConsole() : this(0, "Generi-sys", "Generic System 1000", "Lame") { }
 
 		/// <summary>
-		/// Creates a type, system from company
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="company"></param>
+		/// <param name="system"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public GameConsole(int type, string company, string system) : this(type, company, system, string.Empty) { }
+
+		/// <summary>
+		/// Creates a 'type, system' from 'company', called 'name'
 		/// </summary>
 		/// <param name="type">Console type</param>
 		/// <param name="company">Console company</param>
 		/// <param name="system">Console system</param>
-		public GameConsole(int type, string company, string system) {
-			Name = string.Empty;
+		/// <param name="name">Name of Console</param>
+		public GameConsole(int type, string company, string system, string name) {
 			SysType = type >= 0 && type < types.Length ? type : 0;
 			Company = company;
 			System = system;
+			Rename(name);
 		}
 	}
 }

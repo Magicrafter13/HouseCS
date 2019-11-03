@@ -43,6 +43,12 @@ namespace HouseCS.Items {
 		bool HasItem(IItem item);
 
 		/// <summary>
+		/// Changes the name of the Item
+		/// </summary>
+		/// <param name="name">New name</param>
+		public void Rename(string name);
+
+		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>

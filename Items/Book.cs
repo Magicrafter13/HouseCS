@@ -96,6 +96,12 @@ namespace HouseCS.Items {
 		public bool HasItem(IItem item) => false;
 
 		/// <summary>
+		/// Doesn't, set the name of the Book
+		/// </summary>
+		/// <param name="name">Name to not use</param>
+		public void Rename(string name) => Console.Write($"\nThat doesn't seem very useful...\nTitle not changed to {name}.\n\n");
+
+		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>

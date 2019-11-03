@@ -27,7 +27,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Name of bed
 		/// </summary>
-		public string Name { get; }
+		public string Name { get; private set;  }
 
 		/// <summary>
 		/// string of Item type
@@ -48,7 +48,8 @@ namespace HouseCS.Items {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (key.Equals(types[BedType], StringComparison.OrdinalIgnoreCase) ||
-				(key.ToLower().Equals("adjustable") && Adjustable)) {
+				(key.ToLower().Equals("adjustable") && Adjustable) ||
+				key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
 					output.Add(ListInfo(true));
 					output.Add(new ColorText(typeS));
 					output.Add(ListInfo(false));
@@ -61,9 +62,7 @@ namespace HouseCS.Items {
 		/// Exports Bed information
 		/// </summary>
 		/// <returns>String of bed constructor</returns>
-		public string Export() {
-			return $"new Bed({(Adjustable ? "true" : "false")}, {BedType}),";
-		}
+		public string Export() => $"new Bed({(Adjustable ? "true" : "false")}, {BedType}, \"{Name}\"),";
 
 		/// <summary>
 		/// Don't use
@@ -73,32 +72,47 @@ namespace HouseCS.Items {
 		public bool HasItem(IItem item) => false;
 
 		/// <summary>
+		/// Sets the name of the Bed
+		/// </summary>
+		/// <param name="name">New name</param>
+		public void Rename(string name) => Name = name;
+
+		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor bed details</returns>
-		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{types[BedType]} " : Adjustable ? " - Adjustable" : "" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{(Name.Equals(string.Empty) ? types[BedType] : Name)} " : Adjustable ? " - Adjustable" : "" }, new ConsoleColor[] { ConsoleColor.White });
 
 		/// <summary>
 		/// Information about bed
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public ColorText ToText() => new ColorText(new string[] { $"{(Adjustable ? "Adjustable" : "Non adjustable")} {types[BedType]} size bed" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ToText() => new ColorText(new string[] { $"{(Adjustable ? "Adjustable" : "Non adjustable")} {types[BedType]} size bed{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White });
 
 		/// <summary>
 		/// Creates non adjustable Twin bed
 		/// </summary>
-		public Bed() : this(false, 2) { }
+		public Bed() : this(false, 2, string.Empty) { }
 
 		/// <summary>
-		/// Creates a bed, set adjustability, and set size
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="adjustable"></param>
+		/// <param name="type"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public Bed(bool adjustable, int type) : this(adjustable, type, string.Empty) { }
+
+		/// <summary>
+		/// Creates a bed, of set adjustability, size, and name
 		/// </summary>
 		/// <param name="adjustable">True if bed moves, False if not</param>
 		/// <param name="type">Index of bed type</param>
-		public Bed(bool adjustable, int type) {
-			Name = string.Empty;
+		/// <param name="name">Name of the bed</param>
+		public Bed(bool adjustable, int type, string name) {
 			Adjustable = adjustable;
 			BedType = type >= 0 && type < types.Length ? type : 2;
+			Rename(name);
 		}
 	}
 }

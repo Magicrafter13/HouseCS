@@ -38,33 +38,25 @@ namespace HouseCS {
 		/// <returns>String output of Items found</returns>
 		public List<ColorText> Search(int room, string itemType, List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
-			List<List<IItem>> sortedItems = new List<List<IItem>>(RoomNames.Count + 1);
-			List<List<int>> sortedRooms = new List<List<int>>(RoomNames.Count + 1);
-			for (int i = 0; i < RoomNames.Count + 1; i++) sortedItems.Add(new List<IItem>());
-			for (int i = 0; i < Items.Count; i++) {
-				if (room != -2 && room != Room[i]) continue;
-				sortedItems[Room[i] + 1].Add(Items[i]);
-			}
-			for (int i = 0; i < sortedItems.Count; i++) {
-				if (sortedItems[i].Count > 0) {
-					int testRoom = sortedRooms[i][0];
-					if (room != -2 && room != testRoom) continue;
-					List<ColorText> tempSearch = new List<ColorText>
-					{
-						new ColorText($"  Room {testRoom}:\n")
-					};
-					foreach (IItem item in sortedItems[i]) {
-						if (itemType.Equals("") || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
-							List<ColorText> temp = item.Search(keywords);
-							if (temp.Count != 0) {
-								tempSearch.Add(new ColorText(new string[] { $"    {Items.IndexOf(item)}", ": " }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.White }));
-								tempSearch.AddRange(temp);
-								tempSearch.Add(new ColorText("\n"));
-							}
+			List<IItem>[] sortedItems = new List<IItem>[RoomNames.Count + 1];
+			for (int l = 0; l < sortedItems.Length; l++)
+				sortedItems[l] = new List<IItem>();
+			for (int i = 0; i < Items.Count; i++)
+				if (room == -2 || room == Room[i])
+					sortedItems[Room[i] + 1].Add(Items[i]);
+			for (int r = 0; r < sortedItems.Length; r++) {
+				List<ColorText> tempSearch = new List<ColorText> { new ColorText($"  Room {r - 1}:\n") };
+				foreach (IItem item in sortedItems[r]) {
+					if (itemType.Equals(string.Empty) || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
+						List<ColorText> temp = item.Search(keywords);
+						if (temp.Count != 0) {
+							tempSearch.Add(new ColorText(new string[] { $"    {Items.IndexOf(item)}", ": " }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.White }));
+							tempSearch.AddRange(temp);
+							tempSearch.Add(new ColorText("\n"));
 						}
 					}
-					if (tempSearch.Count > 1) output.AddRange(tempSearch);
 				}
+				if (tempSearch.Count > 1) output.AddRange(tempSearch);
 			}
 			if (output.Count != 0) output.Add(new ColorText("\n"));
 			return output;

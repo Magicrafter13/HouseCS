@@ -17,7 +17,7 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Name of container
 		/// </summary>
-		public string Name { get; }
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// How many Items are in the container
@@ -42,7 +42,9 @@ namespace HouseCS.Items.Containers {
 		public List<ColorText> Search(List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
-				if (Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) {
+				if ((Size == 0 &&
+					key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) ||
+					key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
 					output.Add(ListInfo(true));
 					output.Add(new ColorText(typeS));
 					output.Add(ListInfo(false));
@@ -95,14 +97,14 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}),\n";
+			return $"{retStr}}}, \"{Name}\"),\n";
 		}
 
 		/// <summary>
 		/// Exports Container information
 		/// </summary>
 		/// <returns>String of container constructor</returns>
-		public string Export() => $"new Container(new List<IItem>() {{ /*Items in Container*/ }}),";
+		public string Export() => $"new Container(new List<IItem>() {{ /*Items in Container*/ }}, \"{Name}\"),";
 
 		/// <summary>
 		/// Gets an Item from the container
@@ -178,19 +180,25 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
+		/// Sets the name of the Container
+		/// </summary>
+		/// <param name="name">New name</param>
+		public void Rename(string name) => Name = name;
+
+		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor container details</returns>
-		public ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter ? ColorText.Empty : Items.Count > 0 ? new ColorText(new string[] { ", ", Items.Count.ToString(), " Items" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow }) : new ColorText(new string[] { ", ", "Empty" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
+		public ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter ? ColorText.Empty : Items.Count > 0 ? new ColorText(new string[] { ", ", Items.Count.ToString(), " Items", Name.Equals(string.Empty) ? string.Empty : $", {Name}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White }) : new ColorText(new string[] { ", ", "Empty", Name.Equals(string.Empty) ? string.Empty : $", {Name}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 
 		/// <summary>
 		/// Information about container
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
 		public ColorText ToText() {
-			List<string> retStr = new List<string>() { typeS };
-			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.Yellow };
+			List<string> retStr = new List<string>() { "Items", " in this ", "Container", ":" };
+			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White };
 			for (int i = 0; i < Items.Count; i++) {
 				retStr.Add($"\n\t{i.ToString()}");
 				retClr.Add(ConsoleColor.Cyan);
@@ -221,15 +229,23 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Creates an empty container
 		/// </summary>
-		public Container() : this(new List<IItem>()) { }
+		public Container() : this(new List<IItem>(), string.Empty) { }
+
+		/// <summary>
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="items"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public Container(List<IItem> items) : this(items, string.Empty) { }
 
 		/// <summary>
 		/// Creates a container with a List of Items
 		/// </summary>
 		/// <param name="items">Items in the container</param>
-		public Container(List<IItem> items) {
-			Name = string.Empty;
+		/// <param name="name">Name of Container</param>
+		public Container(List<IItem> items, string name) {
 			Items = items;
+			Rename(name);
 		}
 	}
 }

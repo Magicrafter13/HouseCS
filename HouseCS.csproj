@@ -20,12 +20,11 @@ https://github.com/Magicrafter13/House</Description>
 
   <ItemGroup>
     <Compile Remove="Examples\**" />
+    <Compile Remove="Temp\**" />
     <EmbeddedResource Remove="Examples\**" />
+    <EmbeddedResource Remove="Temp\**" />
     <None Remove="Examples\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Temp\" />
+    <None Remove="Temp\**" />
   </ItemGroup>
 
   <ItemGroup>

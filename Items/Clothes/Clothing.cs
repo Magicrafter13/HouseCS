@@ -17,7 +17,7 @@ namespace HouseCS.Items.Clothes {
 		/// <summary>
 		/// Name of clothing
 		/// </summary>
-		public string Name { get; }
+		public string Name { get; private set; }
 
 		/// <summary>
 		/// string of Item type
@@ -37,7 +37,8 @@ namespace HouseCS.Items.Clothes {
 		public List<ColorText> Search(List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
-				if (key.Equals(Color, StringComparison.OrdinalIgnoreCase)) {
+				if (key.Equals(Color, StringComparison.OrdinalIgnoreCase) ||
+					key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
 					output.Add(ListInfo(true));
 					output.Add(new ColorText(typeS));
 					output.Add(ListInfo(false));
@@ -50,7 +51,7 @@ namespace HouseCS.Items.Clothes {
 		/// Exports Clothing information
 		/// </summary>
 		/// <returns>String of clothing constructor</returns>
-		public string Export() => $"new Clothing(\"{Color}\"),";
+		public string Export() => $"new Clothing(\"{Color}\", \"{Name}\"),";
 
 		/// <summary>
 		/// Don't use
@@ -60,30 +61,44 @@ namespace HouseCS.Items.Clothes {
 		public bool HasItem(IItem item) => false;
 
 		/// <summary>
+		/// Sets the name of the Clothing
+		/// </summary>
+		/// <param name="name">New name</param>
+		public void Rename(string name) => Name = name;
+
+		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor clothing details</returns>
-		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(beforeNotAfter ? $"{Color} " : " - Generic", ConsoleColor.White);
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(beforeNotAfter ? $"{(Name.Equals(string.Empty) ? Color : Name)} " : " - Generic", ConsoleColor.White);
 
 		/// <summary>
 		/// Information about clothing
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public ColorText ToText() => new ColorText($"This is a Generic piece of clothing, it is {Color}", ConsoleColor.White);
+		public ColorText ToText() => new ColorText($"This is a Generic piece of clothing, it is {Color}{(Name.Equals(string.Empty) ? string.Empty : $", and labeled {Name}")}", ConsoleColor.White);
 
 		/// <summary>
 		/// Creates a black piece of clothing
 		/// </summary>
-		public Clothing() : this("Black") { }
+		public Clothing() : this("Black", string.Empty) { }
+
+		/// <summary>
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="color"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public Clothing(string color) : this(color, string.Empty) { }
 
 		/// <summary>
 		/// Creates a colored piece of clothing
 		/// </summary>
 		/// <param name="color">Color for clothes</param>
-		public Clothing(string color) {
-			Name = string.Empty;
+		/// <param name="name">Name of clothing</param>
+		public Clothing(string color, string name) {
 			Color = color;
+			Rename(name);
 		}
 	}
 }

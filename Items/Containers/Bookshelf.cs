@@ -22,7 +22,9 @@ namespace HouseCS.Items.Containers {
 		public new List<ColorText> Search(List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
-				if (Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) {
+				if ((Size == 0 &&
+					key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) ||
+					key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
 					output.Add(ListInfo(true));
 					output.Add(new ColorText(typeS));
 					output.Add(ListInfo(false));
@@ -75,7 +77,7 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}),\n";
+			return $"{retStr}}}, \"{Name}\"),\n";
 		}
 
 		/// <summary>
@@ -123,9 +125,9 @@ namespace HouseCS.Items.Containers {
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor bookshelf details</returns>
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
-			? new ColorText(new string[] { Size > 0 ? "" : "Empty " }, new ConsoleColor[] { ConsoleColor.White })
+			? new ColorText(new string[] { Size > 0 ? "" : $"Empty{(Name.Equals(string.Empty) ? " " : $", {Name} ")}" }, new ConsoleColor[] { ConsoleColor.White })
 			: Size > 0
-				? new ColorText(new string[] { " (", Size.ToString(), Size > 1 ? " Books" : " Book", ")" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, Size > 1 ? ConsoleColor.DarkYellow : ConsoleColor.Yellow, ConsoleColor.White })
+				? new ColorText(new string[] { " (", Size.ToString(), Size > 1 ? " Books" : " Book", $"){(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, Size > 1 ? ConsoleColor.DarkYellow : ConsoleColor.Yellow, ConsoleColor.White })
 				: new ColorText(new string[] { string.Empty }, new ConsoleColor[] { ConsoleColor.White });
 
 		/// <summary>
@@ -156,12 +158,17 @@ namespace HouseCS.Items.Containers {
 		public Bookshelf() : base() { }
 
 		/// <summary>
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="books"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public Bookshelf(List<Book> books) : this(books, string.Empty) { }
+
+		/// <summary>
 		/// Creates a bookshelf with books on it
 		/// </summary>
 		/// <param name="books">List of books</param>
-		public Bookshelf(List<Book> books) : base() {
-			foreach (Book a in books)
-				base.AddItem(a);
-		}
+		/// <param name="name">Name of Bookshelf</param>
+		public Bookshelf(List<Book> books, string name) : base(new List<IItem>(books), name) { }
 	}
 }

@@ -14,7 +14,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Name of empty
 		/// </summary>
-		public string Name => "If you see this in the program, something went wrong.";
+		public string Name { get; private set; } = "If you see this in the program, something went wrong.";
 
 		/// <summary>
 		/// string of Item type
@@ -43,7 +43,7 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <returns>String of empty constructor</returns>
 		public string Export() {
-			return "new Empty(),";
+			return $"new Empty({Name}),";
 		}
 
 		/// <summary>
@@ -59,6 +59,12 @@ namespace HouseCS.Items {
 		/// <param name="item">test Item</param>
 		/// <returns>false</returns>
 		public bool HasItem(IItem item) => false;
+
+		/// <summary>
+		/// Adds to the name of the 'Empty', could be used to debug
+		/// </summary>
+		/// <param name="name">String added to Name</param>
+		public void Rename(string name) => Name += name;
 
 		/// <summary>
 		/// Empty

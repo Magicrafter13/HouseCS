@@ -22,7 +22,9 @@ namespace HouseCS.Items.Containers {
 		public new List<ColorText> Search(List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
-				if (Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) {
+				if ((Size == 0 &&
+					key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) ||
+					key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
 					output.Add(ListInfo(true));
 					output.Add(new ColorText(typeS));
 					output.Add(ListInfo(false));
@@ -75,7 +77,7 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}),\n";
+			return $"{retStr}}}, \"{Name}\"),\n";
 		}
 
 		/// <summary>
@@ -86,8 +88,8 @@ namespace HouseCS.Items.Containers {
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
 			? new ColorText(new string[] { $"{(Size < 9 ? "Clean" : "Dirty")} " }, new ConsoleColor[] { ConsoleColor.White })
 			: Size > 0
-				? new ColorText(new string[] { " - ", Size.ToString(), " Items" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow })
-				: new ColorText(" - Empty", ConsoleColor.White);
+				? new ColorText(new string[] { " - ", Size.ToString(), $" Items{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow })
+				: new ColorText($" - Empty{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}", ConsoleColor.White);
 
 		/// <summary>
 		/// Information about table
@@ -131,9 +133,17 @@ namespace HouseCS.Items.Containers {
 		public Table() : base() { }
 
 		/// <summary>
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="items"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public Table(List<IItem> items) : this(items, string.Empty) { }
+
+		/// <summary>
 		/// Creates table with Items
 		/// </summary>
 		/// <param name="items">Items on table</param>
-		public Table(List<IItem> items) : base(items) { }
+		/// <param name="name">Name of Table</param>
+		public Table(List<IItem> items, string name) : base(items, name) { }
 	}
 }

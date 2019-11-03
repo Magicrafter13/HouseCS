@@ -22,7 +22,8 @@ namespace HouseCS.Items.Clothes {
 		public new List<ColorText> Search(List<string> keywords) {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
-				if (key.Equals(Color, StringComparison.OrdinalIgnoreCase)) {
+				if (key.Equals(Color, StringComparison.OrdinalIgnoreCase) ||
+					key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
 					output.Add(ListInfo(true));
 					output.Add(new ColorText(typeS));
 					output.Add(ListInfo(false));
@@ -35,20 +36,20 @@ namespace HouseCS.Items.Clothes {
 		/// Exports Pants information
 		/// </summary>
 		/// <returns>String of pants constructor</returns>
-		public new string Export() => $"new Pants(\"{Color}\"),";
+		public new string Export() => $"new Pants(\"{Color}\", \"{Name}\"),";
 
 		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor pants details</returns>
-		public new ColorText ListInfo(bool beforeNotAfter) => new ColorText(beforeNotAfter ? $"{Color} " : "", ConsoleColor.White);
+		public new ColorText ListInfo(bool beforeNotAfter) => new ColorText(beforeNotAfter ? $"{(Name.Equals(string.Empty) ? Color : Name)} " : "", ConsoleColor.White);
 
 		/// <summary>
 		/// Information about pants
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public new ColorText ToText() => new ColorText($"These are {Color} {SubType}", ConsoleColor.White);
+		public new ColorText ToText() => new ColorText($"These are {Color} {SubType}{(Name.Equals(string.Empty) ? string.Empty : $", labeled {Name}")}", ConsoleColor.White);
 
 		/// <summary>
 		/// Creates black pants
@@ -56,9 +57,17 @@ namespace HouseCS.Items.Clothes {
 		public Pants() : base() { }
 
 		/// <summary>
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="color"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public Pants(string color) : this(color, string.Empty) { }
+
+		/// <summary>
 		/// Creates colored pants
 		/// </summary>
 		/// <param name="color">Color for clothes</param>
-		public Pants(string color) : base(color) { }
+		/// <param name="name">Name of Pants</param>
+		public Pants(string color, string name) : base(color, name) { }
 	}
 }

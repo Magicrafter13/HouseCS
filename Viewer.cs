@@ -111,7 +111,7 @@ namespace HouseCS {
 		/// </summary>
 		/// <returns>ColorText object of current Item</returns>
 		public ColorText ViewCurItem() {
-			List<string> retStr = new List<string>() { $"Object type is: {curItem.Type}\n\n" };
+			List<string> retStr = new List<string>() { $"Object type is: {curItem.SubType}\nNamed: {curItem.Name}\n\n" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White };
 			ColorText itm = curItem.ToText();
 			foreach (string str in itm.Lines)

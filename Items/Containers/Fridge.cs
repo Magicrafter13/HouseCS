@@ -36,7 +36,8 @@ namespace HouseCS.Items.Containers {
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) ||
-				(HasFreezer && key.Equals("Freezer", StringComparison.OrdinalIgnoreCase))) {
+				(HasFreezer && key.Equals("Freezer", StringComparison.OrdinalIgnoreCase)) ||
+				key.Equals(Name, StringComparison.OrdinalIgnoreCase)) {
 					output.Add(ListInfo(true));
 					output.Add(new ColorText(typeS));
 					output.Add(ListInfo(false));
@@ -89,7 +90,7 @@ namespace HouseCS.Items.Containers {
 			if (Items.Count > 0)
 				for (int i = 0; i < space; i++)
 					retStr += " ";
-			return $"{retStr}}}, {(HasFreezer ? "true" : "false")}),\n";
+			return $"{retStr}}}, {(HasFreezer ? "true" : "false")}, \"{Name}\"),\n";
 		}
 
 		/// <summary>
@@ -160,7 +161,7 @@ namespace HouseCS.Items.Containers {
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor fridge details</returns>
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
-			? new ColorText($"{temperature}° ", ConsoleColor.White)
+			? new ColorText($"{(Name.Equals(string.Empty) ? string.Empty : $"{Name} - ")}{temperature}° ", ConsoleColor.White)
 			: Size > 0
 				? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
 				: new ColorText(new string[] { " - ", "Empty", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
@@ -202,13 +203,22 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Creates empty fridge, without freezer
 		/// </summary>
-		public Fridge() : this(new List<IItem>(), false) { }
+		public Fridge() : this(new List<IItem>(), false, string.Empty) { }
+
+		/// <summary>
+		/// Here for backwards compatibility until next major update, please use full constructor
+		/// </summary>
+		/// <param name="items"></param>
+		/// <param name="hasFreezer"></param>
+		[Obsolete("Constructor is deprecated, please provide name parameter.")]
+		public Fridge(List<IItem> items, bool hasFreezer) : this(items, hasFreezer, string.Empty) { }
 
 		/// <summary>
 		/// Creates fridge with Items, without freezer
 		/// </summary>
 		/// <param name="items">Items in fridge</param>
 		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
-		public Fridge(List<IItem> items, bool hasFreezer) : base(items) => HasFreezer = hasFreezer;
+		/// <param name="name">Name of Fridge</param>
+		public Fridge(List<IItem> items, bool hasFreezer, string name) : base(items, name) => HasFreezer = hasFreezer;
 	}
 }
