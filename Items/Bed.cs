@@ -96,14 +96,6 @@ namespace HouseCS.Items {
 		public Bed() : this(false, 2, string.Empty) { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="adjustable"></param>
-		/// <param name="type"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Bed(bool adjustable, int type) : this(adjustable, type, string.Empty) { }
-
-		/// <summary>
 		/// Creates a bed, of set adjustability, size, and name
 		/// </summary>
 		/// <param name="adjustable">True if bed moves, False if not</param>

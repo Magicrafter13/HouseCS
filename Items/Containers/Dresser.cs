@@ -150,13 +150,6 @@ namespace HouseCS.Items.Containers {
 		public Dresser() : base() { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="items"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Dresser(List<IItem> items) : base(items, string.Empty) { }
-
-		/// <summary>
 		/// Creates a dresser with Items
 		/// </summary>
 		/// <param name="items">Items in dresser</param>

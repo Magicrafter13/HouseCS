@@ -142,17 +142,6 @@ namespace HouseCS.Items {
 		public Computer() : this("Generic", "PC", "", false, "Desktop", string.Empty) { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="brand"></param>
-		/// <param name="family"></param>
-		/// <param name="model"></param>
-		/// <param name="state"></param>
-		/// <param name="type"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Computer(string brand, string family, string model, bool state, string type) : this(brand, family, model, state, type, string.Empty) { }
-
-		/// <summary>
 		/// Creates a brand, family model, computer, with a set power state, set type, and a name
 		/// </summary>
 		/// <param name="brand">Computer brand</param>

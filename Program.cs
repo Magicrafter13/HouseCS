@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace HouseCS {
 	internal class Program {
-		private static readonly int verMajor = 2, verMinor = 9, verFix = 0;
+		private static readonly int verMajor = 3, verMinor = 0, verFix = 0;
 
 		public static readonly string[] topTypes = { "Bed", "Book", "Computer", "Console", "Display", "Clothing", "Container", "Printer" };
 
@@ -208,6 +208,15 @@ namespace HouseCS {
 						new ColorText(new string[] { "Removes", " specified ", "Item", " from current floor.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White })
 					};
 					break;
+				case "ren":
+				case "rename":
+					retCT = new ColorText[] {
+						new ColorText(new string[] { "\nSyntax", " is: ", cmd.ToLower(), " item ", "name...\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.Red, ConsoleColor.Green }),
+						new ColorText(new string[] { "\t   item", " - ", "integer", " of ", "Item", " to ", "rename\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Blue }),
+						new ColorText(new string[] { "\tname...", " - all text after ", "item", ", will be used as the ", "Item's", " name\n\n" }, new ConsoleColor[] { ConsoleColor.Green, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White }),
+						new ColorText(new string[] { "Renames", " specified ", "Item.\n\n" }, new ConsoleColor[] { ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow })
+					};
+					break;
 				case "set":
 					retCT = new ColorText[] {
 						new ColorText(new string[] { "\nSyntax", " is: ", "set", " [", "variable", " [", "value", "]]\n\n" }, new ConsoleColor[] { ConsoleColor.Magenta, ConsoleColor.White, ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Red, ConsoleColor.White }),
@@ -390,20 +399,6 @@ namespace HouseCS {
 			catch (ArrayTooSmall e) { throw e; }
 		}
 
-		public static string GetInput(List<string> values, bool ignoreCase) {
-			try {
-				return GetInput(ColorText.Empty, values, ignoreCase);
-			}
-			catch (ArrayTooSmall e) { throw e; }
-		}
-
-		public static string GetInput(string[] values, bool ignoreCase) {
-			try {
-				return GetInput(ColorText.Empty, values, ignoreCase);
-			}
-			catch (ArrayTooSmall e) { throw e; }
-		}
-
 		public static string OrdSuf(int num) {
 			if (num / 10 == 1) return $"{num}th";
 			switch (num % 10) {
@@ -458,13 +453,6 @@ namespace HouseCS {
 				].Add(houseData[h]);
 
 			while (here) {
-				/*for (int i = 0; i < 4; i++) {
-					for (int r = 0; r < localMap[i].Count; r++) {
-						for (int h = 0; h < localMap[i][r].Count; h++) {
-							Console.Write($"{localMap[i][r][h].AdjRoad}{(localMap[i][r][h].HouseNumber < 10 ? "0" : "")}{localMap[i][r][h].HouseNumber} {(i < 2 ? (i == 0 ? "NE" : "NW") : (i == 2 ? "SW" : "SE"))} {OrdSuf(localMap[i][r][h].ConRoad)} {(localMap[i][r][h].Street ? "St" : "Ave")}\n");
-						}
-					}
-				}*/
 				Console.Write("> ");
 				cmds = Regex.Split(Console.ReadLine(), " +");
 				if (cmds.Length > 0) {
@@ -473,6 +461,28 @@ namespace HouseCS {
 							break;
 						}
 						// ^ Keep this on top, might not affect performance, but if it does, just keep it here ^
+						case "ren":
+						case "rename": {
+							if (cmds.Length > 1) {
+								if (Regex.IsMatch(cmds[1], @"^\d+$")) {
+									IItem i = user.GetItem(int.Parse(cmds[1]));
+									if (!(i is Empty)) {
+										if (cmds.Length > 2) {
+											string name = cmds[2];
+											for (int s = 3; s < cmds.Length; s++)
+												name += $" {cmds[s]}";
+											i.Rename(name);
+											WriteColor(new string[] { "\nItem", " renamed\n\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.Blue });
+										}
+										else WriteColor(new string[] { "\nRename", " it to what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+									}
+									else WriteColor(new string[] { "This floor only has ", user.FloorSize.ToString(), " items on it\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White });
+								}
+								else WriteColor(new string[] { "item", " must be a positive ", "integer\n" }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan });
+							}
+							else WriteColor(new string[] { "\nRename", " what to what?\n\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
+							break;
+						}
 						case "map": {
 							Console.WriteLine("Soon...");
 							break;
@@ -508,21 +518,21 @@ namespace HouseCS {
 							do {
 								Console.Write("Keyword 1 > ");
 								keys[0] = Console.ReadLine();
-							} while (keys[0].Equals(""));
+							} while (string.IsNullOrEmpty(keys[0]));
 							Console.Write("Keyword 2 > ");
 							keys[1] = Console.ReadLine();
-							if (!keys[1].Equals("")) {
+							if (!string.IsNullOrEmpty(keys[1])) {
 								Console.Write("Keyword 3 > ");
 								keys[2] = Console.ReadLine();
 							}
 							keywords.Add(keys[0]);
-							if (!keys[1].Equals("")) keywords.Add(keys[1]);
-							if (!keys[2].Equals("")) keywords.Add(keys[2]);
+							if (!string.IsNullOrEmpty(keys[1])) keywords.Add(keys[1]);
+							if (!string.IsNullOrEmpty(keys[2])) keywords.Add(keys[2]);
 							Console.WriteLine("\nSearching for:");
 							Console.Write($"\"{keywords[0]}\"");
 							for (int key = 1; key < keywords.Count; key++) Console.Write($", \"{keywords[key]}\"");
 							Console.WriteLine();
-							WriteColor(new string[] { "In: ", (searchItem.Equals("") ? "All" : searchItem), " items", ". On floor: ", (searchFloor == -1 ? "all" : searchFloor.ToString()), ". In room: ", (searchRoom == -2 ? "all" : searchRoom == -1 ? "No room" : searchRoom.ToString()), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.DarkYellow, ConsoleColor.White, (searchFloor == -1 ? ConsoleColor.White : ConsoleColor.Cyan), ConsoleColor.White, (searchRoom == -2 || searchRoom == -1 ? ConsoleColor.White : ConsoleColor.Cyan), ConsoleColor.White });
+							WriteColor(new string[] { "In: ", (string.IsNullOrEmpty(searchItem) ? "All" : searchItem), " items", ". On floor: ", (searchFloor == -1 ? "all" : searchFloor.ToString()), ". In room: ", (searchRoom == -2 ? "all" : searchRoom == -1 ? "No room" : searchRoom.ToString()), ".\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.DarkYellow, ConsoleColor.White, (searchFloor == -1 ? ConsoleColor.White : ConsoleColor.Cyan), ConsoleColor.White, (searchRoom == -2 || searchRoom == -1 ? ConsoleColor.White : ConsoleColor.Cyan), ConsoleColor.White });
 							List<ColorText> output = user.Search(searchFloor, searchRoom, searchItem, keywords);
 							if (output.Count > 0)
 								WriteColor(output.ToArray());
@@ -591,7 +601,6 @@ namespace HouseCS {
 										case 3:
 											Console.WriteLine("\nLeft the room(s).\n");
 											enviVar[4, 1] = "-1";
-
 											break;
 										case 0:
 											Console.WriteLine($"\nWelcome to room {room}, \"{user.GetFloor().RoomNames[room]}\".\n");
@@ -1131,7 +1140,7 @@ namespace HouseCS {
 												else if (!yenu && iC > 0)
 													WriteColor(new ColorText[] { new ColorText("\n"), user.ViewCurItem() });
 												else
-													WriteColor(new string[] { $"{user.curItem.SubType}{(user.curItem.Name.Equals(string.Empty) ? string.Empty : $" {user.curItem.Name}")}", " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
+													WriteColor(new string[] { $"{user.curItem.SubType}{(string.IsNullOrEmpty(user.curItem.Name) ? string.Empty : $" {user.curItem.Name}")}", " is empty." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
 												Console.WriteLine();
 												Console.WriteLine();
 												break;
@@ -1572,6 +1581,7 @@ namespace HouseCS {
 								WriteColor(new string[] { "                specific ", "Item\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow });
 								WriteColor(new string[] { "         move", " - moves an ", "Item", " to another floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 								WriteColor(new string[] { "       remove", " - removes an ", "Item", " from the current floor\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+								WriteColor(new string[] { " ren / rename", " - renames an ", "Item" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White, ConsoleColor.Yellow });
 								WriteColor(new string[] { "  save/export", " - saves program objects to a text file, so you can implement\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });
 								WriteColor(new string[] { "                them in your own code\n" }, new ConsoleColor[] { ConsoleColor.White });
 								WriteColor(new string[] { "          set", " - used to set variables in the command interpretter\n" }, new ConsoleColor[] { ConsoleColor.Blue, ConsoleColor.White });

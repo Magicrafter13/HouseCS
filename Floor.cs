@@ -17,12 +17,12 @@ namespace HouseCS {
 		/// <summary>
 		/// List of all Items on the floor.
 		/// </summary>
-		public List<IItem> Items { get; set; }
+		public List<IItem> Items { get; }
 
 		/// <summary>
 		/// List of Room numbers for all Items on the floor
 		/// </summary>
-		public List<int> Room { get; set; }
+		public List<int> Room { get; }
 
 		/// <summary>
 		/// Boolean representation of whether or not the lights are turned on, on this floor.
@@ -47,7 +47,7 @@ namespace HouseCS {
 			for (int r = 0; r < sortedItems.Length; r++) {
 				List<ColorText> tempSearch = new List<ColorText> { new ColorText($"  Room {r - 1}:\n") };
 				foreach (IItem item in sortedItems[r]) {
-					if (itemType.Equals(string.Empty) || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
+					if (string.IsNullOrEmpty(itemType) || item.Type.Equals(itemType, StringComparison.OrdinalIgnoreCase)) {
 						List<ColorText> temp = item.Search(keywords);
 						if (temp.Count != 0) {
 							tempSearch.Add(new ColorText(new string[] { $"    {Items.IndexOf(item)}", ": " }, new ConsoleColor[] { ConsoleColor.Cyan, ConsoleColor.White }));

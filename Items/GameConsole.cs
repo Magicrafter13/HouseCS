@@ -102,15 +102,6 @@ namespace HouseCS.Items {
 		public GameConsole() : this(0, "Generi-sys", "Generic System 1000", "Lame") { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="company"></param>
-		/// <param name="system"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public GameConsole(int type, string company, string system) : this(type, company, system, string.Empty) { }
-
-		/// <summary>
 		/// Creates a 'type, system' from 'company', called 'name'
 		/// </summary>
 		/// <param name="type">Console type</param>

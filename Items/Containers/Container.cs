@@ -232,13 +232,6 @@ namespace HouseCS.Items.Containers {
 		public Container() : this(new List<IItem>(), string.Empty) { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="items"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Container(List<IItem> items) : this(items, string.Empty) { }
-
-		/// <summary>
 		/// Creates a container with a List of Items
 		/// </summary>
 		/// <param name="items">Items in the container</param>

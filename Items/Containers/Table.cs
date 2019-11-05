@@ -88,7 +88,7 @@ namespace HouseCS.Items.Containers {
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
 			? new ColorText(new string[] { $"{(Size < 9 ? "Clean" : "Dirty")} " }, new ConsoleColor[] { ConsoleColor.White })
 			: Size > 0
-				? new ColorText(new string[] { " - ", Size.ToString(), $" Items{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow })
+				? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
 				: new ColorText($" - Empty{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}", ConsoleColor.White);
 
 		/// <summary>
@@ -131,13 +131,6 @@ namespace HouseCS.Items.Containers {
 		/// Creates empty table
 		/// </summary>
 		public Table() : base() { }
-
-		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="items"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Table(List<IItem> items) : this(items, string.Empty) { }
 
 		/// <summary>
 		/// Creates table with Items

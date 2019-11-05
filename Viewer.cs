@@ -144,27 +144,6 @@ namespace HouseCS {
 		/// <returns>ColorText object of list of Items</returns>
 		public ColorText List(int start, int end, string type, int length, int page, int room) => CurHouse.List(CurFloor, start, end, type, length, page, room);
 
-		/*/// <summary>
-		/// Lists all Items on current floor of current house
-		/// </summary>
-		/// <returns>ColorText object of list of all Items</returns>
-		public ColorText List() => CurHouse.List(CurFloor);
-
-		/// <summary>
-		/// Lists range of Items on current floor of current house
-		/// </summary>
-		/// <param name="start">Index of start Item</param>
-		/// <param name="end">Index of end Item</param>
-		/// <returns>ColorText object of range list of Items</returns>
-		public ColorText List(int start, int end) => CurHouse.List(CurFloor, start, end, "*", FloorSize, 0);
-
-		/// <summary>
-		/// Lists type Items on current floor of current house
-		/// </summary>
-		/// <param name="type">Item type to find</param>
-		/// <returns>ColorText object of list of type Items</returns>
-		public ColorText List(string type) => CurHouse.List(CurFloor, type);*/
-
 		/// <summary>
 		/// Adds Item to current floor of current house
 		/// </summary>

@@ -206,14 +206,6 @@ namespace HouseCS.Items.Containers {
 		public Fridge() : this(new List<IItem>(), false, string.Empty) { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="items"></param>
-		/// <param name="hasFreezer"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Fridge(List<IItem> items, bool hasFreezer) : this(items, hasFreezer, string.Empty) { }
-
-		/// <summary>
 		/// Creates fridge with Items, without freezer
 		/// </summary>
 		/// <param name="items">Items in fridge</param>

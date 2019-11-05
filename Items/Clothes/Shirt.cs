@@ -57,13 +57,6 @@ namespace HouseCS.Items.Clothes {
 		public Shirt() : base() { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="color"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Shirt(string color) : this(color, string.Empty) { }
-
-		/// <summary>
 		/// Creates colored shirt
 		/// </summary>
 		/// <param name="color">Color for shirt</param>

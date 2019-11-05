@@ -202,15 +202,6 @@ namespace HouseCS.Items {
 		public Display() : this(false, new List<IItem>(), 20.0, string.Empty) { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="isMonitor"></param>
-		/// <param name="connectedDevs"></param>
-		/// <param name="inchSize"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize) : this(isMonitor, connectedDevs, inchSize, string.Empty) { }
-
-		/// <summary>
 		/// Creates a set sized display, with a set type, a list of connected devices, and a name
 		/// </summary>
 		/// <param name="isMonitor">Whether or not it's a monitor</param>

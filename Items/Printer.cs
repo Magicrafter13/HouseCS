@@ -97,15 +97,6 @@ namespace HouseCS.Items {
 		public Printer() : this(false, true, true, string.Empty) { }
 
 		/// <summary>
-		/// Here for backwards compatibility until next major update, please use full constructor
-		/// </summary>
-		/// <param name="canFax"></param>
-		/// <param name="canScan"></param>
-		/// <param name="hasColor"></param>
-		[Obsolete("Constructor is deprecated, please provide name parameter.")]
-		public Printer(bool canFax, bool canScan, bool hasColor) : this(canFax, canScan, hasColor, string.Empty) { }
-
-		/// <summary>
 		/// Creates a printer, with the given parameters of faxing, scaning, color printing, and name
 		/// </summary>
 		/// <param name="canFax">Whether or not this Printer is capable of faxing</param>

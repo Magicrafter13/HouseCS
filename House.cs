@@ -105,14 +105,6 @@ namespace HouseCS {
 		}
 
 		/// <summary>
-		/// Makes sure none of the floors are null, by using the default constructor
-		/// </summary>
-		private void InitializeFloors() {
-			for (int i = 0; i < Floors.Count; i++)
-				Floors.Add(new Floor());
-		}
-
-		/// <summary>
 		/// Returns page count for listing Items
 		/// </summary>
 		/// <param name="floor">Index of floor in house</param>
@@ -222,21 +214,6 @@ namespace HouseCS {
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
 
-		/*/// <summary>
-		/// Lists all Items on floor
-		/// </summary>
-		/// <param name="floor">Index of floor in house</param>
-		/// <returns>ColorText object containing list of all Items on floor</returns>
-		public ColorText List(int floor) => List(floor, 0, Floors[floor].Size, "*", Floors[floor].Size, 0);*/
-
-		/*/// <summary>
-		/// Lists all Items of type on floor
-		/// </summary>
-		/// <param name="floor">Index of floor in house</param>
-		/// <param name="type">Item type to find</param>
-		/// <returns>ColorText object containing list of all type Items on floor</returns>
-		public ColorText List(int floor, string type) => List(floor, 0, Floors[floor].Size, type, Floors[floor].Size, 0);*/
-
 		/// <summary>
 		/// Adds an Item to floor
 		/// </summary>
@@ -323,15 +300,7 @@ namespace HouseCS {
 		/// <param name="conRoad">Road parallel to House</param>
 		/// <param name="adjRoad">Road adjacent to House</param>
 		/// <param name="quad">Relative quadrant of House</param>
-		public House(int color, int floor, bool street, int houseNumber, int conRoad, int adjRoad, int quad) {
-			Color = color >= 0 && color <= 9 ? color : 0;
-			Floors = new List<Floor>(new Floor[floor]);
-			Street = street;
-			HouseNumber = houseNumber;
-			ConRoad = conRoad;
-			AdjRoad = adjRoad;
-			Quadrant = quad;
-		}
+		public House(int color, int floor, bool street, int houseNumber, int conRoad, int adjRoad, int quad) : this(color, new List<Floor>(new Floor[floor]), street, houseNumber, conRoad, adjRoad, quad) { }
 
 		/// <summary>
 		/// Creates a house with a set color, and an array of floors
@@ -343,6 +312,14 @@ namespace HouseCS {
 		/// <param name="conRoad">Road parallel to House</param>
 		/// <param name="adjRoad">Road adjacent to House</param>
 		/// <param name="quad">Relative quadrant of House</param>
-		public House(int color, List<Floor> floors, bool street, int houseNumber, int conRoad, int adjRoad, int quad) : this(color, 1, street, houseNumber, conRoad, adjRoad, quad) => Floors = floors;
+		public House(int color, List<Floor> floors, bool street, int houseNumber, int conRoad, int adjRoad, int quad) {
+			Color = color >= 0 && color < colors.Length ? color : 0;
+			Floors = floors;
+			Street = street;
+			HouseNumber = houseNumber;
+			ConRoad = conRoad;
+			AdjRoad = adjRoad;
+			Quadrant = quad;
+		}
 	}
 }
