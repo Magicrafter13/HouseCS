@@ -2,49 +2,60 @@
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items {
+namespace HouseCS.Items
+{
 	/// <summary>
 	/// Printer, stores ability to fax, scan, and print in color
 	/// </summary>
-	public class Printer : IItem {
-		private static readonly string typeS = "Printer";
+	public class Printer : IItem
+	{
+		private const string typeS = "Printer";
 
 		/// <summary>
-		/// Represents whether or not the printer can send faxes
+		/// Creates a printer that can't fax, but it can scan and print in color, with no name
 		/// </summary>
+		public Printer() : this(false, true, true, string.Empty) { }
+
+		/// <summary>
+		/// Creates a printer
+		/// </summary>
+		/// <param name="canFax">Whether or not this Printer is capable of faxing</param>
+		/// <param name="canScan">Whether or not this Printer has a built in scanner</param>
+		/// <param name="hasColor">Whether or not this Printer uses color</param>
+		/// <param name="name">Name of Printer</param>
+		public Printer(bool canFax, bool canScan, bool hasColor, string name)
+		{
+			CanFax = canFax;
+			CanScan = canScan;
+			HasColor = hasColor;
+			Rename(name);
+		}
+
+		/// <summary> Represents whether or not the printer can send faxes </summary>
 		public bool CanFax { get; private set; }
 
-		/// <summary>
-		/// Represents whether or not the printer can scan documents
-		/// </summary>
+		/// <summary> Represents whether or not the printer can scan documents </summary>
 		public bool CanScan { get; private set; }
 
-		/// <summary>
-		/// Represents whether or not the printer prints in color
-		/// </summary>
+		/// <summary> Represents whether or not the printer prints in color </summary>
 		public bool HasColor { get; private set; }
 
-		/// <summary>
-		/// Name of printer
-		/// </summary>
+		/// <summary> Name of printer </summary>
 		public string Name { get; private set; }
 
-		/// <summary>
-		/// string of Item parent type
-		/// </summary>
+		/// <summary> string of Item parent type </summary>
 		public string Type => typeS;
 
-		/// <summary>
-		/// string of Item sub type
-		/// </summary>
+		/// <summary> string of Item sub type </summary>
 		public string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public List<ColorText> Search(List<string> keywords) {
+		public List<ColorText> Search(List<string> keywords)
+		{
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((CanFax && key.Equals("Fax", StringComparison.OrdinalIgnoreCase)) ||
@@ -60,9 +71,9 @@ namespace HouseCS.Items {
 		}
 
 		/// <summary>
-		/// Exports Item information
+		/// Exports item information
 		/// </summary>
-		/// <returns>String containing a constructor for the Item</returns>
+		/// <returns>Copyable constructor of the printer</returns>
 		public string Export() => $"new Printer({(CanFax ? "true" : "false")}, {(CanScan ? "true" : "false")}, {(HasColor ? "true" : "false")}, \"{Name}\"),";
 
 		/// <summary>
@@ -90,24 +101,5 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
 		public ColorText ToText() => new ColorText(new string[] { "Printer:\n", $"\tHas Color: {(HasColor ? "Yes" : "No")}\n\tCan Fax: {(CanFax ? "Yes" : "No")}\n\tCan Scan: {(CanScan ? "Yes" : "No")}\n\tName: {Name}" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White });
-
-		/// <summary>
-		/// Creates a printer that can't fax, but it can scan and print in color, and puts it in room -1
-		/// </summary>
-		public Printer() : this(false, true, true, string.Empty) { }
-
-		/// <summary>
-		/// Creates a printer, with the given parameters of faxing, scaning, color printing, and name
-		/// </summary>
-		/// <param name="canFax">Whether or not this Printer is capable of faxing</param>
-		/// <param name="canScan">Whether or not this Printer has a built in scanner</param>
-		/// <param name="hasColor">Whether or not this Printer uses color</param>
-		/// <param name="name">Name of Printer</param>
-		public Printer(bool canFax, bool canScan, bool hasColor, string name) {
-			CanFax = canFax;
-			CanScan = canScan;
-			HasColor = hasColor;
-			Rename(name);
-		}
 	}
 }

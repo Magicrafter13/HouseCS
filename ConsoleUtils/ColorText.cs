@@ -6,16 +6,6 @@ namespace HouseCS.ConsoleUtils {
 	/// </summary>
 	public struct ColorText {
 		/// <summary>
-		/// ColorText object with white empty string
-		/// </summary>
-		public static ColorText Empty => new ColorText(new string[] { string.Empty }, new ConsoleColor[] { ConsoleColor.White });
-
-		/// <summary>
-		/// text string array
-		/// </summary>
-		public string[] Lines { get; private set; }
-
-		/// <summary>
 		/// text color array
 		/// </summary>
 		public ConsoleColor[] Colors { get; private set; }
@@ -42,5 +32,15 @@ namespace HouseCS.ConsoleUtils {
 			Lines = lines;
 			Colors = colors;
 		}
+
+		/// <summary>
+		/// ColorText object with white empty string
+		/// </summary>
+		public static ColorText Empty => new ColorText(new string[] { string.Empty }, new ConsoleColor[] { ConsoleColor.White });
+
+		/// <summary>
+		/// text string array
+		/// </summary>
+		public string[] Lines { get; private set; }
 	}
 }

@@ -12,51 +12,43 @@ namespace HouseCS.Items {
 		private const string typeS = "No Item";
 
 		/// <summary>
-		/// Name of empty
+		/// Creates Emptiness
 		/// </summary>
+		public Empty() { }
+
+		/// <summary> Name of empty </summary>
 		public string Name { get; private set; } = "If you see this in the program, something went wrong.";
 
-		/// <summary>
-		/// string of Item type
-		/// </summary>
+		/// <summary> string of Item type </summary>
 		public string Type => typeS;
 
-		/// <summary>
-		/// string of Item sub-type
-		/// </summary>
+		/// <summary> string of Item sub-type </summary>
 		public string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public List<ColorText> Search(List<string> keywords) {
-			List<ColorText> output = new List<ColorText> {
-				ColorText.Empty
-			};
-			return output;
-		}
+		public List<ColorText> Search(List<string> keywords) => new List<ColorText> { ColorText.Empty };
 
 		/// <summary>
-		/// Exports Empty information
+		/// Exports empty information
 		/// </summary>
-		/// <returns>String of empty constructor</returns>
-		public string Export() {
-			return $"new Empty({Name}),";
-		}
+		/// <returns>Copyable constructor of empty</returns>
+		public string Export() => $"new Empty({Name}),";
 
 		/// <summary>
 		/// Don't use
 		/// </summary>
 		/// <param name="item">Index of sub item</param>
-		/// <returns>Book, telling you that this should be seen</returns>
+		/// <returns>Book, telling you that this shouldn't be seen</returns>
 		public IItem GetSub(int item) => new Book("This item doesn't contain other items.", "(I don't think it should be possible to see this...)" + item, 2018);
 
 		/// <summary>
 		/// Don't use
 		/// </summary>
-		/// <param name="item">test Item</param>
+		/// <param name="item">Test item</param>
 		/// <returns>false</returns>
 		public bool HasItem(IItem item) => false;
 
@@ -69,7 +61,7 @@ namespace HouseCS.Items {
 		/// <summary>
 		/// Empty
 		/// </summary>
-		/// <param name="beforeNotAfter">True is left, False is right</param>
+		/// <param name="beforeNotAfter">Unused</param>
 		/// <returns>Emptiness</returns>
 		public ColorText ListInfo(bool beforeNotAfter) => ColorText.Empty;
 
@@ -78,10 +70,5 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <returns>message</returns>
 		public ColorText ToText() => new ColorText(new string[] { message }, new ConsoleColor[] { ConsoleColor.White });
-
-		/// <summary>
-		/// Creates Emptiness
-		/// </summary>
-		public Empty() { }
 	}
 }

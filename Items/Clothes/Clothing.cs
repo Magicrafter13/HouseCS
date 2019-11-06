@@ -4,33 +4,41 @@ using System.Collections.Generic;
 
 namespace HouseCS.Items.Clothes {
 	/// <summary>
-	/// Clothing, can have a color
+	/// Clothing, is generic - use child classes to be more specific
 	/// </summary>
 	public class Clothing : IItem {
 		private const string typeS = "Clothing";
 
 		/// <summary>
-		/// Clothes color
+		/// Creates a black piece of clothing, with no name
 		/// </summary>
+		public Clothing() : this("Black", string.Empty) { }
+
+		/// <summary>
+		/// Creates an article of clothing
+		/// </summary>
+		/// <param name="color">Color for clothes</param>
+		/// <param name="name">Name of clothing</param>
+		public Clothing(string color, string name)
+		{
+			Color = color;
+			Rename(name);
+		}
+
+		/// <summary> Clothing's color </summary>
 		public string Color { get; set; }
 
-		/// <summary>
-		/// Name of clothing
-		/// </summary>
+		/// <summary> Name of clothing </summary>
 		public string Name { get; private set; }
 
-		/// <summary>
-		/// string of Item type
-		/// </summary>
+		/// <summary> string of Item type </summary>
 		public string Type => typeS;
 
-		/// <summary>
-		/// string of Item sub-type
-		/// </summary>
+		/// <summary> string of Item sub-type </summary>
 		public string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
@@ -48,9 +56,9 @@ namespace HouseCS.Items.Clothes {
 		}
 
 		/// <summary>
-		/// Exports Clothing information
+		/// Exports clothing information
 		/// </summary>
-		/// <returns>String of clothing constructor</returns>
+		/// <returns>Copyable constructor of clothing</returns>
 		public string Export() => $"new Clothing(\"{Color}\", \"{Name}\"),";
 
 		/// <summary>
@@ -61,7 +69,7 @@ namespace HouseCS.Items.Clothes {
 		public bool HasItem(IItem item) => false;
 
 		/// <summary>
-		/// Sets the name of the Clothing
+		/// Sets the name of the clothing
 		/// </summary>
 		/// <param name="name">New name</param>
 		public void Rename(string name) => Name = name;
@@ -78,20 +86,5 @@ namespace HouseCS.Items.Clothes {
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
 		public ColorText ToText() => new ColorText($"This is a Generic piece of clothing, it is {Color}{(Name.Equals(string.Empty) ? string.Empty : $", and labeled {Name}")}", ConsoleColor.White);
-
-		/// <summary>
-		/// Creates a black piece of clothing
-		/// </summary>
-		public Clothing() : this("Black", string.Empty) { }
-
-		/// <summary>
-		/// Creates a colored piece of clothing
-		/// </summary>
-		/// <param name="color">Color for clothes</param>
-		/// <param name="name">Name of clothing</param>
-		public Clothing(string color, string name) {
-			Color = color;
-			Rename(name);
-		}
 	}
 }

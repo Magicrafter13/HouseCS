@@ -2,49 +2,58 @@ using HouseCS.ConsoleUtils;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items {
+namespace HouseCS.Items
+{
 	/// <summary>
-	/// Bed, can be adjustable, and there are different sizes
+	/// Bed - has several types
 	/// </summary>
-	public class Bed : IItem {
-		/// <summary>
-		/// Bed sizes
-		/// </summary>
+	public class Bed : IItem
+	{
+		/// <summary> Bed sizes </summary>
 		public static readonly string[] types = { "King", "Queen", "Twin", "Single" };
 
-		private static readonly string typeS = "Bed";
+		private const string typeS = "Bed";
 
 		/// <summary>
-		/// Boolean for whether or not the bed moves
+		/// Creates non adjustable Twin bed
 		/// </summary>
+		public Bed() : this(false, 2, string.Empty) { }
+
+		/// <summary>
+		/// Creates a bed
+		/// </summary>
+		/// <param name="adjustable">True if bed moves, False if not</param>
+		/// <param name="type">Index of bed type</param>
+		/// <param name="name">Name of the bed</param>
+		public Bed(bool adjustable, int type, string name)
+		{
+			Adjustable = adjustable;
+			BedType = type >= 0 && type < types.Length ? type : 2;
+			Rename(name);
+		}
+
+		/// <summary> Name of bed </summary>
+		public string Name { get; private set; }
+
+		/// <summary> string of Item type </summary>
+		public string Type => typeS;
+
+		/// <summary> string of Item sub-type </summary>
+		public string SubType => typeS;
+
+		/// <summary> Boolean for whether or not the bed moves </summary>
 		private bool Adjustable { get; set; }
 
-		/// <summary>
-		/// Set bed size
-		/// </summary>
+		/// <summary> Set bed size </summary>
 		private int BedType { get; set; }
 
 		/// <summary>
-		/// Name of bed
-		/// </summary>
-		public string Name { get; private set;  }
-
-		/// <summary>
-		/// string of Item type
-		/// </summary>
-		public string Type => typeS;
-
-		/// <summary>
-		/// string of Item sub-type
-		/// </summary>
-		public string SubType => typeS;
-
-		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
-		/// <returns>String output if keywords matched</returns>
-		public List<ColorText> Search(List<string> keywords) {
+		/// <returns>ColorText object of items found</returns>
+		public List<ColorText> Search(List<string> keywords)
+		{
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (key.Equals(types[BedType], StringComparison.OrdinalIgnoreCase) ||
@@ -59,9 +68,9 @@ namespace HouseCS.Items {
 		}
 
 		/// <summary>
-		/// Exports Bed information
+		/// Exports bed information
 		/// </summary>
-		/// <returns>String of bed constructor</returns>
+		/// <returns>Copyable constructor of bed</returns>
 		public string Export() => $"new Bed({(Adjustable ? "true" : "false")}, {BedType}, \"{Name}\"),";
 
 		/// <summary>
@@ -82,29 +91,12 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor bed details</returns>
-		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{(Name.Equals(string.Empty) ? types[BedType] : Name)} " : Adjustable ? " - Adjustable" : "" }, new ConsoleColor[] { ConsoleColor.White });
+		public ColorText ListInfo(bool beforeNotAfter) => new ColorText(new string[] { beforeNotAfter ? $"{(string.IsNullOrEmpty(Name) ? types[BedType] : Name)} " : Adjustable ? " - Adjustable" : "" }, new ConsoleColor[] { ConsoleColor.White });
 
 		/// <summary>
 		/// Information about bed
 		/// </summary>
-		/// <returns>ColorText object of important info</returns>
-		public ColorText ToText() => new ColorText(new string[] { $"{(Adjustable ? "Adjustable" : "Non adjustable")} {types[BedType]} size bed{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White });
-
-		/// <summary>
-		/// Creates non adjustable Twin bed
-		/// </summary>
-		public Bed() : this(false, 2, string.Empty) { }
-
-		/// <summary>
-		/// Creates a bed, of set adjustability, size, and name
-		/// </summary>
-		/// <param name="adjustable">True if bed moves, False if not</param>
-		/// <param name="type">Index of bed type</param>
-		/// <param name="name">Name of the bed</param>
-		public Bed(bool adjustable, int type, string name) {
-			Adjustable = adjustable;
-			BedType = type >= 0 && type < types.Length ? type : 2;
-			Rename(name);
-		}
+		/// <returns>Adjustability, size, and name</returns>
+		public ColorText ToText() => new ColorText(new string[] { $"{(Adjustable ? "Adjustable" : "Non adjustable")} {types[BedType]} size bed{(string.IsNullOrEmpty(Name) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White });
 	}
 }

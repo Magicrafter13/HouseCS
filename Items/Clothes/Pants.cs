@@ -10,12 +10,22 @@ namespace HouseCS.Items.Clothes {
 		private const string typeS = "Pants";
 
 		/// <summary>
-		/// string of Item sub-type
+		/// Creates black pants
 		/// </summary>
+		public Pants() : base() { }
+
+		/// <summary>
+		/// Creates colored pants
+		/// </summary>
+		/// <param name="color">Color for clothes</param>
+		/// <param name="name">Name of Pants</param>
+		public Pants(string color, string name) : base(color, name) { }
+
+		/// <summary> string of Item sub-type </summary>
 		public new string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
@@ -33,9 +43,9 @@ namespace HouseCS.Items.Clothes {
 		}
 
 		/// <summary>
-		/// Exports Pants information
+		/// Exports pants information
 		/// </summary>
-		/// <returns>String of pants constructor</returns>
+		/// <returns>Copyable constructor of pants</returns>
 		public new string Export() => $"new Pants(\"{Color}\", \"{Name}\"),";
 
 		/// <summary>
@@ -50,17 +60,5 @@ namespace HouseCS.Items.Clothes {
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
 		public new ColorText ToText() => new ColorText($"These are {Color} {SubType}{(Name.Equals(string.Empty) ? string.Empty : $", labeled {Name}")}", ConsoleColor.White);
-
-		/// <summary>
-		/// Creates black pants
-		/// </summary>
-		public Pants() : base() { }
-
-		/// <summary>
-		/// Creates colored pants
-		/// </summary>
-		/// <param name="color">Color for clothes</param>
-		/// <param name="name">Name of Pants</param>
-		public Pants(string color, string name) : base(color, name) { }
 	}
 }

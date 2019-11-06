@@ -2,51 +2,55 @@
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items {
+namespace HouseCS.Items
+{
 	/// <summary>
-	/// Book, has a title, author, and publishing year
+	/// Book, contains some text, representing the book's info
 	/// </summary>
-	public class Book : IItem {
-		/// <summary>
-		/// Total book count for program
-		/// </summary>
+	public class Book : IItem
+	{
+		/// <summary> Total book count for program </summary>
 		private static int totalBooks = 0;
 
 		private const string typeS = "Book";
 
 		/// <summary>
-		/// Book title
+		/// Creates a book titled "none", written by "none", in 1600 AD
 		/// </summary>
+		public Book() : this("none", "none", 1600) { }
+
+		/// <summary>
+		/// Creates a book titled tile, written by author, in year AD
+		/// </summary>
+		/// <param name="title">Book title</param>
+		/// <param name="author">Book author</param>
+		/// <param name="year">Book publishing year</param>
+		public Book(string title, string author, int year)
+		{
+			Reset(title, author, year);
+			totalBooks++;
+			ID = totalBooks;
+		}
+
+		/// <summary> Book title </summary>
 		public string Title { get; private set; }
 
-		/// <summary>
-		/// Book author
-		/// </summary>
+		/// <summary> Book author </summary>
 		public string Author { get; private set; }
 
-		/// <summary>
-		/// Book publishing year
-		/// </summary>
+		/// <summary> Book publishing year </summary>
 		public int Year { get; private set; }
 
-		/// <summary>
-		/// Unique object id
-		/// </summary>
+		/// <summary> Unique object id </summary>
 		public int ID { get; }
 
-		/// <summary>
-		/// Name of book
-		/// </summary>
+		/// <summary> Name of book </summary>
 		public string Name => Title;
 
-		/// <summary>
-		/// string of Item type
-		/// </summary>
+		/// <summary> string of Item type </summary>
 		public string Type => typeS;
 
-		/// <summary>
-		/// string of Item sub-type
-		/// </summary>
+		/// <summary> string of Item sub-type </summary>
 		public string SubType => typeS;
 
 		/// <summary>
@@ -54,7 +58,8 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public List<ColorText> Search(List<string> keywords) {
+		public List<ColorText> Search(List<string> keywords)
+		{
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (Title.ToLower().Contains(key.ToLower()) ||
@@ -69,12 +74,10 @@ namespace HouseCS.Items {
 		}
 
 		/// <summary>
-		/// Exports Book information
+		/// Exports book information
 		/// </summary>
-		/// <returns>String of Book constructor</returns>
-		public string Export() {
-			return $"new Book(\"{Title}\", \"{Author}\", {Year}),";
-		}
+		/// <returns>Copyable constructor of book</returns>
+		public string Export() => $"new Book(\"{Title}\", \"{Author}\", {Year}),";
 
 		/// <summary>
 		/// Does the same as the constructor, sets title, author, and publishing year
@@ -82,7 +85,8 @@ namespace HouseCS.Items {
 		/// <param name="title">Book title</param>
 		/// <param name="author">Book author</param>
 		/// <param name="year">Book publishing year</param>
-		public void Reset(string title, string author, int year) {
+		public void Reset(string title, string author, int year)
+		{
 			Title = title;
 			Author = author;
 			Year = year >= 1600 ? year : 1600;
@@ -113,22 +117,5 @@ namespace HouseCS.Items {
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
 		public ColorText ToText() => new ColorText(new string[] { $"Title: {Title}\nAuthor: {Author}\nYear: {Year}" }, new ConsoleColor[] { ConsoleColor.White });
-
-		/// <summary>
-		/// Creates a book titled "none", written by "none", in 1600 AD
-		/// </summary>
-		public Book() : this("none", "none", 1600) { }
-
-		/// <summary>
-		/// Creates a book titled tile, written by author, in year AD
-		/// </summary>
-		/// <param name="title">Book title</param>
-		/// <param name="author">Book author</param>
-		/// <param name="year">Book publishing year</param>
-		public Book(string title, string author, int year) {
-			Reset(title, author, year);
-			totalBooks++;
-			ID = totalBooks;
-		}
 	}
 }

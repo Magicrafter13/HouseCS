@@ -1,49 +1,45 @@
 using HouseCS.ConsoleUtils;
 using System.Collections.Generic;
 
-namespace HouseCS.Items {
+namespace HouseCS.Items
+{
 	/// <summary>
 	/// Interface for all floor Items (the basis of this software)
 	/// </summary>
-	public interface IItem {
+	public interface IItem
+	{
 
-		/// <summary>
-		/// string of Item parent type
-		/// </summary>
+		/// <summary> String of item parent type </summary>
 		string Type { get; }
 
-		/// <summary>
-		/// string of Item sub type
-		/// </summary>
+		/// <summary> String of item sub type </summary>
 		string SubType { get; }
 
-		/// <summary>
-		/// string of Item's assigned name
-		/// </summary>
+		/// <summary> String of item's assigned name </summary>
 		string Name { get; }
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		List<ColorText> Search(List<string> keywords);
 
 		/// <summary>
-		/// Exports Item information
+		/// Exports item information
 		/// </summary>
-		/// <returns>String containing a constructor for the Item</returns>
+		/// <returns>Copyable constructor of the item</returns>
 		string Export();
 
 		/// <summary>
-		/// Tests if Item has sub Item
+		/// Tests if item has sub item
 		/// </summary>
-		/// <param name="item">test Item</param>
-		/// <returns>True if Item has sub Item, False if not</returns>
+		/// <param name="item">Test item</param>
+		/// <returns>True if item has sub item, False if not</returns>
 		bool HasItem(IItem item);
 
 		/// <summary>
-		/// Changes the name of the Item
+		/// Changes the name of the item
 		/// </summary>
 		/// <param name="name">New name</param>
 		public void Rename(string name);
