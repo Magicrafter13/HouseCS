@@ -123,16 +123,16 @@ namespace HouseCS.Items
 			List<string> retStr = new List<string>();
 			List<ConsoleColor> retClr = new List<ConsoleColor>();
 			ColorText left = item.ListInfo(true);
-			foreach (string str in left.Lines)
+			foreach (string str in left.GetLines())
 				retStr.Add(str);
-			foreach (ConsoleColor clr in left.Colors)
+			foreach (ConsoleColor clr in left.Colors())
 				retClr.Add(clr);
 			retStr.Add(item.Type);
 			retClr.Add(ConsoleColor.White);
 			ColorText right = item.ListInfo(false);
-			foreach (string str in right.Lines)
+			foreach (string str in right.GetLines())
 				retStr.Add(str);
-			foreach (ConsoleColor clr in right.Colors)
+			foreach (ConsoleColor clr in right.Colors())
 				retClr.Add(clr);
 			retStr.Add($" connected to this {(IsMonitor ? "monitor" : "tv")}.\n");
 			retClr.Add(ConsoleColor.White);
@@ -197,16 +197,16 @@ namespace HouseCS.Items
 				retStr.Add(": ");
 				retClr.Add(ConsoleColor.White);
 				ColorText left = connectedTo[i].ListInfo(true);
-				foreach (string str in left.Lines)
+				foreach (string str in left.GetLines())
 					retStr.Add(str);
-				foreach (ConsoleColor clr in left.Colors)
+				foreach (ConsoleColor clr in left.Colors())
 					retClr.Add(clr);
 				retStr.Add(connectedTo[i].Type);
 				retClr.Add(ConsoleColor.Yellow);
 				ColorText right = connectedTo[i].ListInfo(false);
-				foreach (string str in right.Lines)
+				foreach (string str in right.GetLines())
 					retStr.Add(str);
-				foreach (ConsoleColor clr in right.Colors)
+				foreach (ConsoleColor clr in right.Colors())
 					retClr.Add(clr);
 			}
 			return new ColorText(retStr.ToArray(), retClr.ToArray());

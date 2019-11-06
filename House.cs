@@ -260,16 +260,16 @@ namespace HouseCS {
 				retStr.Add(": ");
 				retClr.Add(ConsoleColor.White);
 				ColorText left = items[i].ListInfo(true);
-				foreach (string str in left.Lines)
+				foreach (string str in left.GetLines())
 					retStr.Add(str);
-				foreach (ConsoleColor clr in left.Colors)
+				foreach (ConsoleColor clr in left.Colors())
 					retClr.Add(clr);
 				retStr.Add(items[i].SubType);
 				retClr.Add(ConsoleColor.Yellow);
 				ColorText right = items[i].ListInfo(false);
-				foreach (string str in right.Lines)
+				foreach (string str in right.GetLines())
 					retStr.Add(str);
-				foreach (ConsoleColor clr in right.Colors)
+				foreach (ConsoleColor clr in right.Colors())
 					retClr.Add(clr);
 				retStr.Add("\n");
 				retClr.Add(ConsoleColor.White);

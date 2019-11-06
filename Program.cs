@@ -1242,12 +1242,12 @@ namespace HouseCS
 			Console.ResetColor();
 		}
 
-		public static void WriteColor(ColorText text) => WriteColor(text.Lines, text.Colors);
+		public static void WriteColor(ColorText text) => WriteColor(text.GetLines(), text.Colors());
 
 		public static void WriteColor(ColorText[] lines)
 		{
 			foreach (ColorText line in lines)
-				WriteColor(line.Lines, line.Colors);
+				WriteColor(line.GetLines(), line.Colors());
 		}
 
 		public static void WriteColorLine(string[] lines, ConsoleColor[] colors)

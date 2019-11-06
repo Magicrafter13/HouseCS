@@ -147,7 +147,7 @@ namespace HouseCS {
 			for (int i = 0; i < Items.Count; i++) {
 				if (Room[i] == room) {
 					if (deleteItems) {
-						output += $"{Items[i].ListInfo(true).Lines[0]}{Items[i].SubType}{Items[i].ListInfo(false).Lines[0]} removed.\n";
+						output += $"{Items[i].ListInfo(true).GetLines()[0]}{Items[i].SubType}{Items[i].ListInfo(false).GetLines()[0]} removed.\n";
 						Items.RemoveAt(i);
 						Room.RemoveAt(i);
 						i--;

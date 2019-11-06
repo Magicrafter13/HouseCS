@@ -179,16 +179,16 @@ namespace HouseCS.Items.Containers {
 				retStr.Add(": ");
 				retClr.Add(ConsoleColor.White);
 				ColorText left = GetItem(i).ListInfo(true);
-				foreach (string str in left.Lines)
+				foreach (string str in left.GetLines())
 					retStr.Add(str);
-				foreach (ConsoleColor clr in left.Colors)
+				foreach (ConsoleColor clr in left.Colors())
 					retClr.Add(clr);
 				retStr.Add(GetItem(i).SubType);
 				retClr.Add(ConsoleColor.Yellow);
 				ColorText right = GetItem(i).ListInfo(false);
-				foreach (string str in right.Lines)
+				foreach (string str in right.GetLines())
 					retStr.Add(str);
-				foreach (ConsoleColor clr in right.Colors)
+				foreach (ConsoleColor clr in right.Colors())
 					retClr.Add(clr);
 			}
 			retStr.Add("\nEnd of ");
