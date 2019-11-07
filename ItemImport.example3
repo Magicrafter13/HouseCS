@@ -92,11 +92,11 @@ namespace HouseCS {
 						new Display(true, new List<IItem>()
 						{
 							Cache(new Computer("Gateway", "510", "xl", false, "Desktop", "Win XP"))
-						}, "Old 5:4 Monitor"),
+						}, 18, "Old 5:4 Monitor"),
 						new Display(true, new List<IItem>()
 						{
 							Cache(Cache()),
-						}, "Widescreen Monitor"),
+						}, 24, "Widescreen Monitor"),
 						Cache()
 					}, "Desk"),
 					new Bookshelf(new List<Book>()
@@ -157,7 +157,7 @@ namespace HouseCS {
 			{
 				new Floor(new List<IItem>()
 				{
-					new Fridge(new List<IItem>(), true),
+					new Fridge(new List<IItem>(), true, string.Empty),
 				}, new List<int>()
 				{
 					0
