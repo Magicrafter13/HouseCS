@@ -29,7 +29,7 @@ namespace HouseCS {
 		public static readonly Bookshelf[] bookshelfs = {
 			new Bookshelf(new List<Book>() {
 				new Book("The Hobbit", "J.R.R. Tolkien", 1937) //Classic story, "The Hobbit"
-			})
+			}, string.Empty)
 		};
 
 		/// <summary>
@@ -46,9 +46,9 @@ namespace HouseCS {
 		/// Computers in the program
 		/// </summary>
 		public static readonly Computer[] computers = {
-			new Computer("Tandy", "1000", "TL/2", false, "Desktop") //Nice vintage PC running on an Intel 80286
+			new Computer("Tandy", "1000", "TL/2", false, "Desktop", "Tandy") //Nice vintage PC running on an Intel 80286
 		};
-		
+
 		/// <summary>
 		/// Index of where computers are located
 		/// </summary>
@@ -63,9 +63,9 @@ namespace HouseCS {
 		/// Consoles in the program
 		/// </summary>
 		public static readonly GameConsole[] consoles = {
-			new GameConsole(0, "Nintendo", "Wii U"), //console 0
-			new GameConsole(0, "Microsoft", "Xbox 360"), //console 1
-			new GameConsole(1, "Nintendo", "New 3DS XL") //console 2
+			new GameConsole(0, "Nintendo", "Wii U", "Wii U"), //console 0
+			new GameConsole(0, "Microsoft", "Xbox 360", "Xbox"), //console 1
+			new GameConsole(1, "Nintendo", "New 3DS XL", "n3ds") //console 2
 		}; //3 consoles in room 2 (Game Room)
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace HouseCS {
 		public static readonly Display[] displays = {
 			new Display(true, new List<IItem>() { //a 24" monitor...
 				computers[0] //...with the old PC attached to it
-			}, 24)
+			}, 24, "Widescreen Monitor")
 		};
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace HouseCS {
 		/// Beds in the program
 		/// </summary>
 		public static readonly Bed[] beds = {
-			new Bed(false, 2) //standard bed
+			new Bed(false, 2, string.Empty) //standard bed
 		};
 
 		/// <summary>
@@ -139,10 +139,10 @@ namespace HouseCS {
 			new Fridge(new List<IItem>() {//fridges with books (ya know, a normal fridge)
 				new Book("One", "Two", 3),
 				new Book("Four", "Five", 6),
-			}, false), //a fridge in the kitchen... where it belongs
+			}, false, string.Empty), //a fridge in the kitchen... where it belongs
 			new Fridge(new List<IItem>() {
 				new Book("Seven", "Eight", 9),
-			}, false),
+			}, false, "Old Fridge"),
 		};
 
 		/// <summary>
@@ -163,10 +163,10 @@ namespace HouseCS {
 				new Shirt("Red"),
 				new Pants("Blue"),
 				new Pants("Black")
-			}),
+			}, string.Empty),
 			new Dresser(new List<IItem>() {
 				new Pants("Black")
-			}),
+			}, string.Empty),
 		};
 
 		/// <summary>
@@ -187,7 +187,7 @@ namespace HouseCS {
 				new GameConsole(0, "Atari", "VCS 2600"),
 				new GameConsole(0, "Nintendo", "NES"),
 				new GameConsole(0, "Sega", "Genesis")
-			})
+			}, "Game Table")
 		};
 
 		/// <summary>

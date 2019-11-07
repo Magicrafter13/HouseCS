@@ -27,8 +27,6 @@ namespace HouseCS
 			{"cur_room",    "-1",    "int",    "system"}, // current room to get items from
 		};
 
-		public static int house = 0;
-
 		private static void Main(string[] args)
 		{
 			if (args == null)
