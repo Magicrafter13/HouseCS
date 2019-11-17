@@ -62,6 +62,8 @@ namespace HouseCS
 			while (here) {
 				Console.Write("> ");
 				cmds = Regex.Split(Console.ReadLine(), " +");
+				if (string.IsNullOrWhiteSpace(cmds[^1]))
+					cmds = new List<string>(cmds).GetRange(0, cmds.Length - 1).ToArray();
 				if (cmds.Length > 0) {
 					switch (cmds[0].ToLower()) {
 						case "": {
