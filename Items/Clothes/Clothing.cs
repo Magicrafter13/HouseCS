@@ -38,6 +38,18 @@ namespace HouseCS.Items.Clothes {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Creates specified clothing
+		/// </summary>
+		/// <param name="type">Clothing type</param>
+		/// <returns>Requested clothing type</returns>
+		public static IItem Create(string type) => (type.ToLower()) switch
+		{
+			"shirt" => new Shirt(),
+			"pants" => new Pants(),
+			_ => new Clothing(),
+		};
+
+		/// <summary>
 		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>

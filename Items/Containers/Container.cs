@@ -107,6 +107,21 @@ namespace HouseCS.Items.Containers {
 		public string Export() => $"new Container(new List<IItem>() {{ /*Items in Container*/ }}, \"{Name}\"),";
 
 		/// <summary>
+		/// Creates specified container
+		/// </summary>
+		/// <param name="type">Container type</param>
+		/// <returns>Requested container type</returns>
+		public static IItem Create(string type) => (type.ToLower()) switch
+		{
+			"fridge" => new Fridge(),
+			"bookshelf" => new Bookshelf(),
+			"dresser" => new Dresser(),
+			"table" => new Table(),
+			_ => new Container(),
+		};
+
+
+		/// <summary>
 		/// Gets an Item from the container
 		/// </summary>
 		/// <param name="item">Index of Item</param>

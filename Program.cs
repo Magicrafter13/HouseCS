@@ -1008,7 +1008,7 @@ namespace HouseCS
 									case "container":
 										WriteColor(new string[] { "\nEnter the ", "Container", " sub-type:\n\tie: Container, Bookshelf, Fridge, etc. (Defaults to Container)\n\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 										string type = Console.ReadLine();
-										IItem tempCon = CreateContainer(type);
+										IItem tempCon = Container.Create(type);
 										if (cmds.Length > 2) {
 											if (cmds[2].Equals("arg", StringComparison.OrdinalIgnoreCase)) {
 												WriteColor(new string[] { "\nType the number for each ", "Item", " to be put inside this ", tempCon.SubType, " seperated by a space.\n(Optional)\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
@@ -1048,7 +1048,7 @@ namespace HouseCS
 									case "clothing":
 										WriteColor(new string[] { "\nEnter the ", "Clothing", " sub-type:\n\tie: Clothing, Shirt, Pants, etc. (Defaults to Clothing)\n\n> " }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 										string clothType = Console.ReadLine();
-										IItem tempCloth = CreateClothing(clothType);
+										IItem tempCloth = Clothing.Create(clothType);
 										if (cmds.Length > 2) {
 											if (cmds[2].Equals("arg", StringComparison.OrdinalIgnoreCase)) {
 												Console.Write("\nEnter Clothing color > ");
@@ -1546,21 +1546,11 @@ namespace HouseCS
 			}
 		}
 
-		public static IItem CreateContainer(string type) => (type.ToLower()) switch
-		{
-			"fridge" => new Fridge(),
-			"bookshelf" => new Bookshelf(),
-			"dresser" => new Dresser(),
-			"table" => new Table(),
-			_ => new Container(),
-		};
+		[Obsolete("Outdated method, please use Container.Create(string type)")]
+		public static IItem CreateContainer(string type) => Container.Create(type);
 
-		public static IItem CreateClothing(string type) => (type.ToLower()) switch
-		{
-			"shirt" => new Shirt(),
-			"pants" => new Pants(),
-			_ => new Clothing(),
-		};
+		[Obsolete("Outdated method, please use Clothing.Create(string type)")]
+		public static IItem CreateClothing(string type) => Clothing.Create(type);
 
 		public static int GetInput(int min, int max)
 		{
