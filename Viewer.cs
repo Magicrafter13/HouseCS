@@ -111,6 +111,14 @@ namespace HouseCS {
 		public IItem GetItem(int item) => CurHouse.GetItem(CurFloor, item);
 
 		/// <summary>
+		/// Gets Item's SubItem from current floor of current house
+		/// </summary>
+		/// <param name="item">Number of containing item</param>
+		/// <param name="subItem">Number of subitem</param>
+		/// <returns></returns>
+		public IItem GetItem(int item, int subItem) => CurHouse.GetItem(CurFloor, item, subItem);
+
+		/// <summary>
 		/// Adds item to current floor of current house
 		/// </summary>
 		/// <param name="item">Item object to add</param>
@@ -235,7 +243,7 @@ namespace HouseCS {
 		/// <returns>0 if sub-item exists, 1 if not, and 2 if item doesn't exist</returns>
 		public int ChangeItemFocus(int item, int subItem) {
 			if (item >= 0 && item < CurHouse.GetFloor(CurFloor).Size) {
-				curItem = CurHouse.GetItem(CurFloor, item, subItem);
+				curItem = GetItem(item, subItem);
 				return curItem is Empty ? 1 : 0;
 			}
 			return 2;
