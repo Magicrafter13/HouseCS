@@ -28,7 +28,7 @@ namespace HouseCS.Items
 		public Display(bool isMonitor, List<IItem> connectedDevs, double inchSize, string name)
 		{
 			IsMonitor = isMonitor;
-			connectedTo = connectedDevs;
+			connectedTo = connectedDevs ?? throw new ArgumentNullException(nameof(connectedDevs));
 			SizeInch = inchSize > 0 ? inchSize : 20.0;
 			Rename(name);
 		}
@@ -58,6 +58,8 @@ namespace HouseCS.Items
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords)
 		{
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (key.Equals((IsMonitor ? "Monitor" : "Display"), StringComparison.OrdinalIgnoreCase) ||
@@ -104,6 +106,8 @@ namespace HouseCS.Items
 		/// <returns>True if item is connected, false if not</returns>
 		public bool HasItem(IItem item)
 		{
+			if (item is null)
+				throw new ArgumentNullException(nameof(item));
 			foreach (IItem i in connectedTo)
 				if (i == item)
 					return true;
@@ -159,7 +163,7 @@ namespace HouseCS.Items
 		/// </summary>
 		/// <param name="item">Item to disconnect</param>
 		/// <returns>ColorText object showing the item was disconnected, or tells the user the item isn't connected</returns>
-		public ColorText Disconnect(IItem item) => connectedTo.Remove(item)
+		public ColorText Disconnect(IItem item) => connectedTo.Remove(item ?? throw new ArgumentNullException(nameof(item)))
 			? new ColorText(new string[] { "\nDevice", ", ", "disconnected\n" }, new ConsoleColor[] { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.DarkBlue })
 			: new ColorText(new string[] { "No matching ", "Device", " found." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });
 
@@ -168,13 +172,13 @@ namespace HouseCS.Items
 		/// </summary>
 		/// <param name="item">Item to retrieve</param>
 		/// <returns>Requested item</returns>
-		public IItem GetDevice(int item) => connectedTo[item];
+		public IItem GetDevice(int item) => connectedTo[item >= 0 && item < connectedTo.Count ? item : throw new ArgumentNullException(nameof(item))];
 
 		/// <summary>
 		/// Sets the name of the Display
 		/// </summary>
 		/// <param name="name">New name</param>
-		public void Rename(string name) => Name = name;
+		public void Rename(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Minor details for list

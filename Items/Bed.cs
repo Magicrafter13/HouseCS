@@ -29,7 +29,7 @@ namespace HouseCS.Items
 		{
 			Adjustable = adjustable;
 			BedType = type >= 0 && type < types.Length ? type : 2;
-			Rename(name);
+			Rename(name ?? throw new ArgumentNullException(nameof(name)));
 		}
 
 		/// <summary> Name of bed </summary>
@@ -54,6 +54,8 @@ namespace HouseCS.Items
 		/// <returns>ColorText object of items found</returns>
 		public List<ColorText> Search(List<string> keywords)
 		{
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (key.Equals(types[BedType], StringComparison.OrdinalIgnoreCase) ||
@@ -84,7 +86,7 @@ namespace HouseCS.Items
 		/// Sets the name of the Bed
 		/// </summary>
 		/// <param name="name">New name</param>
-		public void Rename(string name) => Name = name;
+		public void Rename(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Minor details for list

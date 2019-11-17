@@ -4,11 +4,13 @@ using HouseCS.Items.Containers;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS {
+namespace HouseCS
+{
 	/// <summary>
 	/// A viewer contains a reference to one house, and has methods to act upon the house, or otherwise interact with it. At least one viewer is REQUIRED for the program to function.
 	/// </summary>
-	public class Viewer {
+	public class Viewer
+	{
 		/// <summary> Item cache for viewer </summary>
 		public IItem curItem;
 
@@ -21,10 +23,11 @@ namespace HouseCS {
 		/// Creates a viewer containing the provided house
 		/// </summary>
 		/// <param name="house">House object for current house</param>
-		public Viewer(House house) {
+		public Viewer(House house)
+		{
 			CurFloor = 0;
 			curItem = new Empty();
-			CurHouse = house;
+			CurHouse = house ?? throw new ArgumentNullException(nameof(house));
 		}
 
 		/// <summary> This viewer's house </summary>
@@ -55,7 +58,8 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="floor">Destination floor</param>
 		/// <returns>True if current floor was changed, False if it wasn't, due to invalid input</returns>
-		public bool GoFloor(int floor) {
+		public bool GoFloor(int floor)
+		{
 			bool check = floor >= 0 && floor < CurHouse.Size;
 			if (check)
 				CurFloor = floor;
@@ -79,7 +83,8 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="room">Destination room</param>
 		/// <returns>Status code of what happened</returns>
-		public int GoRoom(int room) {
+		public int GoRoom(int room)
+		{
 			if (room < -1)
 				return 1;
 			if (room >= RoomNames.Count)
@@ -122,13 +127,21 @@ namespace HouseCS {
 		/// Adds item to current floor of current house
 		/// </summary>
 		/// <param name="item">Item object to add</param>
-		public void AddItem(IItem item) => CurHouse.AddItem(CurFloor, item, CurRoom);
+		public void AddItem(IItem item)
+		{
+			if (item is null)
+				throw new ArgumentNullException(nameof(item));
+			CurHouse.AddItem(CurFloor, item, CurRoom);
+		}
 
 		/// <summary>
 		/// Removes item from current floor of current house
 		/// </summary>
 		/// <param name="item">Item object to remove</param>
-		public void RemoveItem(IItem item) {
+		public void RemoveItem(IItem item)
+		{
+			if (item is null)
+				throw new ArgumentNullException(nameof(item));
 			IItem temp = item;
 			if (temp == curItem)
 				curItem = new Empty();
@@ -158,7 +171,8 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="iN">Parent item (containing)</param>
 		/// <param name="sIN">Sub item</param>
-		public void RemoveItem(int iN, int sIN) {
+		public void RemoveItem(int iN, int sIN)
+		{
 			IItem temp = GetFloor().GetItem(iN, sIN);
 			if (temp == curItem)
 				curItem = new Empty();
@@ -201,7 +215,8 @@ namespace HouseCS {
 		/// Shows cached item
 		/// </summary>
 		/// <returns>ColorText object of current Item</returns>
-		public ColorText ViewCurItem() {
+		public ColorText ViewCurItem()
+		{
 			List<string> retStr = new List<string>() { $"Object type is: {curItem.SubType}\nNamed: {curItem.Name}\n\n" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.White };
 			ColorText itm = curItem.ToText();
@@ -217,10 +232,11 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="house">New house for viewer</param>
 		[Obsolete("Method is outdated. Please consider using different viewers for different houses!")]
-		public void ChangeHouseFocus(House house) {
+		public void ChangeHouseFocus(House house)
+		{
 			CurFloor = 0;
 			curItem = new Empty();
-			CurHouse = house;
+			CurHouse = house ?? throw new ArgumentNullException(nameof(house));
 		}
 
 		/// <summary>
@@ -228,8 +244,9 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="item">Item to cache</param>
 		/// <returns>True if item exists, False if not</returns>
-		public bool ChangeItemFocus(int item) {
-			bool check = item >= 0 && item < CurHouse.GetFloor(CurFloor).Size;
+		public bool ChangeItemFocus(int item)
+		{
+			bool check = IsItem(item);
 			if (check)
 				curItem = GetItem(item);
 			return check;
@@ -241,8 +258,9 @@ namespace HouseCS {
 		/// <param name="item">Item containing item to cache</param>
 		/// <param name="subItem">Item to cache</param>
 		/// <returns>0 if sub-item exists, 1 if not, and 2 if item doesn't exist</returns>
-		public int ChangeItemFocus(int item, int subItem) {
-			if (item >= 0 && item < CurHouse.GetFloor(CurFloor).Size) {
+		public int ChangeItemFocus(int item, int subItem)
+		{
+			if (IsItem(item)) {
 				curItem = GetItem(item, subItem);
 				return curItem is Empty ? 1 : 0;
 			}

@@ -64,7 +64,7 @@ namespace HouseCS.Items
 		/// Sets the name of the computer
 		/// </summary>
 		/// <param name="name">New name</param>
-		public void Rename(string name) => Name = name;
+		public void Rename(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Sets the brand, family, model, power-state, type, and name of the computer
@@ -77,11 +77,11 @@ namespace HouseCS.Items
 		/// <param name="name">Name of Computer</param>
 		public void Reset(string brand, string family, string model, bool state, string type, string name)
 		{
-			ComputerType = type;
+			ComputerType = type ?? throw new ArgumentNullException(nameof(type));
 			IsOn = state;
-			Brand = brand;
-			Family = family;
-			Model = model;
+			Brand = brand ?? throw new ArgumentNullException(nameof(brand));
+			Family = family ?? throw new ArgumentNullException(nameof(family));
+			Model = model ?? throw new ArgumentNullException(nameof(model));
 			Rename(name);
 		}
 
@@ -92,6 +92,8 @@ namespace HouseCS.Items
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords)
 		{
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (key.Equals(ComputerType, StringComparison.OrdinalIgnoreCase) ||

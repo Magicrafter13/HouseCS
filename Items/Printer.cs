@@ -56,6 +56,8 @@ namespace HouseCS.Items
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords)
 		{
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((CanFax && key.Equals("Fax", StringComparison.OrdinalIgnoreCase)) ||
@@ -87,7 +89,7 @@ namespace HouseCS.Items
 		/// Sets the name of the Printer
 		/// </summary>
 		/// <param name="name">New name</param>
-		public void Rename(string name) => Name = name;
+		public void Rename(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Minor details for list

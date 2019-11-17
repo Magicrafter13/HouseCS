@@ -708,6 +708,9 @@ namespace HouseCS
 													case -5:
 														Console.Write("Room does not exist.\n");
 														break;
+													case -6:
+														Console.Write("Floor does not exist.\n");
+														break;
 													default:
 														for (int i = 0; i < pageCount; i++) {
 															WriteColorLine(new string[] { "\n\tFloor ", "Listing", " - Page ", (i + 1).ToString() }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkBlue, ConsoleColor.DarkBlue, ConsoleColor.Cyan });
@@ -1497,6 +1500,8 @@ namespace HouseCS
 
 		public static bool EqualsIgnoreCaseOr(string test, string[] strs)
 		{
+			if (string.IsNullOrEmpty(test))
+				throw new ArgumentException("message", nameof(test));
 			for (int i = 0; i < strs.Length; i++)
 				if (string.Equals(test, strs[i], StringComparison.OrdinalIgnoreCase))
 					return true;
@@ -1505,6 +1510,8 @@ namespace HouseCS
 
 		public static bool CanGoInside(string src, string dst)
 		{
+			if (string.IsNullOrEmpty(src) || string.IsNullOrEmpty(dst))
+				throw new ArgumentException("message", nameof(src));
 			switch (dst.ToLower()) {
 				case "bookshelf":
 					return src.ToLower().Equals("book");
@@ -1580,6 +1587,8 @@ namespace HouseCS
 
 		public static string GetInput(ColorText message, string[] values, bool ignoreCase)
 		{
+			if (values is null)
+				throw new ArgumentNullException(nameof(values));
 			if (values.Length == 0)
 				throw new ArrayTooSmall(1, values.Length);
 			do {

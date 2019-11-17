@@ -32,6 +32,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		public new List<ColorText> Search(List<string> keywords) {
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((Size == 0 &&
@@ -98,6 +100,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="item">Item to add</param>
 		/// <returns>ColorText object saying the book was added, or that the item isn't a book</returns>
 		public new ColorText AddItem(IItem item) {
+			if (item is null)
+				throw new ArgumentNullException(nameof(item));
 			if (item is Book) {
 				base.AddItem(item);
 				return new ColorText(new string[] { "\nBook", " added", " to ", "Bookshelf", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkBlue, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
@@ -124,7 +128,7 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="book">Book to remove</param>
 		/// <returns>ColorText object saying the book was removed, or that the book wasn't on the bookshelf</returns>
-		public ColorText RemoveBook(Book book) => Items.Remove((IItem)book) ? new ColorText(new string[] { "\nBook", ", ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue }) : new ColorText(new string[] { "No matching ", "Book", " found." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+		public ColorText RemoveBook(Book book) => book is null ? throw new ArgumentNullException(nameof(book)) : Items.Remove(book) ? new ColorText(new string[] { "\nBook", ", ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue }) : new ColorText(new string[] { "No matching ", "Book", " found." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 
 		/// <summary>
 		/// Removes a book
@@ -134,6 +138,8 @@ namespace HouseCS.Items.Containers {
 		[Obsolete("Method deprecated, please use RemoveBook(Book);")]
 		public ColorText RemoveBook(IItem book)
 		{
+			if (book is null)
+				throw new ArgumentNullException(nameof(book));
 			if (book is Book)
 				return RemoveBook((Book)book);
 			else
@@ -146,9 +152,9 @@ namespace HouseCS.Items.Containers {
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor bookshelf details</returns>
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
-			? new ColorText(new string[] { Size > 0 ? string.Empty : $"Empty{(Name.Equals(string.Empty) ? " " : $", {Name} ")}" }, new ConsoleColor[] { ConsoleColor.White })
+			? new ColorText(new string[] { Size > 0 ? string.Empty : $"Empty{(string.IsNullOrEmpty(Name) ? " " : $", {Name} ")}" }, new ConsoleColor[] { ConsoleColor.White })
 			: Size > 0
-				? new ColorText(new string[] { " (", Size.ToString(), Size > 1 ? " Books" : " Book", $"){(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, Size > 1 ? ConsoleColor.DarkYellow : ConsoleColor.Yellow, ConsoleColor.White })
+				? new ColorText(new string[] { " (", Size.ToString(), Size > 1 ? " Books" : " Book", $"){(string.IsNullOrEmpty(Name) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, Size > 1 ? ConsoleColor.DarkYellow : ConsoleColor.Yellow, ConsoleColor.White })
 				: new ColorText(new string[] { string.Empty }, new ConsoleColor[] { ConsoleColor.White });
 
 		/// <summary>

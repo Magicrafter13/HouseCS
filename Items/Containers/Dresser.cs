@@ -33,6 +33,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		public new List<ColorText> Search(List<string> keywords) {
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((Size == 0 &&
@@ -99,6 +101,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="type">Clothing type to test for</param>
 		/// <returns>True if clothes are found, False if not</returns>
 		public bool HasClothes(string type) {
+			if (type is null)
+				throw new ArgumentNullException(nameof(type));
 			for (int i = 0; i < Size; i++)
 				if (GetItem(i).SubType.Equals(type, StringComparison.OrdinalIgnoreCase))
 					return true;
@@ -111,7 +115,7 @@ namespace HouseCS.Items.Containers {
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor dresser details</returns>
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
-			? Name.Equals(string.Empty)
+			? string.IsNullOrEmpty(Name)
 				? ColorText.Empty
 				: new ColorText($"{Name} ")
 			: Size > 0

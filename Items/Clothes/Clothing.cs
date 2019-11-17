@@ -21,7 +21,7 @@ namespace HouseCS.Items.Clothes {
 		/// <param name="name">Name of clothing</param>
 		public Clothing(string color, string name)
 		{
-			Color = color;
+			Color = color ?? throw new ArgumentNullException(nameof(color));
 			Rename(name);
 		}
 
@@ -42,7 +42,7 @@ namespace HouseCS.Items.Clothes {
 		/// </summary>
 		/// <param name="type">Clothing type</param>
 		/// <returns>Requested clothing type</returns>
-		public static IItem Create(string type) => (type.ToLower()) switch
+		public static IItem Create(string type) => type is null ? throw new ArgumentNullException(nameof(type)) : (type.ToLower()) switch
 		{
 			"shirt" => new Shirt(),
 			"pants" => new Pants(),
@@ -55,6 +55,8 @@ namespace HouseCS.Items.Clothes {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords) {
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (key.Equals(Color, StringComparison.OrdinalIgnoreCase) ||
@@ -84,7 +86,7 @@ namespace HouseCS.Items.Clothes {
 		/// Sets the name of the clothing
 		/// </summary>
 		/// <param name="name">New name</param>
-		public void Rename(string name) => Name = name;
+		public void Rename(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Minor details for list

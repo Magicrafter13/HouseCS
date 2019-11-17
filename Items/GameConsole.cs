@@ -31,8 +31,8 @@ namespace HouseCS.Items
 		public GameConsole(int type, string company, string system, string name)
 		{
 			SysType = type >= 0 && type < types.Length ? type : 0;
-			Company = company;
-			System = system;
+			Company = company ?? throw new ArgumentNullException(nameof(company));
+			System = system ?? throw new ArgumentNullException(nameof(system));
 			Rename(name);
 		}
 
@@ -74,6 +74,8 @@ namespace HouseCS.Items
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords)
 		{
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (key.Equals(types[SysType], StringComparison.OrdinalIgnoreCase) ||
@@ -103,7 +105,7 @@ namespace HouseCS.Items
 		/// Sets the name of the console
 		/// </summary>
 		/// <param name="name">New name</param>
-		public void Rename(string name) => Name = name;
+		public void Rename(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Minor details for list

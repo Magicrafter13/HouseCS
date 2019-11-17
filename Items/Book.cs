@@ -60,6 +60,8 @@ namespace HouseCS.Items
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords)
 		{
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if (Title.ToLower().Contains(key.ToLower()) ||
@@ -87,8 +89,8 @@ namespace HouseCS.Items
 		/// <param name="year">Book publishing year</param>
 		public void Reset(string title, string author, int year)
 		{
-			Title = title;
-			Author = author;
+			Title = title ?? throw new ArgumentNullException(nameof(title));
+			Author = author ?? throw new ArgumentNullException(nameof(author));
 			Year = year >= 1600 ? year : 1600;
 		}
 

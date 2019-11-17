@@ -22,16 +22,15 @@ namespace HouseCS {
 		/// <param name="l">Sets state of lights, true = on, false = off</param>
 		/// <param name="roomNames">Names of each room on the floor</param>
 		public Floor(List<IItem> i, List<int> r, bool l, List<string> roomNames) {
-			Items = i;
-			if (i.Count == r.Count)
-				Room = r;
-			else {
+			Items = i ?? throw new ArgumentNullException(nameof(i));
+			Room = r ?? throw new ArgumentNullException(nameof(r));
+			if (i.Count != r.Count) {
 				Room = new List<int>(new int[Items.Count]);
 				for (int i1 = 0; i1 < Room.Count; i1++)
 					Room[i1] = -1;
 			}
 			Lights = l;
-			RoomNames = roomNames;
+			RoomNames = roomNames ?? throw new ArgumentNullException(nameof(roomNames));
 		}
 
 		/// <summary>
@@ -104,6 +103,10 @@ namespace HouseCS {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>ColorText object of items found</returns>
 		public List<ColorText> Search(int room, string itemType, List<string> keywords) {
+			if (itemType is null)
+				throw new ArgumentNullException(nameof(itemType));
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			List<IItem>[] sortedItems = new List<IItem>[RoomNames.Count + 1];
 			for (int l = 0; l < sortedItems.Length; l++)
@@ -133,7 +136,7 @@ namespace HouseCS {
 		/// Adds a room to the floor
 		/// </summary>
 		/// <param name="room">Room name</param>
-		public void AddRoom(string room) => RoomNames.Add(room);
+		public void AddRoom(string room) => RoomNames.Add(room is null ? throw new ArgumentNullException(nameof(room)) : room);
 
 		/// <summary>
 		/// Removes a room from the Floor
@@ -143,6 +146,8 @@ namespace HouseCS {
 		/// <returns>Output of command</returns>
 		public string RemoveRoom(int room, bool deleteItems) {
 			string output = $"Room {room}, {RoomNames[room]} removed.\n";
+			if (room < 0 || room >= RoomNames.Count)
+				return "Room doesn't exist.\n";
 			RoomNames.RemoveAt(room);
 			for (int i = 0; i < Items.Count; i++) {
 				if (Room[i] == room) {
@@ -218,8 +223,8 @@ namespace HouseCS {
 		/// <param name="i">Item to add</param>
 		/// <param name="roomID">Room to add the item to</param>
 		public void AddItem(IItem i, int roomID) {
-			Items.Add(i);
-			Room.Add(roomID >= RoomNames.Count ? -1 : roomID);
+			Items.Add(i ?? throw new ArgumentNullException(nameof(i)));
+			Room.Add(roomID >= RoomNames.Count || roomID < -1 ? -1 : roomID);
 		}
 
 		/// <summary>
@@ -227,6 +232,8 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="i">Item to remove</param>
 		public void RemoveItem(int i) {
+			if (i < 0 || i >= Items.Count)
+				return;
 			Items.RemoveAt(i);
 			Room.RemoveAt(i);
 		}
@@ -236,6 +243,8 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="i">Item to remove</param>
 		public void RemoveItem(IItem i) {
+			if (i is null)
+				throw new ArgumentNullException(nameof(i));
 			Room.RemoveAt(Items.IndexOf(i));
 			Items.Remove(i);
 		}
@@ -248,6 +257,8 @@ namespace HouseCS {
 		/// <returns>True if successful, False if item doesn't contain sub-items, or sub-item doesn't exist</returns>
 		public bool RemoveItem(int iN, int sIN) {
 			int removeFromFloor = -1;
+			if (iN < 0 || iN >= Items.Count)
+				return false;
 			for (int i = 0; i < Items.Count; i++) {
 				switch (Items[iN].Type) {
 					case "Container":

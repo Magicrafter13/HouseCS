@@ -56,7 +56,7 @@ namespace HouseCS.Items {
 		/// Adds to the name of the 'Empty', could be used to debug
 		/// </summary>
 		/// <param name="name">String added to Name</param>
-		public void Rename(string name) => Name += name;
+		public void Rename(string name) => Name += name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Empty

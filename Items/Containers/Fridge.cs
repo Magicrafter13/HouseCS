@@ -46,6 +46,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		public new List<ColorText> Search(List<string> keywords) {
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((Size == 0 && key.Equals("Empty", StringComparison.OrdinalIgnoreCase)) ||
@@ -188,7 +190,7 @@ namespace HouseCS.Items.Containers {
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor fridge details</returns>
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
-			? new ColorText($"{(Name.Equals(string.Empty) ? string.Empty : $"{Name} - ")}{temperature}° ", ConsoleColor.White)
+			? new ColorText($"{(string.IsNullOrEmpty(Name) ? string.Empty : $"{Name} - ")}{temperature}° ", ConsoleColor.White)
 			: Size > 0
 				? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
 				: new ColorText(new string[] { " - ", "Empty", $"{(HasFreezer ? $", with {freezerTemp}° Freezer - " : "")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White });

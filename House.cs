@@ -3,11 +3,13 @@ using HouseCS.Items;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS {
+namespace HouseCS
+{
 	/// <summary>
 	/// Houses are a large chunk of the program. A house is where floors, containing items are stored.
 	/// </summary>
-	public class House {
+	public class House
+	{
 		/// <summary> Possible Colors for the House </summary>
 		public static readonly string[] colors = { "White", "Red", "Brown", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "Black" };
 
@@ -43,9 +45,10 @@ namespace HouseCS {
 		/// <param name="conRoad">Road parallel to House</param>
 		/// <param name="adjRoad">Road adjacent to House</param>
 		/// <param name="quad">Relative quadrant of House</param>
-		public House(int color, List<Floor> floors, bool street, int houseNumber, int conRoad, int adjRoad, int quad) {
+		public House(int color, List<Floor> floors, bool street, int houseNumber, int conRoad, int adjRoad, int quad)
+		{
 			Color = color >= 0 && color < colors.Length ? color : 0;
-			Floors = floors;
+			Floors = floors ?? throw new ArgumentNullException(nameof(floors));
 			Street = street;
 			HouseNumber = houseNumber;
 			ConRoad = conRoad;
@@ -103,7 +106,7 @@ namespace HouseCS {
 		public int Quadrant { get; private set; }
 
 		/// <summary> Deciphers the address of the House </summary>
-		public string Address => $"{AdjRoad}{(HouseNumber < 10 ? $"0{HouseNumber}" : $"{HouseNumber}")} {(Quadrant < 2 ? Quadrant == 0 ? "NE" : "NW" : Quadrant == 2 ? "SW" : "SE")} {Program.OrdSuf(ConRoad)} {(Street ? "St" : "Ave")}";
+		public string Address => Quadrant >= 0 ? $"{AdjRoad}{(HouseNumber < 10 ? $"0{HouseNumber}" : $"{HouseNumber}")} {(Quadrant < 2 ? Quadrant == 0 ? "NE" : "NW" : Quadrant == 2 ? "SW" : "SE")} {Program.OrdSuf(ConRoad)} {(Street ? "St" : "Ave")}" : "No set address.";
 
 		/// <summary> House's current color </summary>
 		private int Color { get; }
@@ -112,7 +115,7 @@ namespace HouseCS {
 		/// Adds floor f to the house
 		/// </summary>
 		/// <param name="f">Floor to add</param>
-		public void AddFloor(Floor f) => Floors.Add(f);
+		public void AddFloor(Floor f) => Floors.Add(f ?? throw new ArgumentNullException(nameof(f)));
 
 		/// <summary>
 		/// Creates a new, empty floor to the house
@@ -139,10 +142,12 @@ namespace HouseCS {
 		/// <param name="item">Item to add</param>
 		/// <param name="roomID">Room to add to</param>
 		/// <returns>True if item was added to the floor, False if floor doesn't exist, or room doesn't exist</returns>
-		public bool AddItem(int floor, IItem item, int roomID) {
-			bool check = floor >= 0 && floor < Size && roomID >= -1 && roomID < Floors[floor].RoomNames.Count;
-			if (check)
-				Floors[floor].AddItem(item, roomID);
+		public bool AddItem(int floor, IItem item, int roomID)
+		{
+			if (item is null)
+				throw new ArgumentNullException(nameof(item));
+			bool check = roomID >= -1 && roomID < Floors[floor].RoomNames.Count;
+			GetFloor(floor).AddItem(item, roomID);
 			return check;
 		}
 
@@ -152,7 +157,7 @@ namespace HouseCS {
 		/// <param name="floor">Floor to retrieve from</param>
 		/// <param name="item">Item to retrieve</param>
 		/// <returns>Requested item</returns>
-		public IItem GetItem(int floor, int item) => Floors[floor].GetItem(item);
+		public IItem GetItem(int floor, int item) => GetFloor(floor).GetItem(item);
 
 		/// <summary>
 		/// Gets item from an item on floor
@@ -161,7 +166,7 @@ namespace HouseCS {
 		/// <param name="item">Item containing requested item</param>
 		/// <param name="subItem">Item to retrieve</param>
 		/// <returns>Requested item</returns>
-		public IItem GetItem(int floor, int item, int subItem) => Floors[floor].GetItem(item, subItem);
+		public IItem GetItem(int floor, int item, int subItem) => GetFloor(floor).GetItem(item, subItem);
 
 		/// <summary>
 		/// Searches house for items matching the keywords
@@ -171,20 +176,23 @@ namespace HouseCS {
 		/// <param name="item">Item type to search for</param>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>ColorText object of items found</returns>
-		public List<ColorText> Search(int floor, int room, string item, List<string> keywords) {
+		public List<ColorText> Search(int floor, int room, string item, List<string> keywords)
+		{
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			if (floor > -1) {
-				List<ColorText> tmp = Floors[floor].Search(room, item, keywords);
+				List<ColorText> tmp = GetFloor(floor).Search(room, item, keywords);
 				if (tmp.Count != 0) {
 					output.Add(new ColorText($"Floor {floor}\n"));
-					output.AddRange(Floors[floor].Search(room, item, keywords));
+					output.AddRange(GetFloor(floor).Search(room, item, keywords));
 					output.Add(new ColorText("\n"));
 				}
 			}
 			else {
 				for (int flr = 0; flr < Size; flr++) {
 					if (floor != -1 && floor != flr) continue;
-					List<ColorText> tmp = Floors[flr].Search(room, item, keywords);
+					List<ColorText> tmp = GetFloor(flr).Search(room, item, keywords);
 					if (tmp.Count != 0) {
 						output.Add(new ColorText($"Floor {flr}\n"));
 						output.AddRange(tmp);
@@ -200,7 +208,8 @@ namespace HouseCS {
 		/// </summary>
 		/// <param name="house">House number</param>
 		/// <returns>Copyable constructors for each item</returns>
-		public string Export(int house) {
+		public string Export(int house)
+		{
 			string retStr = $"House {house}\nHouse house{house} = new House({Color}, {Floors.Count}, {Street.ToString().ToLower()}, {HouseNumber}, {ConRoad}, {AdjRoad}, {Quadrant});\n";
 			for (int i = 0; i < Floors.Count; i++)
 				retStr += Floors[i].Export(i);
@@ -218,13 +227,16 @@ namespace HouseCS {
 		/// <param name="page">Which page<para>For example: if you only want 20 items on screen at once, for the first 20 items the page would be 0, but if you need items 20-39, the page would be 1</para></param>
 		/// <param name="room">Room containing the items wanted<para>use -2 for all rooms, and -1 for items not in a room</para></param>
 		/// <returns>ColorText object of list of designated items</returns>
-		public ColorText List(int floor, int start, int end, string type, int pageLength, int page, int room) {
+		public ColorText List(int floor, int start, int end, string type, int pageLength, int page, int room)
+		{
 			bool validType = false;
 			foreach (string t in types)
 				if (type.Equals(t, StringComparison.OrdinalIgnoreCase))
 					validType = true;
 			if (!validType)
 				return new ColorText(new string[] { type, " is not a valid ", "Item", " type." }, new ConsoleColor[] { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+			if (floor < 0 || floor >= Floors.Count)
+				return new ColorText(new string[] { "Floor", " must be greater than or equal to ", "0", ", and less than ", Floors.Count.ToString() }, new ConsoleColor[] { ConsoleColor.Red, ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.White, ConsoleColor.Cyan });
 			if (Floors[floor].Size == 0)
 				return new ColorText(new string[] { "Floor is empty!" }, new ConsoleColor[] { ConsoleColor.White });
 			if (start >= end)
@@ -287,13 +299,16 @@ namespace HouseCS {
 		/// <param name="pageLength">Maximum amount of items to return</param>
 		/// <param name="room">Room containing the items wanted<para>use -2 for all rooms, and -1 for items not in a room</para></param>
 		/// <returns>Total amount of pages that will be required to list the specified items</returns>
-		public int PageCount(int floor, int rangeStart, int rangeEnd, string searchType, int pageLength, int room) {
+		public int PageCount(int floor, int rangeStart, int rangeEnd, string searchType, int pageLength, int room)
+		{
 			bool validType = false;
 			foreach (string t in types)
 				if (searchType.Equals(t, StringComparison.OrdinalIgnoreCase))
 					validType = true;
 			if (!validType)
 				return -1;
+			if (floor < 0 || floor >= Floors.Count)
+				return -6;
 			if (Floors[floor].Size == 0)
 				return -2;
 			if (rangeStart >= rangeEnd)

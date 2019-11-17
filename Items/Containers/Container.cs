@@ -21,7 +21,7 @@ namespace HouseCS.Items.Containers {
 		/// <param name="name">Name of Container</param>
 		public Container(List<IItem> items, string name)
 		{
-			Items = items;
+			Items = items ?? throw new ArgumentNullException(nameof(items));
 			Rename(name);
 		}
 
@@ -55,7 +55,7 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="type">Container type</param>
 		/// <returns>Requested container type</returns>
-		public static IItem Create(string type) => (type.ToLower()) switch
+		public static IItem Create(string type) => type is null ? throw new ArgumentNullException(nameof(type)) : (type.ToLower()) switch
 		{
 			"fridge" => new Fridge(),
 			"bookshelf" => new Bookshelf(),
@@ -70,6 +70,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		public List<ColorText> Search(List<string> keywords) {
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((Size == 0 &&
@@ -141,8 +143,8 @@ namespace HouseCS.Items.Containers {
 		/// Gets an item from the container
 		/// </summary>
 		/// <param name="item">Item you want</param>
-		/// <returns>Returns requested item, or an Empty if item doesn't exist</returns>
-		public IItem GetItem(int item) => item < 0 || item >= Items.Count ? new Empty() : Items[item];
+		/// <returns>Returns requested item</returns>
+		public IItem GetItem(int item) => Items[item];
 
 		/// <summary>
 		/// Adds item to container
@@ -150,6 +152,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="item">Item to add</param>
 		/// <returns>ColorText object saying the object is now in the container, or telling the user why it can't be placed on</returns>
 		public ColorText AddItem(IItem item) {
+			if (item is null)
+				throw new ArgumentNullException(nameof(item));
 			if (item == this)
 				return new ColorText("You can't put something inside itself!", ConsoleColor.White);
 			if (HasItem(item))
@@ -196,7 +200,7 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="item">Item to remove</param>
 		/// <returns>ColorText object saying the Item was removed, or that the item isn't in the container</returns>
-		public ColorText RemoveItem(IItem item) => Items.Remove(item) ? new ColorText(new string[] { "\nItem ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkBlue, ConsoleColor.White }) : new ColorText(new string[] { "No matching ", "Item", " found" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+		public ColorText RemoveItem(IItem item) => item is null ? throw new ArgumentNullException(nameof(item)) : Items.Remove(item) ? new ColorText(new string[] { "\nItem ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkBlue, ConsoleColor.White }) : new ColorText(new string[] { "No matching ", "Item", " found" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 
 		/// <summary>
 		/// Whether or not item is in the container
@@ -204,6 +208,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="item">Test Item</param>
 		/// <returns>True if the item is in the container, False if not</returns>
 		public bool HasItem(IItem item) {
+			if (item is null)
+				throw new ArgumentNullException(nameof(item));
 			foreach (IItem i in Items)
 				if (i == item)
 					return true;
@@ -214,14 +220,18 @@ namespace HouseCS.Items.Containers {
 		/// Sets the name of the container
 		/// </summary>
 		/// <param name="name">New name</param>
-		public void Rename(string name) => Name = name;
+		public void Rename(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
 
 		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>
 		/// <returns>ColorText object of minor container details</returns>
-		public ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter ? ColorText.Empty : Items.Count > 0 ? new ColorText(new string[] { ", ", Items.Count.ToString(), " Items", Name.Equals(string.Empty) ? string.Empty : $", {Name}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White }) : new ColorText(new string[] { ", ", "Empty", Name.Equals(string.Empty) ? string.Empty : $", {Name}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+		public ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
+			? ColorText.Empty
+			: Items.Count > 0
+				? new ColorText(new string[] { ", ", Items.Count.ToString(), " Items", string.IsNullOrEmpty(Name) ? string.Empty : $", {Name}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
+				: new ColorText(new string[] { ", ", "Empty", string.IsNullOrEmpty(Name) ? string.Empty : $", {Name}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 
 		/// <summary>
 		/// Information about container

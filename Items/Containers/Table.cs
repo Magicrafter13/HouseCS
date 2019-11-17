@@ -32,6 +32,8 @@ namespace HouseCS.Items.Containers {
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
 		public new List<ColorText> Search(List<string> keywords) {
+			if (keywords is null)
+				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
 			foreach (string key in keywords) {
 				if ((Size == 0 &&
@@ -100,8 +102,8 @@ namespace HouseCS.Items.Containers {
 		public new ColorText ListInfo(bool beforeNotAfter) => beforeNotAfter
 			? new ColorText(new string[] { $"{(Size < 9 ? "Clean" : "Dirty")} " }, new ConsoleColor[] { ConsoleColor.White })
 			: Size > 0
-				? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
-				: new ColorText($" - Empty{(Name.Equals(string.Empty) ? string.Empty : $", {Name}")}", ConsoleColor.White);
+				? new ColorText(new string[] { " - ", Size.ToString(), " Items", $"{(string.IsNullOrEmpty(Name) ? string.Empty : $", {Name}")}" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Cyan, ConsoleColor.Yellow, ConsoleColor.White })
+				: new ColorText($" - Empty{(string.IsNullOrEmpty(Name) ? string.Empty : $", {Name}")}", ConsoleColor.White);
 
 		/// <summary>
 		/// Information about table
