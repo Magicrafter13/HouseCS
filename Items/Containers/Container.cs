@@ -4,13 +4,29 @@ using System.Collections.Generic;
 
 namespace HouseCS.Items.Containers {
 	/// <summary>
-	/// Container, has Items
+	/// Containers are one of the best and most flexible items in a house. Especially when named. They can realistically be whatever you want them to be.
 	/// </summary>
 	public class Container : IItem {
 		private const string typeS = "Container";
 
 		/// <summary>
-		/// Items in container
+		/// Creates an empty container with no name
+		/// </summary>
+		public Container() : this(new List<IItem>(), string.Empty) { }
+
+		/// <summary>
+		/// Creates a container
+		/// </summary>
+		/// <param name="items">Items in the container</param>
+		/// <param name="name">Name of Container</param>
+		public Container(List<IItem> items, string name)
+		{
+			Items = items;
+			Rename(name);
+		}
+
+		/// <summary>
+		/// Items inside this container
 		/// </summary>
 		public List<IItem> Items { get; private set; }
 
@@ -20,22 +36,36 @@ namespace HouseCS.Items.Containers {
 		public string Name { get; private set; }
 
 		/// <summary>
-		/// How many Items are in the container
+		/// How many items are in the container
 		/// </summary>
 		public int Size => Items.Count;
 
 		/// <summary>
-		/// string of Item type
+		/// string of item type
 		/// </summary>
 		public string Type => typeS;
 
 		/// <summary>
-		/// string of Item sub-type
+		/// string of item sub-type
 		/// </summary>
 		public string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Creates specified container
+		/// </summary>
+		/// <param name="type">Container type</param>
+		/// <returns>Requested container type</returns>
+		public static IItem Create(string type) => (type.ToLower()) switch
+		{
+			"fridge" => new Fridge(),
+			"bookshelf" => new Bookshelf(),
+			"dresser" => new Dresser(),
+			"table" => new Table(),
+			_ => new Container(),
+		};
+
+		/// <summary>
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
@@ -65,10 +95,10 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Exports Container information
+		/// Exports container information
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
-		/// <returns>String of container constructor</returns>
+		/// <returns>Copyable constructor of container</returns>
 		public string Export(int space) {
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
@@ -101,35 +131,21 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Exports Container information
+		/// Exports container information
 		/// </summary>
-		/// <returns>String of container constructor</returns>
+		/// <returns>Copyable constructor of container</returns>
 		public string Export() => $"new Container(new List<IItem>() {{ /*Items in Container*/ }}, \"{Name}\"),";
 
-		/// <summary>
-		/// Creates specified container
-		/// </summary>
-		/// <param name="type">Container type</param>
-		/// <returns>Requested container type</returns>
-		public static IItem Create(string type) => (type.ToLower()) switch
-		{
-			"fridge" => new Fridge(),
-			"bookshelf" => new Bookshelf(),
-			"dresser" => new Dresser(),
-			"table" => new Table(),
-			_ => new Container(),
-		};
-
 
 		/// <summary>
-		/// Gets an Item from the container
+		/// Gets an item from the container
 		/// </summary>
-		/// <param name="item">Index of Item</param>
-		/// <returns>Returns Item, or new Empty if not found</returns>
+		/// <param name="item">Item you want</param>
+		/// <returns>Returns requested item, or an Empty if item doesn't exist</returns>
 		public IItem GetItem(int item) => item < 0 || item >= Items.Count ? new Empty() : Items[item];
 
 		/// <summary>
-		/// Adds Item to container
+		/// Adds item to container
 		/// </summary>
 		/// <param name="item">Item to add</param>
 		/// <returns>ColorText object saying the object is now in the container, or telling the user why it can't be placed on</returns>
@@ -143,10 +159,10 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Remove Item by index
+		/// Remove item by index
 		/// </summary>
-		/// <param name="item">Index of Item</param>
-		/// <returns>ColorText object saying the Item was removed, or showing the index as being invalid</returns>
+		/// <param name="item">Item to remove</param>
+		/// <returns>ColorText object saying the item was removed, or warns if item didn't exist</returns>
 		public ColorText RemoveItem(int item) {
 			if (item < 0 || item >= Items.Count) {
 				List<string> retStr = new List<string>();
@@ -176,17 +192,17 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Removes Item from container
+		/// Removes item from container
 		/// </summary>
 		/// <param name="item">Item to remove</param>
-		/// <returns>ColorText object saying the Item was removed, or that the Item isn't in the container</returns>
+		/// <returns>ColorText object saying the Item was removed, or that the item isn't in the container</returns>
 		public ColorText RemoveItem(IItem item) => Items.Remove(item) ? new ColorText(new string[] { "\nItem ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.DarkBlue, ConsoleColor.White }) : new ColorText(new string[] { "No matching ", "Item", " found" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 
 		/// <summary>
-		/// Whether or not Item is in the container
+		/// Whether or not item is in the container
 		/// </summary>
-		/// <param name="item">test Item</param>
-		/// <returns>True if the Item is in the container, False if it isn't</returns>
+		/// <param name="item">Test Item</param>
+		/// <returns>True if the item is in the container, False if not</returns>
 		public bool HasItem(IItem item) {
 			foreach (IItem i in Items)
 				if (i == item)
@@ -195,7 +211,7 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Sets the name of the Container
+		/// Sets the name of the container
 		/// </summary>
 		/// <param name="name">New name</param>
 		public void Rename(string name) => Name = name;
@@ -239,21 +255,6 @@ namespace HouseCS.Items.Containers {
 			retStr.Add(" contents.");
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
-		}
-
-		/// <summary>
-		/// Creates an empty container
-		/// </summary>
-		public Container() : this(new List<IItem>(), string.Empty) { }
-
-		/// <summary>
-		/// Creates a container with a List of Items
-		/// </summary>
-		/// <param name="items">Items in the container</param>
-		/// <param name="name">Name of Container</param>
-		public Container(List<IItem> items, string name) {
-			Items = items;
-			Rename(name);
 		}
 	}
 }

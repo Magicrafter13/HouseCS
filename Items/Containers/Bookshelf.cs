@@ -4,18 +4,30 @@ using System.Collections.Generic;
 
 namespace HouseCS.Items.Containers {
 	/// <summary>
-	/// Bookshelf, has books
+	/// Bookshelfs are one of the least flexible containers. They can only hold books. But hey, they can hold books.
 	/// </summary>
 	public class Bookshelf : Container, IItem {
 		private static readonly string typeS = "Bookshelf";
 
 		/// <summary>
-		/// string of Item sub-type
+		/// Creates an empty bookshelf, with no name
+		/// </summary>
+		public Bookshelf() : base() { }
+
+		/// <summary>
+		/// Creates a bookshelf
+		/// </summary>
+		/// <param name="books">Books</param>
+		/// <param name="name">Name of bookshelf</param>
+		public Bookshelf(List<Book> books, string name) : base(new List<IItem>(books), name) { }
+
+		/// <summary>
+		/// string of item sub-type
 		/// </summary>
 		public new string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
@@ -45,15 +57,15 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Exports Bookshelf information
+		/// Exports bookshelf information
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
-		/// <returns>String of bookshelf constructor</returns>
+		/// <returns>Copyable constructor of bookshelf</returns>
 		public new string Export(int space) {
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
-			retStr += $"new Bookshelf(new List<IItem>() {{{(Items.Count > 0 ? "\n" : " ")}";
+			retStr += $"new Bookshelf(new List<Book>() {{{(Items.Count > 0 ? "\n" : " ")}";
 			for (int i = 0; i < Items.Count; i++) {
 				if (Items[i] is Container) {
 					retStr += Items[i].SubType switch
@@ -81,7 +93,7 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Adds Item to bookshelf (if it's a book)
+		/// Adds item to bookshelf (if it's a book)
 		/// </summary>
 		/// <param name="item">Item to add</param>
 		/// <returns>ColorText object saying the book was added, or that the item isn't a book</returns>
@@ -94,10 +106,10 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Removes a book by index
+		/// Removes a book
 		/// </summary>
-		/// <param name="book">Index of book to remove</param>
-		/// <returns>ColorText object saying the book was removed, or telling the user why it didn't work</returns>
+		/// <param name="book">Book to remove</param>
+		/// <returns>ColorText object saying the book was removed, or warning that the bookshelf didn't have the book</returns>
 		public ColorText RemoveBook(int book) {
 			if (book < 0 || book >= Items.Count)
 				return Items.Count == 0
@@ -110,8 +122,8 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Removes a book
 		/// </summary>
-		/// <param name="book">Book object</param>
-		/// <returns>ColorText object saying the book was removed, or the book wasn't found</returns>
+		/// <param name="book">Book to remove</param>
+		/// <returns>ColorText object saying the book was removed, or that the book wasn't on the bookshelf</returns>
 		public ColorText RemoveBook(IItem book) {
 			for (int i = 0; i < Items.Count; i++)
 				if (Items.Remove((Book)book))
@@ -151,17 +163,5 @@ namespace HouseCS.Items.Containers {
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-
-		/// <summary>
-		/// Creates a bookshelf with no books on it
-		/// </summary>
-		public Bookshelf() : base() { }
-
-		/// <summary>
-		/// Creates a bookshelf with books on it
-		/// </summary>
-		/// <param name="books">List of books</param>
-		/// <param name="name">Name of Bookshelf</param>
-		public Bookshelf(List<Book> books, string name) : base(new List<IItem>(books), name) { }
 	}
 }

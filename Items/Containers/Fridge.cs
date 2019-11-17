@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HouseCS.Items.Containers {
 	/// <summary>
-	/// Fridge, has Items
+	/// Fridges may contain many items, though they do have some limitations, they may also have freezers, however they are not yet implemented in any meaningful way.
 	/// </summary>
 	public class Fridge : Container, IItem {
 		private const string typeS = "Fridge";
@@ -18,17 +18,30 @@ namespace HouseCS.Items.Containers {
 		private bool freezerCelsius = false;
 
 		/// <summary>
+		/// Creates empty fridge, without freezer, and with no name
+		/// </summary>
+		public Fridge() : this(new List<IItem>(), false, string.Empty) { }
+
+		/// <summary>
+		/// Creates fridge
+		/// </summary>
+		/// <param name="items">Items in fridge</param>
+		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
+		/// <param name="name">Name of fridge</param>
+		public Fridge(List<IItem> items, bool hasFreezer, string name) : base(items, name) => HasFreezer = hasFreezer;
+
+		/// <summary>
 		/// Whether or not this fridge has a freezer
 		/// </summary>
 		public bool HasFreezer { get; private set; }
 
 		/// <summary>
-		/// string of Item sub-type
+		/// string of item sub-type
 		/// </summary>
 		public new string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
@@ -58,10 +71,10 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Exports Fridge information
+		/// Exports fridge information
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
-		/// <returns>String of fridge constructor</returns>
+		/// <returns>Copyable constructor of fridge</returns>
 		public new string Export(int space) {
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
@@ -199,18 +212,5 @@ namespace HouseCS.Items.Containers {
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-
-		/// <summary>
-		/// Creates empty fridge, without freezer
-		/// </summary>
-		public Fridge() : this(new List<IItem>(), false, string.Empty) { }
-
-		/// <summary>
-		/// Creates fridge with Items, without freezer
-		/// </summary>
-		/// <param name="items">Items in fridge</param>
-		/// <param name="hasFreezer">Whether or not this fridge has a freezer</param>
-		/// <param name="name">Name of Fridge</param>
-		public Fridge(List<IItem> items, bool hasFreezer, string name) : base(items, name) => HasFreezer = hasFreezer;
 	}
 }

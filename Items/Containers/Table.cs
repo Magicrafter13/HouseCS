@@ -4,18 +4,30 @@ using System.Collections.Generic;
 
 namespace HouseCS.Items.Containers {
 	/// <summary>
-	/// Table with Items
+	/// Tables are second only to standard Containers. They have very few limitations on what they can hold.
 	/// </summary>
 	public class Table : Container, IItem {
 		private const string typeS = "Table";
 
 		/// <summary>
-		/// string of Item sub-type
+		/// Creates an empty table with no name
+		/// </summary>
+		public Table() : base() { }
+
+		/// <summary>
+		/// Creates table
+		/// </summary>
+		/// <param name="items">Items on table</param>
+		/// <param name="name">Name of table</param>
+		public Table(List<IItem> items, string name) : base(items, name) { }
+
+		/// <summary>
+		/// string of item sub-type
 		/// </summary>
 		public new string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
@@ -45,10 +57,10 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Exports Table information
+		/// Exports table information
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
-		/// <returns>String of table constructor</returns>
+		/// <returns>Copyable constructor of table</returns>
 		public new string Export(int space) {
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
@@ -126,17 +138,5 @@ namespace HouseCS.Items.Containers {
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-
-		/// <summary>
-		/// Creates empty table
-		/// </summary>
-		public Table() : base() { }
-
-		/// <summary>
-		/// Creates table with Items
-		/// </summary>
-		/// <param name="items">Items on table</param>
-		/// <param name="name">Name of Table</param>
-		public Table(List<IItem> items, string name) : base(items, name) { }
 	}
 }

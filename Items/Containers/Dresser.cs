@@ -5,18 +5,30 @@ using System.Collections.Generic;
 
 namespace HouseCS.Items.Containers {
 	/// <summary>
-	/// Dresser, has clothes
+	/// Dressers are technically more flexible than bookshelves, however they haven't quite reached my full vision yet. They only hold Clothing.
 	/// </summary>
 	public class Dresser : Container, IItem {
 		private const string typeS = "Dresser";
 
 		/// <summary>
-		/// string of Item sub-type
+		/// Creates an empty dresser with no name
+		/// </summary>
+		public Dresser() : base() { }
+
+		/// <summary>
+		/// Creates a dresser
+		/// </summary>
+		/// <param name="items">Clothes in dresser</param>
+		/// <param name="name">Name of dresser</param>
+		public Dresser(List<Clothing> items, string name) : base(new List<IItem>(items), name) { }
+
+		/// <summary>
+		/// string of item sub-type
 		/// </summary>
 		public new string SubType => typeS;
 
 		/// <summary>
-		/// Matches keyword against Item data
+		/// Matches keywords against item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
@@ -46,10 +58,10 @@ namespace HouseCS.Items.Containers {
 		}
 
 		/// <summary>
-		/// Exports Dresser information
+		/// Exports dresser information
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
-		/// <returns>String of dresser constructor</returns>
+		/// <returns>Copyable constructor of dresser</returns>
 		public new string Export(int space) {
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
@@ -84,8 +96,8 @@ namespace HouseCS.Items.Containers {
 		/// <summary>
 		/// Checks if dresser has clothes of type
 		/// </summary>
-		/// <param name="type">clothing type to test for</param>
-		/// <returns>True if clothes are found, False if they aren't</returns>
+		/// <param name="type">Clothing type to test for</param>
+		/// <returns>True if clothes are found, False if not</returns>
 		public bool HasClothes(string type) {
 			for (int i = 0; i < Size; i++)
 				if (GetItem(i).SubType.Equals(type, StringComparison.OrdinalIgnoreCase))
@@ -143,17 +155,5 @@ namespace HouseCS.Items.Containers {
 			retClr.Add(ConsoleColor.White);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
 		}
-
-		/// <summary>
-		/// Creates an empty dresser
-		/// </summary>
-		public Dresser() : base() { }
-
-		/// <summary>
-		/// Creates a dresser with Items
-		/// </summary>
-		/// <param name="items">Items in dresser</param>
-		/// <param name="name">Name of Dresser</param>
-		public Dresser(List<Clothing> items, string name) : base(new List<IItem>(items), name) { }
 	}
 }
