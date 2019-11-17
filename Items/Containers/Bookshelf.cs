@@ -124,11 +124,20 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="book">Book to remove</param>
 		/// <returns>ColorText object saying the book was removed, or that the book wasn't on the bookshelf</returns>
-		public ColorText RemoveBook(IItem book) {
-			for (int i = 0; i < Items.Count; i++)
-				if (Items.Remove((Book)book))
-					return new ColorText(new string[] { "\nBook", ", ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue });
-			return new ColorText(new string[] { "No matching ", "Book", " found." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+		public ColorText RemoveBook(Book book) => Items.Remove((IItem)book) ? new ColorText(new string[] { "\nBook", ", ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue }) : new ColorText(new string[] { "No matching ", "Book", " found." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
+
+		/// <summary>
+		/// Removes a book
+		/// </summary>
+		/// <param name="book">Book to remove</param>
+		/// <returns>Status of removed book, or warning that book was not a book</returns>
+		[Obsolete("Method deprecated, please use RemoveBook(Book);")]
+		public ColorText RemoveBook(IItem book)
+		{
+			if (book is Book)
+				return RemoveBook((Book)book);
+			else
+				return new ColorText(new string[] { "Item", " is not a ", "Book", "." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 		}
 
 		/// <summary>

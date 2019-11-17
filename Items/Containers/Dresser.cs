@@ -66,7 +66,7 @@ namespace HouseCS.Items.Containers {
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
-			retStr += $"new Dresser(new List<IItem>() {{{(Items.Count > 0 ? "\n" : " ")}";
+			retStr += $"new Dresser(new List<Clothing>() {{{(Items.Count > 0 ? "\n" : " ")}";
 			for (int i = 0; i < Items.Count; i++) {
 				if (Items[i] is Container) {
 					retStr += Items[i].SubType switch
