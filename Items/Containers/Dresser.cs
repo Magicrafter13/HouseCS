@@ -3,11 +3,13 @@ using HouseCS.Items.Clothes;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items.Containers {
+namespace HouseCS.Items.Containers
+{
 	/// <summary>
 	/// Dressers are technically more flexible than bookshelves, however they haven't quite reached my full vision yet. They only hold Clothing.
 	/// </summary>
-	public class Dresser : Container, IItem {
+	public class Dresser : Container, IItem
+	{
 		private const string typeS = "Dresser";
 
 		/// <summary>
@@ -32,7 +34,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public new List<ColorText> Search(List<string> keywords) {
+		public new List<ColorText> Search(List<string> keywords)
+		{
 			if (keywords is null)
 				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
@@ -64,7 +67,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
 		/// <returns>Copyable constructor of dresser</returns>
-		public new string Export(int space) {
+		public new string Export(int space)
+		{
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
@@ -100,7 +104,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="type">Clothing type to test for</param>
 		/// <returns>True if clothes are found, False if not</returns>
-		public bool HasClothes(string type) {
+		public bool HasClothes(string type)
+		{
 			if (type is null)
 				throw new ArgumentNullException(nameof(type));
 			for (int i = 0; i < Size; i++)
@@ -126,7 +131,8 @@ namespace HouseCS.Items.Containers {
 		/// Information about dresser
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public new ColorText ToText() {
+		public new ColorText ToText()
+		{
 			List<string> retStr = new List<string>() { "Items", " in this ", "Dresser", ":" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White };
 			List<string> type = new List<string>();

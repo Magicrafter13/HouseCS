@@ -2,11 +2,13 @@ using HouseCS.ConsoleUtils;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items.Clothes {
+namespace HouseCS.Items.Clothes
+{
 	/// <summary>
 	/// Shirt, has color
 	/// </summary>
-	public class Shirt : Clothing, IItem {
+	public class Shirt : Clothing, IItem
+	{
 		private const string typeS = "Shirt";
 
 		/// <summary>
@@ -29,7 +31,8 @@ namespace HouseCS.Items.Clothes {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public new List<ColorText> Search(List<string> keywords) {
+		public new List<ColorText> Search(List<string> keywords)
+		{
 			if (keywords is null)
 				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();

@@ -2,11 +2,13 @@ using HouseCS.ConsoleUtils;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items.Containers {
+namespace HouseCS.Items.Containers
+{
 	/// <summary>
 	/// Containers are one of the best and most flexible items in a house. Especially when named. They can realistically be whatever you want them to be.
 	/// </summary>
-	public class Container : IItem {
+	public class Container : IItem
+	{
 		private const string typeS = "Container";
 
 		/// <summary>
@@ -69,7 +71,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public List<ColorText> Search(List<string> keywords) {
+		public List<ColorText> Search(List<string> keywords)
+		{
 			if (keywords is null)
 				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
@@ -101,7 +104,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
 		/// <returns>Copyable constructor of container</returns>
-		public string Export(int space) {
+		public string Export(int space)
+		{
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
@@ -151,7 +155,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="item">Item to add</param>
 		/// <returns>ColorText object saying the object is now in the container, or telling the user why it can't be placed on</returns>
-		public ColorText AddItem(IItem item) {
+		public ColorText AddItem(IItem item)
+		{
 			if (item is null)
 				throw new ArgumentNullException(nameof(item));
 			if (item == this)
@@ -167,7 +172,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="item">Item to remove</param>
 		/// <returns>ColorText object saying the item was removed, or warns if item didn't exist</returns>
-		public ColorText RemoveItem(int item) {
+		public ColorText RemoveItem(int item)
+		{
 			if (item < 0 || item >= Items.Count) {
 				List<string> retStr = new List<string>();
 				List<ConsoleColor> retClr = new List<ConsoleColor>();
@@ -207,7 +213,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="item">Test Item</param>
 		/// <returns>True if the item is in the container, False if not</returns>
-		public bool HasItem(IItem item) {
+		public bool HasItem(IItem item)
+		{
 			if (item is null)
 				throw new ArgumentNullException(nameof(item));
 			foreach (IItem i in Items)
@@ -237,7 +244,8 @@ namespace HouseCS.Items.Containers {
 		/// Information about container
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public ColorText ToText() {
+		public ColorText ToText()
+		{
 			List<string> retStr = new List<string>() { "Items", " in this ", "Container", ":" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White };
 			for (int i = 0; i < Items.Count; i++) {

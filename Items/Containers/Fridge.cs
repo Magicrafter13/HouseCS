@@ -2,11 +2,13 @@ using HouseCS.ConsoleUtils;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items.Containers {
+namespace HouseCS.Items.Containers
+{
 	/// <summary>
 	/// Fridges may contain many items, though they do have some limitations, they may also have freezers, however they are not yet implemented in any meaningful way.
 	/// </summary>
-	public class Fridge : Container, IItem {
+	public class Fridge : Container, IItem
+	{
 		private const string typeS = "Fridge";
 
 		private double temperature = 35.0;
@@ -45,7 +47,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public new List<ColorText> Search(List<string> keywords) {
+		public new List<ColorText> Search(List<string> keywords)
+		{
 			if (keywords is null)
 				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
@@ -77,7 +80,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
 		/// <returns>Copyable constructor of fridge</returns>
-		public new string Export(int space) {
+		public new string Export(int space)
+		{
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
@@ -177,7 +181,8 @@ namespace HouseCS.Items.Containers {
 		/// Resets temperature, and sets to farenheit
 		/// </summary>
 		[Obsolete("Deprecated method, please use ChangeType and ChangeTemp")]
-		public void TempReset() {
+		public void TempReset()
+		{
 			ChangeType(false, false);
 			ChangeType(false, true);
 			ChangeTemp(35.0 - temperature, false);
@@ -199,7 +204,8 @@ namespace HouseCS.Items.Containers {
 		/// Information about fridge
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public new ColorText ToText() {
+		public new ColorText ToText()
+		{
 			List<string> retStr = new List<string>() { "Items", " in this ", "Fridge", ":" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White };
 			for (int i = 0; i < Size; i++) {

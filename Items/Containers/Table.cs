@@ -2,11 +2,13 @@ using HouseCS.ConsoleUtils;
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items.Containers {
+namespace HouseCS.Items.Containers
+{
 	/// <summary>
 	/// Tables are second only to standard Containers. They have very few limitations on what they can hold.
 	/// </summary>
-	public class Table : Container, IItem {
+	public class Table : Container, IItem
+	{
 		private const string typeS = "Table";
 
 		/// <summary>
@@ -31,7 +33,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public new List<ColorText> Search(List<string> keywords) {
+		public new List<ColorText> Search(List<string> keywords)
+		{
 			if (keywords is null)
 				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
@@ -63,7 +66,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
 		/// <returns>Copyable constructor of table</returns>
-		public new string Export(int space) {
+		public new string Export(int space)
+		{
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
@@ -109,7 +113,8 @@ namespace HouseCS.Items.Containers {
 		/// Information about table
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public new ColorText ToText() {
+		public new ColorText ToText()
+		{
 			List<string> retStr = new List<string>() { "Items", " on this ", "Table", ":\n" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White };
 			for (int i = 0; i < Size; i++) {

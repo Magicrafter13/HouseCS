@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items {
+namespace HouseCS.Items
+{
 	/// <summary>
 	/// Empty Item, used in place of null, so the program can actually handle it on run-time
 	/// </summary>
-	public class Empty : IItem {
+	public class Empty : IItem
+	{
 		private const string message = "You have no items/objects selected";
 
 		private const string typeS = "No Item";

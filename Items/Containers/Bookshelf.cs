@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace HouseCS.Items.Containers {
+namespace HouseCS.Items.Containers
+{
 	/// <summary>
 	/// Bookshelfs are one of the least flexible containers. They can only hold books. But hey, they can hold books.
 	/// </summary>
-	public class Bookshelf : Container, IItem {
+	public class Bookshelf : Container, IItem
+	{
 		private static readonly string typeS = "Bookshelf";
 
 		/// <summary>
@@ -31,7 +33,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
 		/// <returns>String output if keywords matched</returns>
-		public new List<ColorText> Search(List<string> keywords) {
+		public new List<ColorText> Search(List<string> keywords)
+		{
 			if (keywords is null)
 				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
@@ -63,7 +66,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="space">How many spaces to start the string with</param>
 		/// <returns>Copyable constructor of bookshelf</returns>
-		public new string Export(int space) {
+		public new string Export(int space)
+		{
 			string retStr = string.Empty;
 			for (int i = 0; i < space; i++)
 				retStr += " ";
@@ -99,7 +103,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="item">Item to add</param>
 		/// <returns>ColorText object saying the book was added, or that the item isn't a book</returns>
-		public new ColorText AddItem(IItem item) {
+		public new ColorText AddItem(IItem item)
+		{
 			if (item is null)
 				throw new ArgumentNullException(nameof(item));
 			if (item is Book) {
@@ -114,7 +119,8 @@ namespace HouseCS.Items.Containers {
 		/// </summary>
 		/// <param name="book">Book to remove</param>
 		/// <returns>ColorText object saying the book was removed, or warning that the bookshelf didn't have the book</returns>
-		public ColorText RemoveBook(int book) {
+		public ColorText RemoveBook(int book)
+		{
 			if (book < 0 || book >= Items.Count)
 				return Items.Count == 0
 					? new ColorText(new string[] { "Bookshelf", " is already empty!" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White })
@@ -161,7 +167,8 @@ namespace HouseCS.Items.Containers {
 		/// Information about bookshelf
 		/// </summary>
 		/// <returns>ColorText object of important info</returns>
-		public new ColorText ToText() {
+		public new ColorText ToText()
+		{
 			List<string> retStr = new List<string>() { "Books", " in this ", "shelf", ":" };
 			List<ConsoleColor> retClr = new List<ConsoleColor>() { ConsoleColor.DarkYellow, ConsoleColor.White, ConsoleColor.DarkYellow, ConsoleColor.White };
 			for (int i = 0; i < Items.Count; i++) {

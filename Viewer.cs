@@ -60,7 +60,7 @@ namespace HouseCS
 		/// <returns>True if current floor was changed, False if it wasn't, due to invalid input</returns>
 		public bool GoFloor(int floor)
 		{
-			bool check = floor >= 0 && floor < CurHouse.Size;
+			bool check = HasFloor(floor);
 			if (check)
 				CurFloor = floor;
 			return check;
@@ -109,6 +109,13 @@ namespace HouseCS
 		public Floor GetFloor(int floor) => CurHouse.GetFloor(floor);
 
 		/// <summary>
+		/// Checks if current house has floor
+		/// </summary>
+		/// <param name="floor">Floor to check for</param>
+		/// <returns>True if floor exists, false if not</returns>
+		public bool HasFloor(int floor) => floor >= 0 && floor < CurHouse.Size;
+
+		/// <summary>
 		/// Gets Item 'item' from current floor of current house
 		/// </summary>
 		/// <param name="item">Number of item you want</param>
@@ -122,6 +129,13 @@ namespace HouseCS
 		/// <param name="subItem">Number of subitem</param>
 		/// <returns></returns>
 		public IItem GetItem(int item, int subItem) => CurHouse.GetItem(CurFloor, item, subItem);
+
+		/// <summary>
+		/// Checks if current floor has item
+		/// </summary>
+		/// <param name="item">Item to check for</param>
+		/// <returns>True if item exists, false if not</returns>
+		public bool HasItem(int item) => item >= 0 && item < FloorSize;
 
 		/// <summary>
 		/// Adds item to current floor of current house
@@ -209,7 +223,8 @@ namespace HouseCS
 		/// </summary>
 		/// <param name="item">Item to test for</param>
 		/// <returns>True if item exists, false if not</returns>
-		public bool IsItem(int item) => item >= 0 && item < FloorSize;
+		[Obsolete("Deprecated method, please use HasItem(int) instead.")]
+		public bool IsItem(int item) => HasItem(item);
 
 		/// <summary>
 		/// Shows cached item
@@ -246,7 +261,7 @@ namespace HouseCS
 		/// <returns>True if item exists, False if not</returns>
 		public bool ChangeItemFocus(int item)
 		{
-			bool check = IsItem(item);
+			bool check = HasItem(item);
 			if (check)
 				curItem = GetItem(item);
 			return check;
@@ -260,7 +275,7 @@ namespace HouseCS
 		/// <returns>0 if sub-item exists, 1 if not, and 2 if item doesn't exist</returns>
 		public int ChangeItemFocus(int item, int subItem)
 		{
-			if (IsItem(item)) {
+			if (HasItem(item)) {
 				curItem = GetItem(item, subItem);
 				return curItem is Empty ? 1 : 0;
 			}
