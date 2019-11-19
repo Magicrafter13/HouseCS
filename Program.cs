@@ -366,7 +366,7 @@ namespace HouseCS
 												}
 												else WriteColor(new string[] { "Invalid argument, did you mean ", "-d", "?\n" }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Green, ConsoleColor.White });
 											}
-											else if (user.IsItem(src) && user.IsItem(dst)) {
+											else if (user.HasItem(src) && user.HasItem(dst)) {
 												IItem src_i = user.GetItem(src);
 												IItem dst_i = user.GetItem(dst);
 												switch (dst_i.Type) {

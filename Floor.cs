@@ -142,6 +142,11 @@ namespace HouseCS
 		/// <param name="room">Room name</param>
 		public void AddRoom(string room) => RoomNames.Add(room is null ? throw new ArgumentNullException(nameof(room)) : room);
 
+		/// <summary>
+		/// Checks whether the room is on the floor or not
+		/// </summary>
+		/// <param name="room">Room to check for</param>
+		/// <returns>True if the room exists, false if not</returns>
 		public bool HasRoom(int room) => room >= 0 && room < RoomNames.Count ? true : false;
 
 		/// <summary>
