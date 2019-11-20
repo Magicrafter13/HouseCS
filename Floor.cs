@@ -147,7 +147,7 @@ namespace HouseCS
 		/// </summary>
 		/// <param name="room">Room to check for</param>
 		/// <returns>True if the room exists, false if not</returns>
-		public bool HasRoom(int room) => room >= 0 && room < RoomNames.Count ? true : false;
+		public bool HasRoom(int room) => room > -2 && room < RoomNames.Count ? true : false;
 
 		/// <summary>
 		/// Removes a room from the Floor
