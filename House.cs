@@ -181,7 +181,9 @@ namespace HouseCS
 			if (keywords is null)
 				throw new ArgumentNullException(nameof(keywords));
 			List<ColorText> output = new List<ColorText>();
-			if (floor > -1) {
+			if (floor >= Size)
+				output.Add(new ColorText("There aren't that many floors!\n"));
+			else if (floor > -1) {
 				List<ColorText> tmp = GetFloor(floor).Search(room, item, keywords);
 				if (tmp.Count != 0) {
 					output.Add(new ColorText($"Floor {floor}\n"));

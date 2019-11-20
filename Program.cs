@@ -11,7 +11,7 @@ namespace HouseCS
 {
 	internal class Program
 	{
-		public const int verMajor = 3, verMinor = 0, verFix = 0;
+		public const int verMajor = 3, verMinor = 0, verFix = 1;
 
 		public const int maxStreets = 300, maxAvenues = 300, maxHouses = 20; // 300 st x 300 ave, up to 20 houses per road
 
