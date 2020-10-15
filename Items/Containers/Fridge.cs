@@ -132,32 +132,6 @@ namespace HouseCS.Items.Containers
 		}
 
 		/// <summary>
-		/// Switches temperature of fridge or freezer to celsius
-		/// </summary>
-		/// <param name="freezer">True to set freezer, False to set fridge</param>
-		[Obsolete("Deprecated method, please use ChangeType(true, bool);")]
-		public void ToCelsius(bool freezer) => ChangeType(true, freezer);
-
-		/// <summary>
-		/// Switches temperature of fridge or freezer to farenheit
-		/// </summary>
-		/// <param name="freezer">True to set freezer, False to set fridge</param>
-		[Obsolete("Deprecated method, please use ChangeType(false, bool);")]
-		public void ToFarenheit(bool freezer) => ChangeType(false, freezer);
-
-		/// <summary>
-		/// Increment the temperature by 1
-		/// </summary>
-		[Obsolete("Deprecated method, please use TempChange(double) instead")]
-		public void TempInc() => temperature += 1.0;
-
-		/// <summary>
-		/// Decrement the temperature by 1
-		/// </summary>
-		[Obsolete("Deprecated method, please use TempChange(double) instead")]
-		public void TempDec() => temperature -= 1.0;
-
-		/// <summary>
 		/// Changes temperature of fridge or freezer
 		/// </summary>
 		/// <param name="newTemp">Degrees to add to temperature</param>
@@ -168,25 +142,6 @@ namespace HouseCS.Items.Containers
 				freezerTemp += newTemp;
 			else
 				temperature += newTemp;
-		}
-
-		/// <summary>
-		/// Changes temperature of fridge
-		/// </summary>
-		/// <param name="newTemp">New temperature for fridge</param>
-		[Obsolete("Deprecated method, please use ChangeTemp(double, false) instead")]
-		public void TempChange(double newTemp) => ChangeTemp(newTemp, false);
-
-		/// <summary>
-		/// Resets temperature, and sets to farenheit
-		/// </summary>
-		[Obsolete("Deprecated method, please use ChangeType and ChangeTemp")]
-		public void TempReset()
-		{
-			ChangeType(false, false);
-			ChangeType(false, true);
-			ChangeTemp(35.0 - temperature, false);
-			ChangeTemp(0.0 - freezerTemp, true);
 		}
 
 		/// <summary>

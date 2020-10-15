@@ -219,14 +219,6 @@ namespace HouseCS
 		public void RemoveItem(int item) => RemoveItem(GetFloor().GetItem(item));
 
 		/// <summary>
-		/// Checks if item is on the current floor of the current house
-		/// </summary>
-		/// <param name="item">Item to test for</param>
-		/// <returns>True if item exists, false if not</returns>
-		[Obsolete("Deprecated method, please use HasItem(int) instead.")]
-		public bool IsItem(int item) => HasItem(item);
-
-		/// <summary>
 		/// Shows cached item
 		/// </summary>
 		/// <returns>ColorText object of current Item</returns>
@@ -240,18 +232,6 @@ namespace HouseCS
 			foreach (ConsoleColor clr in itm.Colors())
 				retClr.Add(clr);
 			return new ColorText(retStr.ToArray(), retClr.ToArray());
-		}
-
-		/// <summary>
-		/// Sets the house of the viewer
-		/// </summary>
-		/// <param name="house">New house for viewer</param>
-		[Obsolete("Method is outdated. Please consider using different viewers for different houses!")]
-		public void ChangeHouseFocus(House house)
-		{
-			CurFloor = 0;
-			curItem = new Empty();
-			CurHouse = house ?? throw new ArgumentNullException(nameof(house));
 		}
 
 		/// <summary>

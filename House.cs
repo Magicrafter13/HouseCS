@@ -33,7 +33,11 @@ namespace HouseCS
 		/// <param name="conRoad">Road parallel to House</param>
 		/// <param name="adjRoad">Road adjacent to House</param>
 		/// <param name="quad">Relative quadrant of House</param>
-		public House(int color, int floor, bool street, int houseNumber, int conRoad, int adjRoad, int quad) : this(color, new List<Floor>(new Floor[floor]), street, houseNumber, conRoad, adjRoad, quad) { }
+		public House(int color, int floor, bool street, int houseNumber, int conRoad, int adjRoad, int quad) : this(color, new List<Floor>(floor), street, houseNumber, conRoad, adjRoad, quad)
+		{
+			for (int f = 0; f < floor; f++)
+				Floors.Add(new Floor());
+		}
 
 		/// <summary>
 		/// Creates a house with specified floors

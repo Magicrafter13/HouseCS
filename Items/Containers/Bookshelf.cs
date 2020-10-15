@@ -137,22 +137,6 @@ namespace HouseCS.Items.Containers
 		public ColorText RemoveBook(Book book) => book is null ? throw new ArgumentNullException(nameof(book)) : Items.Remove(book) ? new ColorText(new string[] { "\nBook", ", ", "removed", ".\n" }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.DarkBlue }) : new ColorText(new string[] { "No matching ", "Book", " found." }, new ConsoleColor[] { ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
 
 		/// <summary>
-		/// Removes a book
-		/// </summary>
-		/// <param name="book">Book to remove</param>
-		/// <returns>Status of removed book, or warning that book was not a book</returns>
-		[Obsolete("Method deprecated, please use RemoveBook(Book);")]
-		public ColorText RemoveBook(IItem book)
-		{
-			if (book is null)
-				throw new ArgumentNullException(nameof(book));
-			if (book is Book)
-				return RemoveBook((Book)book);
-			else
-				return new ColorText(new string[] { "Item", " is not a ", "Book", "." }, new ConsoleColor[] { ConsoleColor.Yellow, ConsoleColor.White, ConsoleColor.Yellow, ConsoleColor.White });
-		}
-
-		/// <summary>
 		/// Minor details for list
 		/// </summary>
 		/// <param name="beforeNotAfter">True for left side, False for right side</param>

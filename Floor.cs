@@ -36,51 +36,6 @@ namespace HouseCS
 			RoomNames = roomNames ?? throw new ArgumentNullException(nameof(roomNames));
 		}
 
-		/// <summary>
-		/// Creates a floor with a set List of Items, and the lights off
-		/// </summary>
-		/// <param name="i">List of Items for the floor</param>
-		[Obsolete("This Constructor is outdated, please use Floor(List<IItem>, List<int>, bool, List<string>), or Floor()")]
-		public Floor(List<IItem> i) : this(i, new List<int>(new int[i.Count + 1]), false, new List<string>()) { }
-
-		/// <summary>
-		/// Creates a floor with the lights on or off
-		/// </summary>
-		/// <param name="l">Lights, true = on, false = off</param>
-		[Obsolete("This Constructor is outdated, please use Floor(List<IItem>, List<int>, bool, List<string>), or Floor()")]
-		public Floor(bool l) : this(new List<IItem>(), new List<int>(new int[] { -1 }), l, new List<string>()) { }
-
-		/// <summary>
-		/// Creates a floor with set rooms, and no Items, with lights off
-		/// </summary>
-		/// <param name="rooms">Room names</param>
-		[Obsolete("This Constructor is outdated, please use Floor(List<IItem>, List<int>, bool, List<string>), or Floor()")]
-		public Floor(List<string> rooms) : this(new List<IItem>(), new List<int>(new int[] { -1 }), false, rooms) { }
-
-		/// <summary>
-		/// Creates a floor with Items, set lights, and no rooms
-		/// </summary>
-		/// <param name="items">Items on floor</param>
-		/// <param name="lights">Whether lights are on or off</param>
-		[Obsolete("This Constructor is outdated, please use Floor(List<IItem>, List<int>, bool, List<string>), or Floor()")]
-		public Floor(List<IItem> items, bool lights) : this(items, new List<int>(new int[items.Count + 1]), lights, new List<string>()) { }
-
-		/// <summary>
-		/// Creates a floor with Items, rooms, and lights off
-		/// </summary>
-		/// <param name="items">Items on floor</param>
-		/// <param name="rooms">Rooms on floor</param>
-		[Obsolete("This Constructor is outdated, please use Floor(List<IItem>, List<int>, bool, List<string>), or Floor()")]
-		public Floor(List<IItem> items, List<string> rooms) : this(items, new List<int>(new int[items.Count + 1]), false, rooms) { }
-
-		/// <summary>
-		/// Creates a floor with no Items, rooms, and set lights
-		/// </summary>
-		/// <param name="lights">Lights, true = on, false = off</param>
-		/// <param name="rooms">Rooms on floor</param>
-		[Obsolete("This Constructor is outdated, please use Floor(List<IItem>, List<int>, bool, List<string>), or Floor()")]
-		public Floor(bool lights, List<string> rooms) : this(new List<IItem>(), new List<int>(new int[] { -1 }), lights, rooms) { }
-
 		/// <summary> How many items are on the floor </summary>
 		public int Size => Items.Count;
 
