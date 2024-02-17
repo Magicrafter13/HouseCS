@@ -31,6 +31,13 @@ namespace HouseCS {
 		public int Size => Floors.Length;
 
 		/// <summary>
+		/// Removes a room the specified floor, and moves all items from the room into "the hall"
+		/// </summary>
+		/// <param name="floor">Floor containing room to remove</param>
+		/// <param name="room">Room number to remove</param>
+		public void RemoveRoom(int floor, int room) => Floors[floor].RemoveRoom(room);
+
+		/// <summary>
 		/// The floors of this house
 		/// </summary>
 		public Floor[] Floors { get; }

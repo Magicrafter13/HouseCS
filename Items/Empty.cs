@@ -27,6 +27,13 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Sets RoomID of Empty Item, hopefully this is never called...
+		/// </summary>
+		public void Move(int room) {
+			RoomID = room;
+		}
+
+		/// <summary>
 		/// Matches keyword against Item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>

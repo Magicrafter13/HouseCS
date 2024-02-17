@@ -50,6 +50,13 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Sets RoomID of Book
+		/// </summary>
+		public void Move(int room) {
+			RoomID = room;
+		}
+
+		/// <summary>
 		/// Matches keyword against Item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
@@ -82,10 +89,12 @@ namespace HouseCS.Items {
 		/// <param name="title">Book title</param>
 		/// <param name="author">Book author</param>
 		/// <param name="year">Book publishing year</param>
-		public void Reset(string title, string author, int year) {
+		/// <param name="room">Room the Book is located in</param>
+		public void Reset(string title, string author, int year, int room) {
 			Title = title;
 			Author = author;
 			Year = year >= 1600 ? year : 1600;
+			RoomID = room;
 		}
 
 		/// <summary>
@@ -121,10 +130,9 @@ namespace HouseCS.Items {
 		/// <param name="year">Book publishing year</param>
 		/// <param name="room">Room the book is in</param>
 		public Book(string title, string author, int year, int room) {
-			Reset(title, author, year);
+			Reset(title, author, year, room);
 			totalBooks++;
 			ID = totalBooks;
-			RoomID = room;
 		}
 	}
 }

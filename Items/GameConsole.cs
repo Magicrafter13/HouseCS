@@ -45,6 +45,13 @@ namespace HouseCS.Items {
 		public string SubType => typeS;
 
 		/// <summary>
+		/// Sets RoomID of GameConsole
+		/// </summary>
+		public void Move(int room) {
+			RoomID = room;
+		}
+
+		/// <summary>
 		/// Matches keyword against Item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>

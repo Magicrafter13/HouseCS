@@ -35,6 +35,12 @@ namespace HouseCS {
 		public int CurFloor { get; private set; }
 
 		/// <summary>
+		/// Removes a room the current floor, and moves all items from the room into "the hall"
+		/// </summary>
+		/// <param name="room">Room number to remove</param>
+		public void RemoveRoom(int room) => CurHouse.RemoveRoom(CurFloor, room);
+
+		/// <summary>
 		/// Names of rooms on current floor of current house
 		/// </summary>
 		public List<string> RoomNames => CurHouse.GetFloor(CurFloor).RoomNames;
@@ -287,7 +293,7 @@ namespace HouseCS {
 		/// ToString override showing status of Viewer
 		/// </summary>
 		/// <returns>string containing current house index, current floor index, and type of current Item</returns>
-		public override string ToString() => $"\tCurrent House: {Program.house}\n\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
+		public override string ToString() => $"\tCurrent House: {Program.enviVar[2, 1]}\n\tCurrent Floor: {CurFloor}\n\tCurrent Item Type: {curItem.Type}";
 
 		/// <summary>
 		/// Creates a Viewer with a new default House

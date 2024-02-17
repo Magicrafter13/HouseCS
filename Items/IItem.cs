@@ -22,6 +22,11 @@ namespace HouseCS.Items {
 		string SubType { get; }
 
 		/// <summary>
+		/// Sets RoomID of Item
+		/// </summary>
+		void Move(int room);
+
+		/// <summary>
 		/// Matches keyword against Item data
 		/// </summary>
 		/// <param name="keywords">Keywords to search for</param>
